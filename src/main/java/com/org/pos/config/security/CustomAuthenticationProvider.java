@@ -25,7 +25,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 	    
 	    Usuario u = userRepository.findByUsername(usuario);
 	    
-		if(u != null /*&& Encryption.comparePassword(contrasena, u.getPassword())*/) {
+		if(u != null && Encryption.comparePassword(contrasena, u.getPassword())) {
 			
 			Authentication auth = new UsernamePasswordAuthenticationToken(u, authentication.getCredentials(),
 					u.getGrantedAuthorities());
