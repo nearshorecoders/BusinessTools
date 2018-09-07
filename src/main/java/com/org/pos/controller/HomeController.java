@@ -29,7 +29,7 @@ public class HomeController {
 
     @GetMapping("/user")
     public String user() {
-        return "/user";
+        return "/profile";
     }
 
     @GetMapping("/about")
@@ -52,7 +52,7 @@ public class HomeController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		
 		if (!(auth instanceof AnonymousAuthenticationToken)) {
-			return "redirect:/index";
+			return "redirect:/home";
 		}
 		return "login";
 	}
