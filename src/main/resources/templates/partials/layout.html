@@ -169,7 +169,7 @@
               <!-- Menu Footer-->
               <li class="user-footer">
                 <div class="pull-left">
-                  <a href="#" class="btn btn-default btn-flat">Profile</a>
+                  <a href="#" class="btn btn-default btn-flat" onclick="navegacion(this);" id="user">Profile</a>
                 </div>
                 <div class="pull-right">
                   <a href="#" class="btn btn-default btn-flat">Sign out</a>
@@ -392,7 +392,7 @@
   <!-- =============================================== -->
 
   <!-- Content Wrapper. Contains page content -->
-  <div class="content-wrapper">
+  <div class="content-wrapper" id="btContent">
     <!-- Content Header (Page header) -->
     <section class="content-header">
       <h1>
@@ -642,7 +642,6 @@
   <div class="control-sidebar-bg"></div>
 </div>
 <!-- ./wrapper -->
-
 <!-- jQuery 3 -->
 <script src="js/theme/bower_components/jquery/dist/jquery.min.js"></script>
 <!-- Bootstrap 3.3.7 -->
@@ -655,6 +654,8 @@
 <script src="js/theme/dist/js/adminlte.min.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="js/theme/dist/js/demo.js"></script>
+<!-- AdminLTE for demo purposes -->
+<script src="js/modules/layout.js"></script>
 <script>
   $(document).ready(function () {
     $('.sidebar-menu').tree()
