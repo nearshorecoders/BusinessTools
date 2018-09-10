@@ -47,6 +47,19 @@ public class UserRepository {
     	return us;
     }
     
+    @Transactional(readOnly=true)
+    public Usuario findByUser(String usuario) {
+    	Usuario us = null;
+    	try {
+    		us = jdbcTemplate.queryForObject("SELECT * FROM usuarios WHERE nombreUsuario = ?", 
+        			new Object[]{usuario}, new UsuarioRowMapper());    		
+    	} catch(IncorrectResultSizeDataAccessException e) {
+    		LOGGER.error("Invalid user");
+    	}
+
+    	return us;
+    }
+    
     class UsuarioRowMapper implements RowMapper<Usuario> {
         @Override
         public Usuario mapRow(ResultSet rs, int rowNum) throws SQLException {
@@ -58,6 +71,7 @@ public class UserRepository {
         	usuario.setApellidom(rs.getString("apellidom"));
         	usuario.setNombreUsuario(rs.getString("nombreUsuario"));
         	usuario.setPassword(rs.getString("password"));
+        	usuario.setIdRol(rs.getInt("rol_idrol"));
         	//usuario.setCorreo(rs.getString("correo"));
         	//usuario.setTelefono(rs.getString("telefono"));
         	//usuario.setId_rol(rs.getInt("id_rol"));

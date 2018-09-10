@@ -20,7 +20,8 @@ var layout = (function() {
 	var i = 0;
 
 	var initProperties = function() {
-		events.slowNetworkDetection();	
+		events.slowNetworkDetection();
+		events.getMainMenu();
 	}
 	
 	var catchDom = function() {
@@ -56,6 +57,7 @@ var layout = (function() {
 		
 		loadMainPage : function() {
 			events.changeView("index");
+			
 		},
 		
 		changeView : function (theView) {
@@ -67,7 +69,24 @@ var layout = (function() {
 			
 			$("#btContent").load(result + "/" + theView );
 		},
-		
+		getMainMenu : function() {
+			$.ajax({
+			    url: "/getMainMenu",
+			    type: "GET",
+			    dataType : "json",
+			}).done(function( json ) {
+				console.log("Getting response ------------------------------------");
+				console.log(json);
+			}).fail(function( xhr, status, errorThrown ) {
+				//console.log( "Sorry, there was a problem!" );
+			    console.log( "Error: " + errorThrown );
+			    console.log( "Status: " + status );
+			    //console.dir( xhr );
+			}).always(function( xhr, status ) {
+			    //console.log( "The request is complete!" );
+			});
+			
+		},
 		slowNetworkDetection : function() {
 			// Add event listener offline to detect network loss.
 			window.addEventListener("offline", function(e) {

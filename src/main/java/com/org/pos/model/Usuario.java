@@ -77,6 +77,7 @@ public class Usuario implements UserDetails {
 	private String apellidom;
 	private String password;
 	private String estatus;
+	private Integer idRol;
 	
 	private List<GrantedAuthority> grantedAuthorities = AuthorityUtils.createAuthorityList("USER");
 	
@@ -115,6 +116,14 @@ public class Usuario implements UserDetails {
 	@Override
 	public String getPassword() {
 		return password;
+	}
+
+	public Integer getIdRol() {
+		return idRol;
+	}
+
+	public void setIdRol(Integer idRol) {
+		this.idRol = idRol;
 	}
 	
 }
