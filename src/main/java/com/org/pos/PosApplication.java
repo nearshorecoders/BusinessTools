@@ -10,3 +10,16 @@ public class PosApplication {
 		SpringApplication.run(PosApplication.class, args);
 	}
 }
+
+
+/////example mail sender
+
+//MailSender mailSender=new MailSender();
+
+///
+
+//try {
+//		mailSender.enviarCorreo("hotmail", "Bienvenido a Exchange!!!", email , null , "Bienvenido al selecto grupo de usuarios de exchange");
+//}catch(Exception e) {
+//	e.printStackTrace();
+//}

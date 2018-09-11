@@ -1,5 +1,11 @@
 package com.org.pos.controller;
 
+import java.security.Principal;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -8,10 +14,16 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.org.pos.model.Usuario;
+import com.org.pos.services.PermisosService;
 
 @Controller
 public class HomeController {
 
+	@Autowired
+	PermisosService permisosService;
 //    @GetMapping("/")
 //    public String home1() {
 //        return "/login";
@@ -61,5 +73,11 @@ public class HomeController {
 	public String login(final Model model) {
 		return "redirect:/";
 	}
-
+	
+	@RequestMapping(value = "/getMainMenu",method = RequestMethod.GET)
+	public ResponseEntity<?> getMenu(Principal principal) {
+		 return new ResponseEntity<Map<String,Object>>(permisosService.getAllPermisosByRol(principal),HttpStatus.OK);
+	}
+	 
+	
 }
