@@ -40,7 +40,7 @@ public class RolHasPermisosRepository {
         	
         	List<Map<String, Object>> list = jdbcTemplate.queryForList(query,new Object[]{idRol});
         	Map<String, Object> map = new HashMap<String, Object>();
-        	map.put("transactionsGropuedByCoin", list);
+        	map.put("menuContent", list);
         	
         	return map;
         }catch (Exception e){

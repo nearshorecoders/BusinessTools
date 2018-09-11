@@ -75,8 +75,54 @@ var layout = (function() {
 			    type: "GET",
 			    dataType : "json",
 			}).done(function( json ) {
-				console.log("Getting response ------------------------------------");
+				console.log("Getting main menu");
 				console.log(json);
+				arregloMenu=json.menuContent;
+				
+				$("#mainMenu").html('');
+				
+				var stringMenu='<li class="header">MENU PRINCIPAL</li>';
+				var stringMenuDinamico='';
+				var mainListContainerStart='<li class="treeview">';
+				var mainListContainerEnd='</li>';
+				currentParentMenu='';
+				currentParentMenuName='';
+				for(i=0;i<arregloMenu.length;i++){
+					
+					if(arregloMenu[i].moduloPadre==0){
+						currentParentMenu=arregloMenu[i].idpermisos;
+						currentParentMenuName=arregloMenu[i].nombreModulo; 
+						currentParentMenuName=currentParentMenuName.replace(/ /g,"");
+						
+						stringMenuDinamico=mainListContainerStart+
+											'<li class="treeview" id="menuParent'+arregloMenu[i].numberIndex + '">'+
+									          '<a href="'+arregloMenu[i].urlAction+'">'+
+									           '<i class="fa fa-share"></i> <span>'+ arregloMenu[i].nombreModulo +'</span>'+
+									            '<span class="pull-right-container">'+
+									              '<i class="fa fa-angle-left pull-right"></i>'+
+									            '</span>'+
+									          '</a>'+
+									          '<ul class="treeview-menu" id="menuChildrenContainer' +currentParentMenuName +'">'+
+									          '</ul>'+
+									         '</li>';
+						$("#mainMenu").append(stringMenuDinamico);
+						
+					}else if(arregloMenu[i].moduloPadre==currentParentMenu){
+						
+						stringMenuDinamico=  '<li id="'+arregloMenu[i].numberIndex+'"><a href="'+arregloMenu[i].urlAction+'"><i class="fa fa-circle-o"></i> '+ arregloMenu[i].nombreModulo +'</a></li>';
+						$("#menuChildrenContainer"+currentParentMenuName).append(stringMenuDinamico);
+					
+					}			          
+					
+				}
+				
+				var menuFooter= '<li class="header">AVISOS</li>'+
+			        			'<li><a href="#"><i class="fa fa-circle-o text-red"></i> <span>Sin stock</span></a></li>'+
+			        			'<li><a href="#"><i class="fa fa-circle-o text-yellow"></i> <span>Stock minimo</span></a></li>'+
+			        			'<li><a href="#"><i class="fa fa-circle-o text-aqua"></i> <span>7-sept-2018</span></a></li>';
+				
+				$("#mainMenu").append(menuFooter);
+				
 			}).fail(function( xhr, status, errorThrown ) {
 				//console.log( "Sorry, there was a problem!" );
 			    console.log( "Error: " + errorThrown );
