@@ -87,10 +87,31 @@ var layout = (function() {
 				var mainListContainerEnd='</li>';
 				currentParentMenu='';
 				currentParentMenuName='';
+				console.log('Creating menu');
 				for(i=0;i<arregloMenu.length;i++){
 					
+					levels=arregloMenu[i].numberIndex.toString();
+					
+					arreglolevels=levels.split(".");
+					
+					numeroNiveles=arreglolevels.length;
+					
+					var levelFather="";
+					
+					if(numeroNiveles==2){
+						levelFather=levels[0];
+					}else if(numeroNiveles==3){
+						levelFather=levels[0]+"."+levels[1];
+					}else if(numeroNiveles==4){
+						levelFather=levels[0]+"."+levels[1]+"."+levels[2];
+					}else if(numeroNiveles==5){
+						levelFather=levels[0]+"."+levels[1]+"."+levels[2]+"."+levels[4];
+					}
+					
+					currentParentMenu=levelFather;
+					
 					if(arregloMenu[i].moduloPadre==0){
-						currentParentMenu=arregloMenu[i].idpermisos;
+						//currentParentMenu=arregloMenu[i].idpermisos;
 						currentParentMenuName=arregloMenu[i].nombreModulo; 
 						currentParentMenuName=currentParentMenuName.replace(/ /g,"");
 						
@@ -102,15 +123,17 @@ var layout = (function() {
 									              '<i class="fa fa-angle-left pull-right"></i>'+
 									            '</span>'+
 									          '</a>'+
-									          '<ul class="treeview-menu" id="menuChildrenContainer' +currentParentMenuName +'">'+
+									          '<ul class="treeview-menu" id="menuChildrenContainer' +currentParentMenu +'">'+
 									          '</ul>'+
 									         '</li>';
 						$("#mainMenu").append(stringMenuDinamico);
 						
 					}else if(arregloMenu[i].moduloPadre==currentParentMenu){
 						
-						stringMenuDinamico=  '<li id="'+arregloMenu[i].numberIndex+'"><a href="'+arregloMenu[i].urlAction+'"><i class="fa fa-circle-o"></i> '+ arregloMenu[i].nombreModulo +'</a></li>';
-						$("#menuChildrenContainer"+currentParentMenuName).append(stringMenuDinamico);
+						stringMenuDinamico=  '<li id=menuChildren"'+arregloMenu[i].numberIndex+'" data-fatherLevel="'+levelFather+'"><a href="'+arregloMenu[i].urlAction+'"><i class="fa fa-circle-o"></i> '+ arregloMenu[i].nombreModulo +'</a></li>';
+						
+						
+						$("#menuChildrenContainer"+currentParentMenu).append(stringMenuDinamico);
 					
 					}			          
 					
