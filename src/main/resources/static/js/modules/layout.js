@@ -89,8 +89,26 @@ var layout = (function() {
 				currentParentMenuName='';
 				for(i=0;i<arregloMenu.length;i++){
 					
+					levels=arregloMenu[i].numberIndex.toString();
+					
+					arreglolevels=levels.split(".");
+					
+					numeroNiveles=arreglolevels.length;
+					
+					if(numeroNiveles==0){
+						
+					}else if(numeroNiveles==1){
+						
+					}else if(numeroNiveles==2){
+						
+					}else if(numeroNiveles==3){
+						
+					}else if(numeroNiveles==4){
+						
+					}
+					
 					if(arregloMenu[i].moduloPadre==0){
-						currentParentMenu=arregloMenu[i].idpermisos;
+						//currentParentMenu=arregloMenu[i].idpermisos;
 						currentParentMenuName=arregloMenu[i].nombreModulo; 
 						currentParentMenuName=currentParentMenuName.replace(/ /g,"");
 						
@@ -102,14 +120,16 @@ var layout = (function() {
 									              '<i class="fa fa-angle-left pull-right"></i>'+
 									            '</span>'+
 									          '</a>'+
-									          '<ul class="treeview-menu" id="menuChildrenContainer' +currentParentMenuName +'">'+
+									          '<ul class="treeview-menu" id="menuChildrenContainer' +arregloMenu[i].numberIndex +'">'+
 									          '</ul>'+
 									         '</li>';
 						$("#mainMenu").append(stringMenuDinamico);
 						
 					}else if(arregloMenu[i].moduloPadre==currentParentMenu){
 						
-						stringMenuDinamico=  '<li id="'+arregloMenu[i].numberIndex+'"><a href="'+arregloMenu[i].urlAction+'"><i class="fa fa-circle-o"></i> '+ arregloMenu[i].nombreModulo +'</a></li>';
+						stringMenuDinamico=  '<li id=menuChildren"'+arregloMenu[i].numberIndex+'"><a href="'+arregloMenu[i].urlAction+'"><i class="fa fa-circle-o"></i> '+ arregloMenu[i].nombreModulo +'</a></li>';
+						
+						
 						$("#menuChildrenContainer"+currentParentMenuName).append(stringMenuDinamico);
 					
 					}			          
