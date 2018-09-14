@@ -116,7 +116,7 @@ var layout = (function() {
 						currentParentMenuName=currentParentMenuName.replace(/ /g,"");
 						
 						stringMenuDinamico=mainListContainerStart+
-											'<li class="treeview" id="menuParent'+arregloMenu[i].numberIndex + '">'+
+											'<li class="treeview" id="menuParent'+arregloMenu[i].numberIndex + '" >'+
 									          '<a href="'+arregloMenu[i].urlAction+'">'+
 									           '<i class="fa fa-share"></i> <span>'+ arregloMenu[i].nombreModulo +'</span>'+
 									            '<span class="pull-right-container">'+
@@ -130,8 +130,8 @@ var layout = (function() {
 						
 					}else if(arregloMenu[i].moduloPadre==currentParentMenu){
 						
-						stringMenuDinamico=  '<li id=menuChildren"'+arregloMenu[i].numberIndex+'" data-fatherLevel="'+levelFather+'"><a href="'+arregloMenu[i].urlAction+'"><i class="fa fa-circle-o"></i> '+ arregloMenu[i].nombreModulo +'</a></li>';
-						
+						//stringMenuDinamico=  '<li id=menuChildren"'+arregloMenu[i].numberIndex+'" data-fatherLevel="'+levelFather+'"><a href="'+arregloMenu[i].urlAction+'" onclick="layout.events.changeview(\''+arregloMenu[i].urlAction+'\');"><i class="fa fa-circle-o"></i> '+ arregloMenu[i].nombreModulo +'</a></li>';
+						stringMenuDinamico=  '<li id=menuChildren"'+arregloMenu[i].numberIndex+'" data-fatherLevel="'+levelFather+'"><a onclick="layout.events.changeView(\''+arregloMenu[i].urlAction+'\');"><i class="fa fa-circle-o"></i> '+ arregloMenu[i].nombreModulo +'</a></li>';
 						
 						$("#menuChildrenContainer"+currentParentMenu).append(stringMenuDinamico);
 					

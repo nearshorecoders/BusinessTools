@@ -1,5 +1,8 @@
 package com.org.pos.services;
 
+import org.springframework.stereotype.Service;
+
+@Service
 public class AccountServices {
 //	package com.cis.exchange.router.handler;
 //

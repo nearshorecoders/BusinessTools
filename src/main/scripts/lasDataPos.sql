@@ -198,7 +198,7 @@ CREATE TABLE `permisos` (
 
 LOCK TABLES `permisos` WRITE;
 /*!40000 ALTER TABLE `permisos` DISABLE KEYS */;
-INSERT INTO `permisos` VALUES (1,'Punto de venta tienda',1,1,0,'#',NULL,NULL,1.1),(2,'Clientes',2,1,1,'/clientes',NULL,NULL,1.2),(3,'Productos',3,1,1,'/productos',NULL,NULL,1.3),(4,'Usuarios',4,1,1,'/usuarios',NULL,NULL,1.4),(5,'Dashboard',1,5,0,'/dashboard',NULL,NULL,2.1),(6,'Configuración',1,6,0,'/config',NULL,NULL,3.1),(7,'Caja',5,1,1,'/caja',NULL,NULL,1.5),(8,'Ventas',6,1,1,'/ventas',NULL,NULL,1.6),(9,'tabletSell',1,9,0,'/tabletCell',NULL,NULL,NULL),(10,'Restaurante',1,10,0,'#',NULL,NULL,NULL),(11,'Administración de mesas',2,10,10,'/administrarMesas',NULL,NULL,NULL),(12,'Asignación de mesas',3,10,10,'/asignarMesas',NULL,NULL,NULL);
+INSERT INTO `permisos` VALUES (1,'Punto de venta tienda',1,1,0,'#',NULL,NULL,1.1),(2,'Clientes',2,1,1,'clientes',NULL,NULL,1.2),(3,'Productos',3,1,1,'productos',NULL,NULL,1.3),(4,'Usuarios',4,1,1,'usuarios',NULL,NULL,1.4),(5,'Dashboard',1,5,0,'dashboard',NULL,NULL,2.1),(6,'Configuración',1,6,0,'/config',NULL,NULL,3.1),(7,'Caja',5,1,1,'/caja',NULL,NULL,1.5),(8,'Ventas',6,1,1,'ventas',NULL,NULL,1.6),(9,'tabletSell',1,9,0,'/tabletCell',NULL,NULL,NULL),(10,'Restaurante',1,10,0,'#',NULL,NULL,10.1),(11,'Administración de mesas',2,10,10,'/administrarMesas',NULL,NULL,10.2),(12,'Asignación de mesas',3,10,10,'/asignarMesas',NULL,NULL,10.3);
 /*!40000 ALTER TABLE `permisos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -321,7 +321,7 @@ CREATE TABLE `rol_has_permisos` (
 
 LOCK TABLES `rol_has_permisos` WRITE;
 /*!40000 ALTER TABLE `rol_has_permisos` DISABLE KEYS */;
-INSERT INTO `rol_has_permisos` VALUES (1,1),(1,2),(1,3),(1,4),(1,5),(1,6),(1,7),(4,7),(1,8),(4,8);
+INSERT INTO `rol_has_permisos` VALUES (1,1),(4,1),(1,2),(1,3),(1,4),(1,5),(1,6),(1,7),(4,7),(1,8),(4,8),(1,10),(1,11),(1,12);
 /*!40000 ALTER TABLE `rol_has_permisos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -390,7 +390,7 @@ CREATE TABLE `usuarios` (
 
 LOCK TABLES `usuarios` WRITE;
 /*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
-INSERT INTO `usuarios` VALUES (1,'admin','$2a$10$WdN1beQtYfCT/jSp2j1SR.IWG3FboIFVcrGiFVKBwUvmgbCCmmlxC','Juan Jose Perez',NULL,NULL,1,1,1,1,1,1,'a@hotmail.com',NULL,1),(2,'test','test','Test modificacion2',NULL,NULL,1,0,0,1,1,0,NULL,NULL,0),(3,'vendedor','$2a$10$WdN1beQtYfCT/jSp2j1SR.IWG3FboIFVcrGiFVKBwUvmgbCCmmlxC','vendedor',NULL,NULL,0,0,0,1,0,1,'b@hotmail.com',NULL,4),(4,'administrador','administrador2','Jose Perez Lopez',NULL,NULL,0,0,0,1,0,1,NULL,NULL,0),(5,'newUser','newUser','Jose Jose',NULL,NULL,0,0,0,1,0,1,NULL,NULL,0),(6,'vendedor','vendedor','vendedor',NULL,NULL,0,0,0,1,0,1,NULL,NULL,0);
+INSERT INTO `usuarios` VALUES (1,'admin','$2a$10$WdN1beQtYfCT/jSp2j1SR.IWG3FboIFVcrGiFVKBwUvmgbCCmmlxC','Juan Jose Perez',NULL,NULL,1,1,1,1,1,1,'a@hotmail.com',NULL,1),(2,'test','test','Test modificacion2',NULL,NULL,1,0,0,1,1,0,NULL,NULL,0),(3,'vendedor','$2a$10$WdN1beQtYfCT/jSp2j1SR.IWG3FboIFVcrGiFVKBwUvmgbCCmmlxC','vendedor',NULL,NULL,0,0,0,1,0,1,'b@hotmail.com',NULL,4),(4,'administrador','administrador2','Jose Perez Lopez',NULL,NULL,0,0,0,1,0,1,NULL,NULL,0),(5,'newUser','newUser','Jose Jose',NULL,NULL,0,0,0,1,0,1,NULL,NULL,0);
 /*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -438,4 +438,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2018-09-11 16:24:40
+-- Dump completed on 2018-09-13 18:51:13

@@ -34,6 +34,31 @@ public class HomeController {
         return "/layout";
     }
 
+    @GetMapping("/usuarios")
+    public String usuarios() {
+        return "/usuarios";
+    }
+    
+    @GetMapping("/dashboard")
+    public String dashboard() {
+        return "/dashboard";
+    }
+    
+    @GetMapping("/ventas")
+    public String ventas() {
+        return "/ventas";
+    }
+    
+    @GetMapping("/productos")
+    public String productos() {
+        return "/productos";
+    }
+    
+    @GetMapping("/clientes")
+    public String clientes() {
+        return "/clientes";
+    }
+    
     @GetMapping("/admin")
     public String admin() {
         return "/admin";
