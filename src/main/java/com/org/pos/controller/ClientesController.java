@@ -27,10 +27,14 @@ public class ClientesController {
 	
 	@PostMapping("/createClient")
 	public ResponseEntity<?> getMenu(@RequestBody Map<String, String> body,Principal principal) {
+		//System.out.println(body);
 		//Clientos Cliento=new Clientos();
-		 //Map<String,Object> flujoResult=ClientosService.insertarCliento(principal,Cliento);
-		//return new ResponseEntity<Map<String,Object>>(flujoResult,HttpStatus.OK);
-		return null;
+		//Map<String,Object> flujoResult=ClientosService.insertarCliento(principal,Cliento);
+		
+		Integer response = clientesService.createClient(body);
+		
+		return new ResponseEntity<Map<String,String>>(body,HttpStatus.OK);
+		//return null;
 	}
 	
 	@GetMapping("/getClient/{id}")

@@ -1,3 +1,3 @@
-git config --global credential.helper wincred
 git config --global user.name "Alfredo Suarez"
-$ git config --global user.email alfred0823@hotmail.com
+git config --global user.email alfred0823@hotmail.com
+git config --global credential.helper wincred

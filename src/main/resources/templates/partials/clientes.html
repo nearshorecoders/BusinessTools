@@ -33,41 +33,41 @@
             <form class="form-horizontal">
               <div class="box-body">
                 <div class="form-group">
-                  <label for="inputCodigo" class="col-sm-2 control-label">Nombre</label>
+                  <label for="inputNombre" class="col-sm-2 control-label">Nombre</label>
                   <div class="col-sm-10">
-                    <input type="text" class="form-control" id="inputCodigo" placeholder="Nombre o nombres del cliente">
+                    <input type="text" class="form-control" id="inputNombre" placeholder="Nombre o nombres del cliente">
                   </div>
                 </div>
 				<div class="form-group">
-                  <label for="inputDescripcion" class="col-sm-2 control-label">Apellido paterno</label>
+                  <label for="inputApellidoP" class="col-sm-2 control-label">Apellido paterno</label>
 
                   <div class="col-sm-10">
-                    <input type="text" class="form-control" id="inputDescripcion" placeholder="Apellido paterno del cliente">
+                    <input type="text" class="form-control" id="inputApellidoP" placeholder="Apellido paterno del cliente">
                   </div>
                 </div>
 				<div class="form-group">
-                  <label for="inputCantidad" class="col-sm-2 control-label">Apellido materno</label>
+                  <label for="inputApellidoM" class="col-sm-2 control-label">Apellido materno</label>
 
                   <div class="col-sm-10">
-                    <input type="text" class="form-control" id="inputCantidad" placeholder="Apellido materno del cliente">
+                    <input type="text" class="form-control" id="inputApellidoM" placeholder="Apellido materno del cliente">
                   </div>
                 </div>
 				<div class="form-group">
-                  <label for="inputPrecioCompra" class="col-sm-2 control-label">Teléfono</label>
+                  <label for="inputTelefono" class="col-sm-2 control-label">Teléfono</label>
                   <div class="col-sm-10">
-                    <input type="text" class="form-control" id="inputPrecioCompra" placeholder="Número de contacto">
+                    <input type="text" class="form-control" id="inputTelefono" placeholder="Número de contacto">
                   </div>
                 </div>
 				<div class="form-group">
-                  <label for="inputPrecioVenta" class="col-sm-2 control-label">Dirección</label>
+                  <label for="inputDireccion" class="col-sm-2 control-label">Dirección</label>
                   <div class="col-sm-10">
-                    <input type="text" class="form-control" id="inputPrecioVenta" placeholder="Dirección del cliente">
+                    <input type="text" class="form-control" id="inputDireccion" placeholder="Dirección del cliente">
                   </div>
                 </div>
               </div>
               <!-- /.box-body -->
               <div class="box-footer">
-                <button type="submit" class="btn btn-info pull-right">Guardar</button>
+                <a type="submit" class="btn btn-info pull-right" onclick="clientes.events.createNewClient();">Guardar</a>
               </div>
               <!-- /.box-footer -->
             </form>
@@ -193,7 +193,7 @@
     </section>
     <!-- section content---> 
   <!-- /.content-wrapper --> 
-	<script src="js/modules/layout.js"></script>
+	<script src="js/modules/clientes.js"></script>
 </body>
 </html>
 
