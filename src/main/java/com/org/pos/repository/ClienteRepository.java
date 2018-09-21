@@ -27,46 +27,6 @@ public class ClienteRepository {
 	            String varMaterno=apellidoM;
 	            String varDireccion=dir;
 	            
-	            String validadorVacios=varNombre+varPaterno+varMaterno+varDireccion;
-	            
-	            if(validadorVacios.equals("")){
-	                
-	                //JOptionPane.showMessageDialog(null,"No has proporcionado ningun dato");
-	                
-	                
-	            }
-	            
-	            String mensajeError="";
-	            
-	            
-	            if(varNombre.equals("")){
-	                
-	                mensajeError+="Nombre \n";
-	                
-	            }
-	            
-	            if(varPaterno.equals("")){
-	                
-	                mensajeError+="Apellido paterno \n";
-	                
-	            }
-	            
-	             if(varDireccion.equals("")){
-	                
-	                mensajeError+="Dirección \n";
-	                
-	            }
-
-	            
-	            if(!mensajeError.equals("")){
-	            
-	                mensajeError="Los siguientes campos son necesarios para continuar: \n\n "+mensajeError;
-	                
-	                //JOptionPane.showMessageDialog(null, mensajeError);
-	                return 0; 
-	            }
-	              
-	            
 	            Date fecha =new Date();
 	              
 	            SimpleDateFormat formatoFecha=new SimpleDateFormat("yyyy/MM/dd");
