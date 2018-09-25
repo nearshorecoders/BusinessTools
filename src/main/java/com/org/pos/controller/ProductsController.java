@@ -29,6 +29,32 @@ public class ProductsController {
 	@PostMapping("/createProduct")
 	public ResponseEntity<?> getMenu(@RequestBody Map<String, String> body,Principal principal) {
 		Productos producto=new Productos();
+		producto.setCodigo(body.get("codigo"));
+		producto.setDescripcion("descripcion");
+		producto.setEstatus(1);
+		Double precioCompra=0.0;
+		if(body.get("precioCompra")!=null) {
+			precioCompra=Double.parseDouble(body.get("precioCompra"));
+		}
+		
+		producto.setPrecioCompra(precioCompra);
+		
+		Double precioVenta=0.0;
+		if(body.get("precioVenta")!=null) {
+			precioVenta=Double.parseDouble(body.get("precioVenta"));
+		}
+		producto.setPrecioVenta(precioVenta);
+		producto.setPresentacion(body.get("presentacion"));
+		
+		Double unidades=0.0;
+		if(body.get("unidades")!=null) {
+			unidades=Double.parseDouble(body.get("unidades"));
+		}
+		producto.setUnidadesEnCaja(unidades);
+		
+		
+		producto.setUnidadMedida(body.get("unidadMedida"));
+		
 		 Map<String,Object> flujoResult=productosService.insertarProducto(principal,producto);
 		return new ResponseEntity<Map<String,Object>>(flujoResult,HttpStatus.OK);
 	}

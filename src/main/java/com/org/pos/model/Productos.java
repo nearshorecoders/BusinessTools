@@ -9,8 +9,8 @@ public class Productos {
     private Double precioVenta;            
     private String presentacion;
     private String unidadMedida;
-    private int estatus;
-    private int unidadesEnCaja;
+    private Integer estatus;
+    private Double unidadesEnCaja;
 
     
     
@@ -116,14 +116,14 @@ public class Productos {
     /**
      * @return the unidadesEnCaja
      */
-    public int getUnidadesEnCaja() {
+    public Double getUnidadesEnCaja() {
         return unidadesEnCaja;
     }
 
     /**
      * @param unidadesEnCaja the unidadesEnCaja to set
      */
-    public void setUnidadesEnCaja(int unidadesEnCaja) {
+    public void setUnidadesEnCaja(Double unidadesEnCaja) {
         this.unidadesEnCaja = unidadesEnCaja;
     }
 

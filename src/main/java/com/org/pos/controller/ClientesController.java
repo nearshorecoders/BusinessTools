@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.org.pos.model.Cliente;
 import com.org.pos.services.ClienteService;
 
 
@@ -40,7 +41,7 @@ public class ClientesController {
 	@GetMapping("/getClient/{id}")
 	public Object getToEvalById(@PathVariable Long id) {
 		try {
-			return new Object();
+			return null;
 		}catch(Exception e) {
 			return null;
 		}
@@ -50,7 +51,7 @@ public class ClientesController {
 	@PostMapping(value = "/getAllClients")
 	public @ResponseBody ResponseEntity<List<Map<String, Object>>> getAllClients(@RequestParam String str, @RequestParam int type) {
 		if(type == 0) {
-			//return new ResponseEntity<List<Map<String, Object>>>(ticketRepository.getUserByName(str), HttpStatus.OK);
+			//return new ResponseEntity<List<Map<String, Object>>>(clientesService.listarClientes(idLoguedUser), HttpStatus.OK);
 			return null;
 		}else {
 			//return new ResponseEntity<List<Map<String, Object>>>(ticketRepository.getUserByEmail(str), HttpStatus.OK);
@@ -60,20 +61,31 @@ public class ClientesController {
 	}
 	
 	@PutMapping(value = "/updateClient/{id}")
-	public Object updateClient(@PathVariable Long id) {
+	public Integer updateClient(@PathVariable Integer id,@PathVariable String varNombre,@PathVariable String varApellidoP, @PathVariable String varApellidoM, @PathVariable String varDireccion,@PathVariable String varTelefono) {
 		try {
-			return new Object();
+			
+			Cliente cliente=new Cliente();
+			cliente.setIdClienteAModificar(id);
+			cliente.setVarNombre(varNombre);
+			cliente.setVarApellidoP(varApellidoP);
+			cliente.setVarApellidoM(varApellidoM);
+			cliente.setVarDireccion(varDireccion);
+			cliente.setVarTelefono(varTelefono);
+			
+			return clientesService.modificarCliente(cliente);
+			
 		}catch(Exception e) {
 			return null;
 		}
 	}
 	
 	@DeleteMapping(value = "/deleteClient/{id}")
-	public Object deleteClient(@PathVariable Long id) {
+	public Object deleteClient(@PathVariable Integer id) {
 		try {
 			//we dont delete producs to preserve the integrity of historical data
 			//instead we only deactivate producs to not be showed in the list
-			return new Object();
+			return clientesService.desactivarCliente(id);
+			
 		}catch(Exception e) {
 			return null;
 		}
