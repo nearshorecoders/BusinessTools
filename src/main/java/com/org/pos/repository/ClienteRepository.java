@@ -131,11 +131,13 @@ public class ClienteRepository {
           
 
           //jdbcTemplate.query(sqlString, rse);
-          return null;
+          
 
         }catch(Exception e){
                e.printStackTrace();
-        }       
+        } 
+        
+        return null;
     }
     
 public Integer modificarCliente(Cliente cliente) {   

@@ -153,7 +153,7 @@ public class VentaService {
            productoParaCarrrito.setPrecioVenta(rs.getDouble("precioUnitarioV"));
            productoParaCarrrito.setPresentacion(rs.getString("presentacion"));
            productoParaCarrrito.setUnidadMedida(rs.getString("uMedida"));
-           productoParaCarrrito.setUnidadesEnCaja(rs.getInt("unidadesEnCaja"));
+           productoParaCarrrito.setUnidadesEnCaja(rs.getDouble("unidadesEnCaja"));
            
            tipoDeProductoAgregado=rs.getInt("TipoProducto");
            
@@ -223,7 +223,7 @@ public class VentaService {
           if(contador>0){
               
              int cantidadAvender=Integer.parseInt("cantidad");
-             int cantidadEnAlmacen=productoParaCarrrito.getUnidadesEnCaja();
+             Double cantidadEnAlmacen=productoParaCarrrito.getUnidadesEnCaja();
              ///recorrer y sumar los productos con el mismo codigo o id 
              ///para obtener cuantos productos en total de cantidad se han agregado
              

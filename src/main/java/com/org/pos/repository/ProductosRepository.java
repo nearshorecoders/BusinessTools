@@ -23,6 +23,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mysql.jdbc.Connection;
+import com.org.pos.model.Productos;
 import com.org.pos.model.Usuario;
 import com.org.pos.repository.UserRepository.UsuarioRowMapper;
 
@@ -124,66 +125,52 @@ public class ProductosRepository {
     public void marcarProductoComoUtilizadoEnVenta(String idProd,String cantidadAlmacen,String cantidadVendida, String catidadVendidaAlMomento){
         ///se descuenta del total de unidades y se incrementa el numero de vendidos
         
-        int cantidadAl=Integer.parseInt(cantidadAlmacen);
-        int cantidadVe=Integer.parseInt(cantidadVendida);
-        int cantidadVendidaAlMomento=Integer.parseInt(catidadVendidaAlMomento);
-        //DBConect conexion=new DBConect();  
-        
+        Double cantidadAl=Double.parseDouble(cantidadAlmacen);
+        Double cantidadVe=Double.parseDouble(cantidadVendida);
+        Double cantidadVendidaAlMomento=Double.parseDouble(catidadVendidaAlMomento);
+        Integer resultado=0;
         try{
-
-          //Connection conexionMysql = null;
-          //conexion.GetConnection();
-
-          //Statement statement = conexionMysql.createStatement();
-          
+        	
           String sqlString="Update productos set unidadesEnCaja="+ (cantidadAl-cantidadVendidaAlMomento)+
                            " , cantidadVendidos="+(cantidadVe+cantidadVendidaAlMomento)+
                            " where idProductos='"+idProd+"'";
           
-          //statement.executeUpdate(sqlString);
-          
-          
+          resultado=jdbcTemplate.update(sqlString);
+
         }catch(Exception e){
             e.printStackTrace();
         }
         
     }
 
-    private void agregarProductoActionPerformed(java.awt.event.ActionEvent evt) {                                                
-        
-        //DBConect conexion=new DBConect();
+    private Integer agregarProductoABD(Productos producto) {                                                
+    	Integer resultado=0;
         String tipoProdSel="";//comboTipoProducto.getSelectedItem().toString();
         try{
-            Connection conexionMysql = null;//conexion.GetConnection();
-
-            Statement statement = conexionMysql.createStatement();
-
-            String varDescripcion="";//descripcionAltaText.getText();
-            String varUnidades="";//unidadesEnCajaText.getText();
-            String varPrecioC="";//precioCompraAltaText.getText();
-            String varPrecioV="";//precioVentaAltaText.getText();
-            String varUMedida="";//uMedidaLista.getSelectedItem().toString();
-            String varPresentacion="";//presentacionLista.getSelectedItem().toString();
-            String varCodigo="";//codigoAltaText.getText();
+            String varDescripcion=producto.getDescripcion();
+            Double varUnidades=producto.getUnidadesEnCaja();
+            Double varPrecioC=producto.getPrecioCompra();
+            Double varPrecioV=producto.getPrecioVenta();
+            String varUMedida=producto.getUnidadMedida();
+            String varPresentacion=producto.getPresentacion();
+            String varCodigo=producto.getCodigo();
             
             String precioChica="";//pChica.getText();
             String precioMediana="";//pMediana.getText();
             String precioGrande="";//pGrande.getText();
             String precioFamiliar="";//pFamiliar.getText();
             
-            String tipoProd="";
+            String tipoProd="0";
             //0 general
             //1 pizza
-            // tacos
-            ////en el combo... Pizza, Tacos, General
             
             if(tipoProdSel.equals("---")){
                 tipoProd="0";
             }
             if(tipoProdSel.equals("Pizza")){
                 tipoProd="1";
-                varPrecioC="0";
-                varPrecioV="0";
+                varPrecioC=0.0;
+                varPrecioV=0.0;
                 
             }
             if(tipoProdSel.equals("Tacos")){
@@ -197,80 +184,17 @@ public class ProductosRepository {
                 precioFamiliar="0";
             }
             
-            
-            String validadorVacios=varDescripcion+varUnidades+varPrecioC+varPrecioV+varUMedida+varPresentacion+varCodigo;
-            
-            if(validadorVacios.equals("")){
-                
-                //JOptionPane.showMessageDialog(null,"No has proporcionado ningun dato");
-                
-            }
-            
-            String mensajeError="";
-            
-            
-//            if(varCodigo.equals("")){
-//                
-//                mensajeError+="Código \n";
-//                
-//            }
-            
-            if(varDescripcion.equals("")){
-                
-                mensajeError+="Descripción \n";
-                
-            }
-            String seleccion="";//comboTipoProducto.getSelectedItem().toString();
-            
-            if(seleccion.equals("Pizza")){
-                varUnidades="1";
-                
-            }
-            
-             if(varUnidades.equals("")){
-                
-                mensajeError+="Cantidad \n";
-                
-            }
-             if(varPrecioC.equals("")){
-                
-                mensajeError+="Precio de compra \n";
-                
-            }
-              if(varPrecioV.equals("")){
-                
-                mensajeError+="Precio de venta \n";
-                
-            }
-            
-            if(!mensajeError.equals("")){
-            
-                mensajeError="Los siguientes campos son necesarios para continuar: \n\n "+mensajeError;
-                
-                
-                //JOptionPane.showMessageDialog(null, mensajeError);
-                return; 
-            }
-             
             String sqlString="INSERT INTO `productos` (`descripcion`, `unidadesEnCaja`, `precioUnitarioC`, `uMedida`, `presentacion`, `cantidadFraccion`, `codigo`,`precioUnitarioV`,`TipoProducto`,precioChica,precioMediana,precioGrande,precioFamiliar) "
                     + " VALUES ('"+varDescripcion+"', '"+varUnidades+"', '"+varPrecioC+"', '"+varUMedida+"', '"+varPresentacion+"', '0', '"+varCodigo+"', '"+varPrecioV+"',"+tipoProd+","+precioChica+","+precioMediana+","+precioGrande+","+precioFamiliar+")";
         
-            int resultado=statement.executeUpdate(sqlString);
-       
-            if(resultado>0){
-
-                //JOptionPane.showMessageDialog(null, "El producto se agrego correctamente");
-                if(tipoProd.equals("1")){
-                   // refrescarComboAlAgregarProducto();
-                }
-                
-                //limpiaNuevoProducto();
-            }
+            resultado=jdbcTemplate.update(sqlString);
             
        }catch(Exception e){
            e.printStackTrace();
        }
-         
+        
+        return resultado;
+        
     }   
     private void BusquedaProductosTodoActionPerformed(java.awt.event.ActionEvent evt) {                                                      
         
