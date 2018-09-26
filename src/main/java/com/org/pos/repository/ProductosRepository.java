@@ -143,9 +143,9 @@ public class ProductosRepository {
         
     }
 
-    private Integer agregarProductoABD(Productos producto) {                                                
+    public Integer agregarProductoABD(Productos producto) {                                                
     	Integer resultado=0;
-        String tipoProdSel="";//comboTipoProducto.getSelectedItem().toString();
+        String tipoProdSel="0";
         try{
             String varDescripcion=producto.getDescripcion();
             Double varUnidades=producto.getUnidadesEnCaja();
@@ -196,175 +196,91 @@ public class ProductosRepository {
         return resultado;
         
     }   
-    private void BusquedaProductosTodoActionPerformed(java.awt.event.ActionEvent evt) {                                                      
-        
-        //DBConect conexion=new DBConect();
-        //productosEncontradosAModificar= new DefaultTableModel();
-        //listaProductosAModificar.setModel(productosEncontradosAModificar);
-        
-//        String code=codigoProdFiltro.getText();
-        String desc="";//descripcionProdFiltro.getText();
-        
-        String filter=desc;
-        
-        if(filter.equals("")){
-            //JOptionPane.showMessageDialog(null, "Se necesita al menos un dato para realizar la busqueda de productos");
-            return;
-        }
-        
+    private void busquedaProductos(String descripcion) {                                                      
         try{
 
-          Connection conexionMysql = null;//conexion.GetConnection();
-
-          Statement statement = conexionMysql.createStatement();
-
-          //String codigoVar=codigoProdFiltro.getText();
-          String descripcionVar="";//descripcionProdFiltro.getText();
+          String descripcionVar=descripcion;
           
           String sqlString="Select idProductos as 'Id',codigo,descripcion as 'Descripción',precioUnitarioC as 'Precio compra', precioUnitarioV as 'Precio venta',unidadesEnCaja as 'Cantidad'"
                   + ",uMedida as 'Unidad medida', presentacion as 'Presentación' from  productos " +
                            " where estatus=0 ";
-                           
-          if(!descripcionVar.equals("")){
-               sqlString+= " And descripcion like '%"+descripcionVar+"%'";
-          }
+              
+               	sqlString+= " And descripcion like '%"+descripcionVar+"%'";
+
           
-//          if(codigoVar.equals("") && !descripcionVar.equals("")){
-//              
-//              sqlString="SELECT idProductos as 'Id',codigo,descripcion as 'Descripción',precioUnitarioC as 'Precio compra', precioUnitarioV as 'Precio venta',unidadesEnCaja as 'Cantidad' "
-//                      +",uMedida as 'Unidad medida', presentacion as 'Presentación'"
-//                      + " FROM productos where estatus=0 and descripcion like '%"+descripcionVar+"%'";
-//              
-//          }
-          
-            ResultSet rs = statement.executeQuery(sqlString); 
-            int contador=0;  
+            //ResultSet rs = jdbcTemplate.query(sqlString); 
+            //int contador=0;  
      
-            ResultSetMetaData rsMd = rs.getMetaData();
+            //ResultSetMetaData rsMd = rs.getMetaData();
             //La cantidad de columnas que tiene la consulta
-            int cantidadColumnas = rsMd.getColumnCount();
+            //int cantidadColumnas = rsMd.getColumnCount();
             //Establecer como cabezeras el nombre de las colimnas
-            for (int i = 1; i <= cantidadColumnas; i++) {
-             //productosEncontradosAModificar.addColumn(rsMd.getColumnLabel(i));
-            }
-            //Creando las filas para el JTable
-            while (rs.next()) {
-             contador++;
-             Object[] fila = new Object[cantidadColumnas];
-             for (int i = 0; i < cantidadColumnas; i++) {
-               fila[i]=rs.getObject(i+1);
-             }
-             //productosEncontradosAModificar.addRow(fila);
-            }
-          
-            if(contador==0){
-                //JOptionPane.showMessageDialog(null, "No se encontro ningun producto con los datos proporcionados.");
-            }
+//            for (int i = 1; i <= cantidadColumnas; i++) {
+//             //productosEncontradosAModificar.addColumn(rsMd.getColumnLabel(i));
+//            }
+//            //Creando las filas para el JTable
+//            while (rs.next()) {
+//             contador++;
+//             Object[] fila = new Object[cantidadColumnas];
+//             for (int i = 0; i < cantidadColumnas; i++) {
+//               fila[i]=rs.getObject(i+1);
+//             }
+//             //productosEncontradosAModificar.addRow(fila);
+//            }
+//          
+//            if(contador==0){
+//                //JOptionPane.showMessageDialog(null, "No se encontro ningun producto con los datos proporcionados.");
+//            }
             
             
         }catch(Exception e){
             e.printStackTrace();
         }
     } 
-    private void ModificarProductosGuardarActionPerformed(java.awt.event.ActionEvent evt) {                                                          
-        int fila=0;//listaProductosAModificar.getSelectedRowCount();
-        
-        if(fila==0){
-            //JOptionPane.showMessageDialog(null,"No has seleccionado un producto para modificar");
-            return;
-        }else{
-            fila=fila-1;
-        }
-        fila=0;//listaProductosAModificar.getSelectedRow();
-        String idProductoModificar="";//+listaProductosAModificar.getValueAt(fila, 0);
-        String codigo="";//+listaProductosAModificar.getValueAt(fila, 1);
-        //DBConect conexion=new DBConect();  
-        
+    private Integer modificarProductos(Productos producto) {                                                          
+
+        String idProductoModificar=producto.getId();
+        String codigo=producto.getCodigo();
+        Integer resultado=0;
         try{
 
-          Connection conexionMysql =null;// conexion.GetConnection();
+          String descripcionVar=producto.getDescripcion();
+          Double precioCVar=producto.getPrecioCompra();
+          Double precioVVar=producto.getPrecioVenta();
+          Double cantidad=producto.getUnidadesEnCaja();
+          String uM=producto.getUnidadMedida();
+          String presentacion=producto.getPresentacion();
 
-          Statement statement = conexionMysql.createStatement();
-          String descripcionVar="";//descripcionAltaText1.getText();
-          String precioCVar="";//precioCompraAltaText1.getText();
-          String precioVVar="";//precioVentaAltaText1.getText();
-          String cantidad="";//unidadesEnCajaText1.getText();
-          String uM="";//uMedidaLista1.getSelectedItem().toString();
-          String presentacion="";//presentacionLista1.getSelectedItem().toString();
-
-          String sqlString="UPDATE productos set descripcion='"+descripcionVar+"',precioUnitarioC="+precioCVar+", "
+          String sqlString="UPDATE productos set codigo='"+codigo+"' descripcion='"+descripcionVar+"',precioUnitarioC="+precioCVar+", "
                             + " precioUnitarioV="+precioVVar+",unidadesEnCaja="+cantidad+",uMedida='"+uM+"', presentacion='"+presentacion+"'"
                             +" where idProductos='"+idProductoModificar+"'";
           
-          int resultado=statement.executeUpdate(sqlString);
-          
-          if(resultado>=1){
-                //JOptionPane.showMessageDialog(null, "Se modifico correctamente la informacion del producto");
-                //BusquedaProductosTodoActionPerformed(evt);
-                //descripcionAltaText1.setText("");
-                //precioVentaAltaText1.setText("");
-                //precioCompraAltaText1.setText("");
-                //unidadesEnCajaText1.setText("");
+          resultado=jdbcTemplate.update(sqlString);
 
-                //uMedidaLista1.setSelectedItem("---");
-                //presentacionLista1.setSelectedItem("---");
-          }else{
-              //JOptionPane.showMessageDialog(null, "Ocurrio un error al guardar los cambios por favor intente nuevamente");
-          }
-          
-          //codigoProdFiltro.setText("");
-          //descripcionProdFiltro.setText("");
-          //panelModificarProducto.setVisible(false);
-          
         }catch(Exception e){
             e.printStackTrace();
         }
         
+        return resultado;
     }
-    private void removerProductoActionPerformed(java.awt.event.ActionEvent evt) {                                                
-        int fila=0;//listaProductosAModificar.getSelectedRowCount();
-        
-        if(fila==0){
-            //JOptionPane.showMessageDialog(null,"No has seleccionado un producto para desactivar");
-            return;
-        }else{
-            fila=fila-1;
-        }
-        
-        int confirmacion= 0;
-       if(confirmacion==0){
-            String idProductoModificar="";//+listaProductosAModificar.getValueAt(fila, 0);
-        
-            //DBConect conexion=new DBConect();  
+    public Integer removerProducto(String idProducto) {                                                
 
+            String idProductoModificar=idProducto;
+            Integer resultado=0;
             try{
-
-              Connection conexionMysql = null;//conexion.GetConnection();
-
-              Statement statement = conexionMysql.createStatement();
 
               String sqlString="UPDATE productos set activo=0"
                                 +" where idProductos='"+idProductoModificar+"'";
 
-              int resultado=statement.executeUpdate(sqlString);
-
-              if(resultado>=1){
-                    //JOptionPane.showMessageDialog(null, "Se desactivo correctamente la informacion del producto");
-              }else{
-                  //JOptionPane.showMessageDialog(null, "Ocurrio un error al desactivar el producto por favor intente nuevamente");
-              }
-
-              //codigoProdFiltro.setText("");
-              //descripcionProdFiltro.setText("");
-              //panelModificarProducto.setVisible(true);
+              resultado=jdbcTemplate.update(sqlString);
 
             }catch(Exception e){
                 e.printStackTrace();
             }
-       }
-        
+       
+        return resultado;
     }                                             
-	private void busquedaManualActionPerformed(java.awt.event.ActionEvent evt) {                                               
+	private void busquedaPorDescripcion(java.awt.event.ActionEvent evt) {                                               
 	        
 	        //DBConect conexion=new DBConect();
 	        try{
