@@ -19,7 +19,11 @@ public class ProductosService {
 	public Map<String,Object> insertarProducto(Principal principal,Productos producto){
 		Map<String,Object> result=new HashMap<String,Object>();
 		
+		Integer resultadoInsert=productosRepository.agregarProductoABD(producto);
 		
+		if(resultadoInsert==1){
+			result.put("insertedProduct", producto);
+		}
 		
 		return result;
 	}

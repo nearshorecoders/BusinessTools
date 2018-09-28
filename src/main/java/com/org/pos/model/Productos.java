@@ -11,7 +11,9 @@ public class Productos {
     private String unidadMedida;
     private Integer estatus;
     private Double unidadesEnCaja;
-
+    private Double cantidadMinima;
+    private Double cantidadAceptable;
+    private Integer idSucursal;
     
     
     ///geters y setters 
@@ -140,6 +142,30 @@ public class Productos {
     public void setId(String id) {
         this.id = id;
     }
+
+	public Double getCantidadMinima() {
+		return cantidadMinima;
+	}
+
+	public void setCantidadMinima(Double cantidadMinima) {
+		this.cantidadMinima = cantidadMinima;
+	}
+
+	public Double getCantidadAceptable() {
+		return cantidadAceptable;
+	}
+
+	public void setCantidadAceptable(Double cantidadAceptable) {
+		this.cantidadAceptable = cantidadAceptable;
+	}
+
+	public Integer getIdSucursal() {
+		return idSucursal;
+	}
+
+	public void setIdSucursal(Integer idSucursal) {
+		this.idSucursal= idSucursal;
+	}
     
     
 }
