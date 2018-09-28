@@ -90,7 +90,8 @@ var productos = (function() {
 					cantidadMinima : $("#inputCantidadMinima").val(),
 					cantidadAceptable : $("#inputCantidadAceptable").val(),
 					unidadMedida : unidadMedida,
-					presentacion : prsentacionToSend
+					presentacion : prsentacionToSend,
+					idSucursal:1
 				}
 				$.ajax({
 					

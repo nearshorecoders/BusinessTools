@@ -154,11 +154,13 @@ public class ProductosRepository {
             String varUMedida=producto.getUnidadMedida();
             String varPresentacion=producto.getPresentacion();
             String varCodigo=producto.getCodigo();
-            
-            String precioChica="";//pChica.getText();
-            String precioMediana="";//pMediana.getText();
-            String precioGrande="";//pGrande.getText();
-            String precioFamiliar="";//pFamiliar.getText();
+            Double cantidadMinima=producto.getCantidadMinima();
+            Double cantidadAceptable=producto.getCantidadAceptable();
+            Integer idSucursal=producto.getIdSucursal();
+            String precioChica="0";//pChica.getText();
+            String precioMediana="0";//pMediana.getText();
+            String precioGrande="0";//pGrande.getText();
+            String precioFamiliar="0";//pFamiliar.getText();
             
             String tipoProd="0";
             //0 general
@@ -184,8 +186,8 @@ public class ProductosRepository {
                 precioFamiliar="0";
             }
             
-            String sqlString="INSERT INTO `productos` (`descripcion`, `unidadesEnCaja`, `precioUnitarioC`, `uMedida`, `presentacion`, `cantidadFraccion`, `codigo`,`precioUnitarioV`,`TipoProducto`,precioChica,precioMediana,precioGrande,precioFamiliar) "
-                    + " VALUES ('"+varDescripcion+"', '"+varUnidades+"', '"+varPrecioC+"', '"+varUMedida+"', '"+varPresentacion+"', '0', '"+varCodigo+"', '"+varPrecioV+"',"+tipoProd+","+precioChica+","+precioMediana+","+precioGrande+","+precioFamiliar+")";
+            String sqlString="INSERT INTO `productos` (`descripcion`, `unidadesEnCaja`, `precioUnitarioC`, `uMedida`, `presentacion`, `cantidadFraccion`, `codigo`,`precioUnitarioV`,`TipoProducto`,precioChica,precioMediana,precioGrande,precioFamiliar,cantidadMinima,cantidadAceptable,sucursal_idsucursal) "
+                    + " VALUES ('"+varDescripcion+"', '"+varUnidades+"', '"+varPrecioC+"', '"+varUMedida+"', '"+varPresentacion+"', '0', '"+varCodigo+"', '"+varPrecioV+"',"+tipoProd+","+precioChica+","+precioMediana+","+precioGrande+","+precioFamiliar+"," + cantidadMinima + "," + cantidadAceptable +","+idSucursal+ ")";
         
             resultado=jdbcTemplate.update(sqlString);
             
