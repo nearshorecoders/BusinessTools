@@ -2,7 +2,7 @@ package com.org.pos.model;
 
 public class Productos {
 	   
-    private String id;
+    private Integer id;
     private String codigo;
     private String Descripcion;
     private Double precioCompra;
@@ -104,14 +104,14 @@ public class Productos {
     /**
      * @return the estatus
      */
-    public int getEstatus() {
+    public Integer getEstatus() {
         return estatus;
     }
 
     /**
      * @param estatus the estatus to set
      */
-    public void setEstatus(int estatus) {
+    public void setEstatus(Integer estatus) {
         this.estatus = estatus;
     }
 
@@ -132,14 +132,14 @@ public class Productos {
     /**
      * @return the id
      */
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
     /**
      * @param id the id to set
      */
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

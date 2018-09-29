@@ -292,45 +292,38 @@ public class VentasRepository {
                              e.printStackTrace();
                          }
 
-                       Cliente clienteAquienSeVendio;
+                       Cliente clienteAquienSeVendio=null;
                        try{
                            String sqlNombreCompleto="select * from cliente where idcliente="+venta.getCliente_idcliente();
                            List<Map<String, Object>> rows = jdbcTemplate.queryForList(sqlNombreCompleto);
                            	for (Map row : rows) {
-                           		(String) row.get("nombre");" "+row.get("apellidop") +" "+row.get("apellidom");
+                           		clienteAquienSeVendio=new Cliente();
+                           		clienteAquienSeVendio.setVarNombre(row.get("nombre")!=null?(String) row.get("nombre"):"");
+                           		clienteAquienSeVendio.setVarApellidoP(row.get("apellidop")!=null ? (String) row.get("apellidop") :"");
+                           		clienteAquienSeVendio.setVarApellidoM(row.get("apellidom")!=null ? (String) row.get("apellidom") :"");
+                           		clienteAquienSeVendio.setVarDireccion(row.get("direccion")!=null ? (String) row.get("direccion") :"");
+                           		clienteAquienSeVendio.setVarTelefono(row.get("telefono")!=null ? (String) row.get("telefono") :"");
+                           		clienteAquienSeVendio.setIdClienteAModificar(venta.getCliente_idcliente());
+                           		
                            	}
 
                          }catch(Exception e){
                              e.printStackTrace();
                          }
                        
-                       int fila=0;//tablaClientesEncontrados.getSelectedRow();
+               
                        String clienteTicket="";//+tablaClientesEncontrados.getValueAt(fila, 1);
                        
-                       String direccionCliente="";//+tablaClientesEncontrados.getValueAt(fila, 2);
-                       String telefonoCliente="";
-                       String preTelefono="";//+tablaClientesEncontrados.getValueAt(fila, 3);
+                       String direccionCliente=clienteAquienSeVendio.getVarDireccion();
+                       String telefonoCliente=clienteAquienSeVendio.getVarTelefono();
                        
-                       if(!preTelefono.equals("")){
-                           telefonoCliente="\nTelefono del cliente:";//+tablaClientesEncontrados.getValueAt(fila, 3);
+                       telefonoCliente="\nTelefono del cliente:"+telefonoCliente;
                            
-                           direccionCliente+=telefonoCliente;
-                       }
-                       
-                       
+                       direccionCliente+=telefonoCliente;          
+ 
                        if(clienteTicket.equals("Usuario sin registro")){
                            clienteTicket="Cliente en local";
                            direccionCliente="-----------";
-                           
-                           String seleccion="";//seleccionPizza1.getSelectedItem().toString();
-                           boolean tipoProdAgregado=true;//tiposDeProductoAgregados.contains(5);
-                           
-                           if(!seleccion.equals("---") || tipoProdAgregado==true){
-                               do{
-                                   clienteTicket="";//JOptionPane.showInputDialog(null,"¿Cual es el nombre del cliente?");
-                               }while(clienteTicket.equals(""));
-                           }
-                           
                        }
                        ///damos el formato deseado a la hora y fecha
                        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy hh:mm a");
@@ -338,7 +331,7 @@ public class VentasRepository {
                        String fecha=sdf.format(now);
                                     
                        Double ivaDouble=0.0;//Double.parseDouble(ivaTotal.getText().replace("$", ""));
-                       Double totalDouble=0.0;//Double.parseDouble(etiquetaGranTotal.getText().replace("$", ""));
+                       Double totalDouble=venta.getTotal();
                        
                        Double subTotal=totalDouble-ivaDouble;
                        boolean tipoProdVendido=true;//tiposDeProductoAgregados.contains(0);
@@ -349,16 +342,6 @@ public class VentasRepository {
                           //JOptionPane.showMessageDialog(null,"Abriendo caja por venta de rebanada");
                        }else{
                            ///imprimimos el ticket normalmente
-                           
-                           boolean tipoProd4=true;//;tiposDeProductoAgregados.contains(4);
-                           
-                           //obtenemos el refresco seleccionado en la interfaz
-                           String refresco="";//jComboBox2.getSelectedItem().toString();
-                           if(tipoProd4==true){
-                               refresco="";
-                           }else{                        
-                               refresco="Refresco:"+refresco;
-                           }
                            
 //                           Ticket t=new Ticket(valorSucursal.getText(),valorDireccion.getText(),ultimaVentaRealizada+"",udFueAtendidoPor,fecha,itemsVenta,subTotal+"",ivaTotal.getText(),etiquetaGranTotal.getText(),efectivoRecibido.getText(),cambioTotal.getText(),clienteTicket,direccionCliente,refresco);
 //                           imprimirLogo();
@@ -573,7 +556,7 @@ public class VentasRepository {
           contador++;
           
           Productos productoParaCarrrito=new Productos();
-          productoParaCarrrito.setId(""+rs.getInt("idProductos"));
+          productoParaCarrrito.setId(rs.getInt("idProductos"));
           productoParaCarrrito.setCodigo(rs.getString("codigo"));
           productoParaCarrrito.setDescripcion(rs.getString("descripcion"));
           productoParaCarrrito.setEstatus(rs.getInt("estatus"));

@@ -1,6 +1,6 @@
 /**@author asr*/
 
-var clientes = (function() {
+var ventas = (function() {
 
 	var title = document.title;
 	var favicon = "";
@@ -29,6 +29,17 @@ var clientes = (function() {
 	
 	var suscribeEvents = function() {
 		
+		var timer = null;
+		$('#inputCodigo').keydown(function(){
+		       clearTimeout(timer); 
+		       timer = setTimeout(doCallToGetProductByCode, 1000)
+		});
+
+		function doCallToGetProductByCode() {
+		    console.log('get product by code executing');
+		    events.getProductByCode();
+		}
+		
 		$(".navbar-brand.pitch-logo").on("click", function(){ 
 			events.loadMainPage();
         });
@@ -53,17 +64,14 @@ var clientes = (function() {
 	};
 	
 	var events = {
-			getAllClients : function() {
+			getProductByDescription : function() {
+				console.log("buscando producto por descripcion");
+				description=$("#inputDescripcion").val();
 				$.ajax({
-				    url: "/getAllClients",
+				    url: "/getProductByDescription/"+description,
 				    type: "GET",
-				    dataType : "json",
-				    headers: { 
-				        'Accept': 'application/json',
-				        'Content-Type': 'application/json' 
-				    },
 				}).done(function( json ) {
-					console.log("Getting main menu");
+					console.log("Getting product by desc");
 					console.log(json);
 					
 				}).fail(function( xhr, status, errorThrown ) {
@@ -76,27 +84,33 @@ var clientes = (function() {
 				});
 				
 			},
-			createNewClient : function() {
-				dataToSend={
-					nombre : $("#inputNombre").val(),
-					apellidoP : $("#inputApellidoP").val(),
-					apellidoM : $("#inputApellidoM").val(),
-					telefono : $("#inputTelefono").val(),
-					direccion : $("#inputDireccion").val()
-				}
+			getProductByCode : function() {
+
+				codigo= $("#inputCodigo").val();
+				
 				$.ajax({
-					
-				    url: "/createClient",
-				    type: "POST",
-				    dataType : "json",
-				    data:JSON.stringify(dataToSend),
-				    headers: { 
-				        'Accept': 'application/json',
-				        'Content-Type': 'application/json' 
-				    },
-				    
+				    url: "/getProductByCode/"+codigo,
+				    type: "GET",
 				}).done(function( json ) {
-					console.log("creating client");
+					console.log("Get producto by code");
+					console.log(json);
+					
+				}).fail(function( xhr, status, errorThrown ) {
+					//console.log( "Sorry, there was a problem!" );
+				    console.log( "Error: " + errorThrown );
+				    console.log( "Status: " + status );
+				    //console.dir( xhr );
+				}).always(function( xhr, status ) {
+				    //console.log( "The request is complete!" );
+				});
+				
+			},
+			listAllProducts : function() {
+				$.ajax({
+				    url: "/getAllProducts",
+				    type: "GET",
+				}).done(function( json ) {
+					console.log("Get all products");
 					console.log(json);
 					
 				}).fail(function( xhr, status, errorThrown ) {
@@ -177,10 +191,10 @@ var clientes = (function() {
 })();
 
 $(document).ready(function () {
-	clientes.init();
+	ventas.init();
 });
 
 function navegacion(element){
 	console.log("iniciando clientes-----------------------");
-	clientes.events.changeView(element.id);
+	ventas.events.changeView(element.id);
 }
