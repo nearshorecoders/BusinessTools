@@ -1,24 +1,51 @@
 package com.org.pos.repository;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
+import javax.sql.DataSource;
 import javax.swing.table.DefaultTableModel;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Repository;
 
 import com.mysql.jdbc.Connection;
+import com.org.pos.model.Cliente;
+import com.org.pos.model.DetalleVenta;
 import com.org.pos.model.Productos;
+import com.org.pos.model.Venta;
 import com.org.pos.utils.Utils;
 
 @Repository
 public class VentasRepository {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserRepository.class);
+
+    @Autowired
+    ProductosRepository productosRepository;
+    
+    private JdbcTemplate jdbcTemplate;
+    
+    @Autowired
+    @Qualifier("exchangeDS")
+    public void setDataSource(DataSource dataSource) {
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    }
+	
     private void generarReporteVentasActionPerformed(java.awt.event.ActionEvent evt, Double ivaConfigurado) {                                                     
         Date fechaInit = null;//fechaInicio.getDate();
         Date fechaEnd = null;//fechaFin.getDate();
@@ -131,29 +158,12 @@ public class VentasRepository {
         
     }    
     
-    private void confirmarVentaBotonActionPerformed(java.awt.event.ActionEvent evt) {                                                    
-        
-//        JTable jTableHelper = new JTable() {
-//           private static final long serialVersionUID = 1;
-//           public boolean isCellEditable(int row, int column) {                
-//               return false;               
-//           };
-//       };
-//       
-//       jTableHelper.setModel(tablaDetalleVenta.getModel());
+    public Integer insertarVentaBD(Venta venta) {                                                    
        
-//       tablaDetalleVenta=jTableHelper;
-       
-       DefaultTableModel model =null;// (DefaultTableModel) tablaDetalleVenta.getModel();
-       ////obtenemos el consecutivo de venta del día
-       //DBConect conexion=new DBConect();  
-       int consecutivoVenta=1;
-       try{
+       DefaultTableModel model =null;
 
-         Connection conexionMysql = null;//conexion.GetConnection();
+       	int consecutivoVenta=1;
 
-         Statement statement = conexionMysql.createStatement();
-         
          Date fechaInicioDia=new Date();
          fechaInicioDia.setHours(01);
          fechaInicioDia.setMinutes(00);
@@ -167,167 +177,99 @@ public class VentasRepository {
          String fi=sf.format(fechaInicioDia);
          String ff=sf.format(fechaFinDia);
                  
-         
-         String sqlString="select max(consecutivoVenta) from Venta where (fechaVenta BETWEEN '"+fi+"' AND '"+ff+"')";
-         System.out.println(sqlString);
-         ResultSet rs=statement.executeQuery(sqlString);
-         
-         while(rs.next()){
-             //consecutivoVenta=rs.getInt(1);
-             //if(consecutivoVenta>1){
-                 consecutivoVenta=rs.getInt(1)+1;
-             //}
-             
+         try {
+         	//agregar a la consulta el usuario y tambien la sucursal
+            String sqlString="select max(consecutivoVenta) from Venta where (fechaVenta BETWEEN '"+fi+"' AND '"+ff+"')";
+         	Integer consecMax=jdbcTemplate.queryForObject(sqlString, Integer.class);
+         	consecutivoVenta=consecMax;
+         }catch (Exception e){
+         	LOGGER.error("Error", e);
+             throw e;
          }
-         
-       }catch(Exception e){
-           e.printStackTrace();
-       }
        
-       //contador++;
-       
-       int noSeleccionados=0;//seleccionGlobalCliente;
-       
-       //tablaClientesEncontrados.getSelectedRowCount();
-       
-//       if (tablaClientesEncontrados.getCellSelectionEnabled()) {
-//           //tablaClientesEncontrados.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-//           int rowIndex = tablaClientesEncontrados.getSelectedRow();
-//           int colIndex = tablaClientesEncontrados.getSelectedColumn();
-//           System.out.print(rowIndex+","+colIndex);
-//
-//       }
+       String cliente=""+venta.getCliente_idcliente();
       
-       if(noSeleccionados<=0){
-           //JOptionPane.showMessageDialog(null,"Es necesario seleccionar un cliente para continuar");
-           return;
-       }
-       
-       
-       String cliente="";//getClienteId();
-       
-       if(cliente.equals("")){
-           //JOptionPane.showMessageDialog(null,"Es necesario seleccionar un cliente para continuar");
-           return;
-       }
-       ////realizar insert en venta
-               
-      // DBConect conexion=new DBConect();
-       
        try{
-           Connection conexionMysql = null;//conexion.GetConnection();
-
-           Statement statement = conexionMysql.createStatement();
-           Statement statement2 = conexionMysql.createStatement();
-           
            ///insertamos la cabecera de la venta
-           int cantidadProductos=model.getRowCount();
+           int cantidadProductos=venta.getDetalleVenta().size();
            
            if(cantidadProductos<=0){
                
-              //JOptionPane.showMessageDialog(null, "No has agregado ningun producto");
-              return;
-               
            }else{
 
-              String precioSinSigno="";//etiquetaGranTotal.getText().substring(1,etiquetaGranTotal.getText().length());
+              String precioSinSigno=""+venta.getTotal();
               
               String efectivo="";//efectivoRecibido.getText();
               Double efectivoRecibido1=0.0;
               Double precioSinSigno1=0.0;
               
-              
-              if(efectivo.equals("")){
-                  //JOptionPane.showMessageDialog(null, "Se necesita saber cuanto efectivo recibiste");
-                  return;
-              }else{
-                  try{
-                   precioSinSigno1=Double.parseDouble(precioSinSigno);
-                   efectivoRecibido1=Double.parseDouble(efectivo);
-                   
-                  }catch(Exception e){
-                      //JOptionPane.showMessageDialog(null, "No introdujiste un numero");
-                      return;
-                  }
-                   if(efectivoRecibido1<precioSinSigno1){
-                       //JOptionPane.showMessageDialog(null, "La cantidad recibida no puede ser menor al costo");
-                       return;
-                   }
-              }
-              
                String sqlString="INSERT INTO `venta` (`total`,`cliente_idcliente`,`usuarios_idusuario`,`consecutivoVenta`,`efectivoRecib`,`cambio`) "
                        + " VALUES ('"+precioSinSigno+"','"+1+"', '"+2+"',"+consecutivoVenta+","+efectivoRecibido1+","+(efectivoRecibido1-precioSinSigno1)+" )";
 
-               int resultado=statement.executeUpdate(sqlString);
+               int resultado=jdbcTemplate.update(sqlString);
+            		   //statement.executeUpdate(sqlString);
                
                Utils u=new Utils();
                
-               String sqlMaxID="select max(consecutivoVenta) as max from Venta where "+u.obtenerBetweenParaConsulta("fechaVenta");
-               
-               ResultSet rs=statement.executeQuery(sqlMaxID);
                int ultimaVentaRealizada=1;
-               while(rs.next()){
-                   ultimaVentaRealizada=rs.getInt(1);
-               }
-               
-               //if(ultimaVentaRealizada<1){
-               //    ultimaVentaRealizada=1;
-               //}
-               
-               
-               ////obtenemos el max id de la ultima venta insertada
-               String sqlMaxIDM="select max(idVenta) as max from Venta where "+u.obtenerBetweenParaConsulta("fechaVenta");
-               
-               ResultSet rsM=statement.executeQuery(sqlMaxIDM);
+               try {
+                	//agregar a la consulta el usuario y tambien la sucursal
+            	   String sqlMaxID="select max(consecutivoVenta) as max from Venta where "+u.obtenerBetweenParaConsulta("fechaVenta");
+            	   Integer ultVenta=jdbcTemplate.queryForObject(sqlMaxID, Integer.class);
+            	   ultimaVentaRealizada=ultVenta;
+                }catch (Exception e){
+                	LOGGER.error("Error", e);
+                    throw e;
+                }
+
                int ultimaVentaRealizadaM=1;
-               while(rsM.next()){
-                   ultimaVentaRealizadaM=rsM.getInt(1);
+               try {
+               	//agregar a la consulta el usuario y tambien la sucursal
+                   ////obtenemos el max id de la ultima venta insertada
+                   String sqlMaxIDM="select max(idVenta) as max from Venta where "+u.obtenerBetweenParaConsulta("fechaVenta");
+            	   Integer ultVenta=jdbcTemplate.queryForObject(sqlMaxIDM, Integer.class);
+            	   ultimaVentaRealizadaM=ultVenta;
+               }catch (Exception e){
+               	LOGGER.error("Error", e);
+                   throw e;
                }
                
-               if(ultimaVentaRealizadaM<1){
-                   ultimaVentaRealizadaM=1;
-               }
-               
-               
-               ////Obtenemos el tamaño para el ticket
-               //de la pizza
-               String tamañoTicket="";
+               String tamanioTicket="";
                if(resultado>0){
                
                    int errores=0;
-                   for(int i=0;i<model.getRowCount();i++){
+                   for(int i=0;i<venta.getDetalleVenta().size();i++){
                    //insertamos el detalle de la venta
-                       String consecutivo,cantidad,descripcion,precio,id;
+                	   DetalleVenta detalleVenta=venta.getDetalleVenta().get(i);
+                	   
+                	   String consecutivo,cantidad,descripcion,precio,id;
                    
-                           consecutivo=""+model.getValueAt(i,0);
-                           cantidad=""+model.getValueAt(i,1);
-                           descripcion=""+model.getValueAt(i,2);
-                           precio=""+model.getValueAt(i,3);
-                           id=""+model.getValueAt(i,5);
-                           tamañoTicket=""+model.getValueAt(i,6);
+                           consecutivo=""+detalleVenta.getConsecutivoVenta();
+                           cantidad=""+detalleVenta.getCantidad();
+                           descripcion=""+detalleVenta.getDescripcionProd();
+                           precio=""+detalleVenta.getPrecioTotal();
+                           id=""+detalleVenta.getProductos_idproductos();
+                           tamanioTicket=""+detalleVenta.getTamanio();
                            
                            String sqlString2="INSERT INTO `detalleVenta` (`consecutivoVenta`,`cantidad`,`precioTotal`,`descripcionProd`,`Productos_idProductos`,`Venta_idVenta`,`tamanio`) "
-                           + " VALUES ('"+consecutivo+"','"+cantidad+"', '"+precio+"','"+descripcion+"','"+id+"','"+ultimaVentaRealizadaM+"','"+tamañoTicket+"' )";
+                           + " VALUES ('"+consecutivo+"','"+cantidad+"', '"+precio+"','"+descripcion+"','"+id+"','"+ultimaVentaRealizadaM+"','"+tamanioTicket+"' )";
                        
-                           int resultado2=statement2.executeUpdate(sqlString2);
+                           int resultado2=jdbcTemplate.update(sqlString2);
                            
                            if(resultado2>0){
                                
+                               Double cantidadVend=0.0;
+                               Double cantidadAlm=0.0;
                                String vendidos="select cantidadVendidos,unidadesEnCaja from productos where idProductos="+id;
-               
-                               ResultSet rsP=statement.executeQuery(vendidos);
-                               int cantidadVend=0;
-                               int cantidadAlm=0;
-                               while(rsP.next()){
-                                   cantidadVend=rsP.getInt(1);
-                                   cantidadAlm=rsP.getInt(2);
-                               }
-                               ////Producto repository call
-                               //marcarProductoComoUtilizadoEnVenta(id,""+cantidadAlm,""+cantidadVend,cantidad);
-                               //if(indicadorRefrescoUtilizadoEnPaquete==1){                                
-                               //    marcarRefrescoUtilizadoEnPaquete();
-                               //}
                                
+                               List<Map<String, Object>> rows = jdbcTemplate.queryForList(vendidos);
+	                           	for (Map row : rows) {
+	                           		cantidadVend=(Double) row.get("cantidadVendidos");
+	                           		cantidadAlm=(Double)row.get("unidadesEnCaja");
+	                           	}
+
+                               ////Producto repository call
+	                           	productosRepository.marcarProductoComoUtilizadoEnVenta(id,""+cantidadAlm,""+cantidadVend,cantidad);
                                
                            }else{
                                errores++;
@@ -335,32 +277,33 @@ public class VentasRepository {
                    }
                    
                    if(errores==0){
-                       
                        String itemsVenta="";//obtenerProductosParaTicket(tablaDetalleVenta);
-                       
-                       //JOptionPane.showMessageDialog(null,"Se genero correctamente la venta No. "+ultimaVentaRealizada);
-                       DefaultTableModel modelLimpio=null;//(DefaultTableModel)tablaDetalleVenta.getModel();
-                       modelLimpio.setNumRows(0);
-                       
                        String udFueAtendidoPor="";
                        
                        ///obtenemos el nombre completo del usuario para insertarlo al ticket
                        try{
-
-                           statement = conexionMysql.createStatement();
-                           String usuarioLogueado="";
-                           sqlString="select NombreCompleto from usuarios where idusuario="+usuarioLogueado;
-
-                           ResultSet rs2=statement.executeQuery(sqlString);
-
-                           while(rs2.next()){
-                               udFueAtendidoPor=rs2.getString(1);
-                           }
+                           String sqlNombreCompleto="select nombre,apellidop,apellidom, from usuarios where idusuario="+venta.getUsuarios_idusuario();
+                           List<Map<String, Object>> rows = jdbcTemplate.queryForList(sqlNombreCompleto);
+                           	for (Map row : rows) {
+                           		udFueAtendidoPor=(String) row.get("nombre") +" "+row.get("apellidop") +" "+row.get("apellidom");
+                           	}
 
                          }catch(Exception e){
                              e.printStackTrace();
                          }
 
+                       Cliente clienteAquienSeVendio;
+                       try{
+                           String sqlNombreCompleto="select * from cliente where idcliente="+venta.getCliente_idcliente();
+                           List<Map<String, Object>> rows = jdbcTemplate.queryForList(sqlNombreCompleto);
+                           	for (Map row : rows) {
+                           		(String) row.get("nombre");" "+row.get("apellidop") +" "+row.get("apellidom");
+                           	}
+
+                         }catch(Exception e){
+                             e.printStackTrace();
+                         }
+                       
                        int fila=0;//tablaClientesEncontrados.getSelectedRow();
                        String clienteTicket="";//+tablaClientesEncontrados.getValueAt(fila, 1);
                        
@@ -425,28 +368,6 @@ public class VentasRepository {
 //                           t.Imprimir();
                        }
                        
-//                       resultadoClientes.setColumnCount(0);
-//                       resultadoClientes.setRowCount(0);
-//                       
-//                     
-//       
-//                       resultadoClientes= new DefaultTableModel();
-//                       tablaClientesEncontrados.setModel(resultadoClientes);
-//                       etiquetaGranTotal.setText("---");
-//                       efectivoRecibido.setText("");
-//                       cambioTotal.setText("$");
-//                       ivaTotal.setText("---");
-//                       seleccionGlobalCliente=0;
-//                       
-//                       agregarUsuarioSinRegistro();
-//                       
-//                       seleccionPizza1.setSelectedIndex(0);
-//                       seleccionPizza2.setSelectedIndex(0);
-//                       seleccionPizza3.setSelectedIndex(0);
-//                       seleccionExtras1.setSelectedIndex(0);
-//                       seleccionExtras2.setSelectedIndex(0);
-//                       
-//                       tiposDeProductoAgregados.clear();
                    }
                    
                }
@@ -455,6 +376,8 @@ public class VentasRepository {
       }catch(Exception e){
           e.printStackTrace();
       } 
+       
+       return 0;
        
    }                                                   
 
