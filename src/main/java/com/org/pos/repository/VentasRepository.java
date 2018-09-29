@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
@@ -23,6 +24,7 @@ import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Repository;
 
 import com.mysql.jdbc.Connection;
+import com.org.pos.model.Cliente;
 import com.org.pos.model.DetalleVenta;
 import com.org.pos.model.Productos;
 import com.org.pos.model.Venta;
@@ -33,8 +35,11 @@ public class VentasRepository {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(UserRepository.class);
 
+    @Autowired
+    ProductosRepository productosRepository;
+    
     private JdbcTemplate jdbcTemplate;
-
+    
     @Autowired
     @Qualifier("exchangeDS")
     public void setDataSource(DataSource dataSource) {
@@ -154,21 +159,9 @@ public class VentasRepository {
     }    
     
     public Integer insertarVentaBD(Venta venta) {                                                    
-        
-//        JTable jTableHelper = new JTable() {
-//           private static final long serialVersionUID = 1;
-//           public boolean isCellEditable(int row, int column) {                
-//               return false;               
-//           };
-//       };
-//       
-//       jTableHelper.setModel(tablaDetalleVenta.getModel());
        
-//       tablaDetalleVenta=jTableHelper;
-       
-       DefaultTableModel model =null;// (DefaultTableModel) tablaDetalleVenta.getModel();
-       ////obtenemos el consecutivo de venta del día
-       //DBConect conexion=new DBConect();  
+       DefaultTableModel model =null;
+
        	int consecutivoVenta=1;
 
          Date fechaInicioDia=new Date();
@@ -193,51 +186,18 @@ public class VentasRepository {
          	LOGGER.error("Error", e);
              throw e;
          }
-         
-        
-
-       //contador++;
        
-       int noSeleccionados=0;//seleccionGlobalCliente;
-       
-       //tablaClientesEncontrados.getSelectedRowCount();
-       
-//       if (tablaClientesEncontrados.getCellSelectionEnabled()) {
-//           //tablaClientesEncontrados.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-//           int rowIndex = tablaClientesEncontrados.getSelectedRow();
-//           int colIndex = tablaClientesEncontrados.getSelectedColumn();
-//           System.out.print(rowIndex+","+colIndex);
-//
-//       }
+       String cliente=""+venta.getCliente_idcliente();
       
-       if(noSeleccionados<=0){
-
-       }
-       
-       
-       String cliente="";//getClienteId();
-       
-       if(cliente.equals("")){
-
-       }
-       ////realizar insert en venta
-               
-      // DBConect conexion=new DBConect();
-       
        try{
-           Connection conexionMysql = null;//conexion.GetConnection();
-
-           Statement statement = conexionMysql.createStatement();
-           Statement statement2 = conexionMysql.createStatement();
-           
            ///insertamos la cabecera de la venta
-           int cantidadProductos=model.getRowCount();
+           int cantidadProductos=venta.getDetalleVenta().size();
            
            if(cantidadProductos<=0){
                
            }else{
 
-              String precioSinSigno="";//etiquetaGranTotal.getText().substring(1,etiquetaGranTotal.getText().length());
+              String precioSinSigno=""+venta.getTotal();
               
               String efectivo="";//efectivoRecibido.getText();
               Double efectivoRecibido1=0.0;
@@ -274,9 +234,6 @@ public class VentasRepository {
                    throw e;
                }
                
-               
-               ////Obtenemos el tamaño para el ticket
-               //de la pizza
                String tamanioTicket="";
                if(resultado>0){
                
@@ -301,21 +258,18 @@ public class VentasRepository {
                            
                            if(resultado2>0){
                                
+                               Double cantidadVend=0.0;
+                               Double cantidadAlm=0.0;
                                String vendidos="select cantidadVendidos,unidadesEnCaja from productos where idProductos="+id;
-                               //jdbcTemplate.query(vendidos, ResultSetExtractor<T>);
-                               ResultSet rsP=statement.executeQuery(vendidos);
-                               int cantidadVend=0;
-                               int cantidadAlm=0;
-                               while(rsP.next()){
-                                   cantidadVend=rsP.getInt(1);
-                                   cantidadAlm=rsP.getInt(2);
-                               }
-                               ////Producto repository call
-                               //marcarProductoComoUtilizadoEnVenta(id,""+cantidadAlm,""+cantidadVend,cantidad);
-                               //if(indicadorRefrescoUtilizadoEnPaquete==1){                                
-                               //    marcarRefrescoUtilizadoEnPaquete();
-                               //}
                                
+                               List<Map<String, Object>> rows = jdbcTemplate.queryForList(vendidos);
+	                           	for (Map row : rows) {
+	                           		cantidadVend=(Double) row.get("cantidadVendidos");
+	                           		cantidadAlm=(Double)row.get("unidadesEnCaja");
+	                           	}
+
+                               ////Producto repository call
+	                           	productosRepository.marcarProductoComoUtilizadoEnVenta(id,""+cantidadAlm,""+cantidadVend,cantidad);
                                
                            }else{
                                errores++;
@@ -323,32 +277,33 @@ public class VentasRepository {
                    }
                    
                    if(errores==0){
-                       
                        String itemsVenta="";//obtenerProductosParaTicket(tablaDetalleVenta);
-                       
-                       //JOptionPane.showMessageDialog(null,"Se genero correctamente la venta No. "+ultimaVentaRealizada);
-                       DefaultTableModel modelLimpio=null;//(DefaultTableModel)tablaDetalleVenta.getModel();
-                       modelLimpio.setNumRows(0);
-                       
                        String udFueAtendidoPor="";
                        
                        ///obtenemos el nombre completo del usuario para insertarlo al ticket
                        try{
-
-                           statement = conexionMysql.createStatement();
-                           String usuarioLogueado="";
-                           sqlString="select NombreCompleto from usuarios where idusuario="+usuarioLogueado;
-
-                           ResultSet rs2=statement.executeQuery(sqlString);
-
-                           while(rs2.next()){
-                               udFueAtendidoPor=rs2.getString(1);
-                           }
+                           String sqlNombreCompleto="select nombre,apellidop,apellidom, from usuarios where idusuario="+venta.getUsuarios_idusuario();
+                           List<Map<String, Object>> rows = jdbcTemplate.queryForList(sqlNombreCompleto);
+                           	for (Map row : rows) {
+                           		udFueAtendidoPor=(String) row.get("nombre") +" "+row.get("apellidop") +" "+row.get("apellidom");
+                           	}
 
                          }catch(Exception e){
                              e.printStackTrace();
                          }
 
+                       Cliente clienteAquienSeVendio;
+                       try{
+                           String sqlNombreCompleto="select * from cliente where idcliente="+venta.getCliente_idcliente();
+                           List<Map<String, Object>> rows = jdbcTemplate.queryForList(sqlNombreCompleto);
+                           	for (Map row : rows) {
+                           		(String) row.get("nombre");" "+row.get("apellidop") +" "+row.get("apellidom");
+                           	}
+
+                         }catch(Exception e){
+                             e.printStackTrace();
+                         }
+                       
                        int fila=0;//tablaClientesEncontrados.getSelectedRow();
                        String clienteTicket="";//+tablaClientesEncontrados.getValueAt(fila, 1);
                        
@@ -413,28 +368,6 @@ public class VentasRepository {
 //                           t.Imprimir();
                        }
                        
-//                       resultadoClientes.setColumnCount(0);
-//                       resultadoClientes.setRowCount(0);
-//                       
-//                     
-//       
-//                       resultadoClientes= new DefaultTableModel();
-//                       tablaClientesEncontrados.setModel(resultadoClientes);
-//                       etiquetaGranTotal.setText("---");
-//                       efectivoRecibido.setText("");
-//                       cambioTotal.setText("$");
-//                       ivaTotal.setText("---");
-//                       seleccionGlobalCliente=0;
-//                       
-//                       agregarUsuarioSinRegistro();
-//                       
-//                       seleccionPizza1.setSelectedIndex(0);
-//                       seleccionPizza2.setSelectedIndex(0);
-//                       seleccionPizza3.setSelectedIndex(0);
-//                       seleccionExtras1.setSelectedIndex(0);
-//                       seleccionExtras2.setSelectedIndex(0);
-//                       
-//                       tiposDeProductoAgregados.clear();
                    }
                    
                }
