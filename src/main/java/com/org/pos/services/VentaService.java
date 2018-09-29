@@ -1,20 +1,29 @@
 package com.org.pos.services;
 
+import java.security.Principal;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 
 import javax.swing.table.DefaultTableModel;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.mysql.jdbc.Connection;
 import com.org.pos.model.Productos;
+import com.org.pos.model.Venta;
+import com.org.pos.repository.VentasRepository;
 
 @Service
 public class VentaService {
 
+	@Autowired 
+	VentasRepository ventasRepository;
+	
     Productos productoParaCarrrito;
     private Productos productoParaCarrritoDesdeOtraVentana;
 	
@@ -34,6 +43,17 @@ public class VentaService {
     
     }
 	
+	public Map<String,Object> insertarVenta(Principal principal,Venta venta){
+		Map<String,Object> result=new HashMap<String,Object>();
+		
+		Integer resultadoInsert=ventasRepository.insertarVentaBD(venta);
+		
+		if(resultadoInsert==1){
+			result.put("insertedVenta", venta);
+		}
+		
+		return result;
+	}
     
     public void agregarProductoDesdeOtraVentana(Productos productoParaCarrritoDesdeOtraVentana){
         //DefaultTableModel model = (DefaultTableModel) tablaDetalleVenta.getModel();

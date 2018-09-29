@@ -1,24 +1,46 @@
 package com.org.pos.repository;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 
+import javax.sql.DataSource;
 import javax.swing.table.DefaultTableModel;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Repository;
 
 import com.mysql.jdbc.Connection;
+import com.org.pos.model.DetalleVenta;
 import com.org.pos.model.Productos;
+import com.org.pos.model.Venta;
 import com.org.pos.utils.Utils;
 
 @Repository
 public class VentasRepository {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(UserRepository.class);
+
+    private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    @Qualifier("exchangeDS")
+    public void setDataSource(DataSource dataSource) {
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    }
+	
     private void generarReporteVentasActionPerformed(java.awt.event.ActionEvent evt, Double ivaConfigurado) {                                                     
         Date fechaInit = null;//fechaInicio.getDate();
         Date fechaEnd = null;//fechaFin.getDate();
@@ -131,7 +153,7 @@ public class VentasRepository {
         
     }    
     
-    private void confirmarVentaBotonActionPerformed(java.awt.event.ActionEvent evt) {                                                    
+    public Integer insertarVentaBD(Venta venta) {                                                    
         
 //        JTable jTableHelper = new JTable() {
 //           private static final long serialVersionUID = 1;
@@ -147,13 +169,8 @@ public class VentasRepository {
        DefaultTableModel model =null;// (DefaultTableModel) tablaDetalleVenta.getModel();
        ////obtenemos el consecutivo de venta del día
        //DBConect conexion=new DBConect();  
-       int consecutivoVenta=1;
-       try{
+       	int consecutivoVenta=1;
 
-         Connection conexionMysql = null;//conexion.GetConnection();
-
-         Statement statement = conexionMysql.createStatement();
-         
          Date fechaInicioDia=new Date();
          fechaInicioDia.setHours(01);
          fechaInicioDia.setMinutes(00);
@@ -167,23 +184,18 @@ public class VentasRepository {
          String fi=sf.format(fechaInicioDia);
          String ff=sf.format(fechaFinDia);
                  
-         
-         String sqlString="select max(consecutivoVenta) from Venta where (fechaVenta BETWEEN '"+fi+"' AND '"+ff+"')";
-         System.out.println(sqlString);
-         ResultSet rs=statement.executeQuery(sqlString);
-         
-         while(rs.next()){
-             //consecutivoVenta=rs.getInt(1);
-             //if(consecutivoVenta>1){
-                 consecutivoVenta=rs.getInt(1)+1;
-             //}
-             
+         try {
+         	//agregar a la consulta el usuario y tambien la sucursal
+            String sqlString="select max(consecutivoVenta) from Venta where (fechaVenta BETWEEN '"+fi+"' AND '"+ff+"')";
+         	Integer consecMax=jdbcTemplate.queryForObject(sqlString, Integer.class);
+         	consecutivoVenta=consecMax;
+         }catch (Exception e){
+         	LOGGER.error("Error", e);
+             throw e;
          }
          
-       }catch(Exception e){
-           e.printStackTrace();
-       }
-       
+        
+
        //contador++;
        
        int noSeleccionados=0;//seleccionGlobalCliente;
@@ -199,16 +211,14 @@ public class VentasRepository {
 //       }
       
        if(noSeleccionados<=0){
-           //JOptionPane.showMessageDialog(null,"Es necesario seleccionar un cliente para continuar");
-           return;
+
        }
        
        
        String cliente="";//getClienteId();
        
        if(cliente.equals("")){
-           //JOptionPane.showMessageDialog(null,"Es necesario seleccionar un cliente para continuar");
-           return;
+
        }
        ////realizar insert en venta
                
@@ -225,9 +235,6 @@ public class VentasRepository {
            
            if(cantidadProductos<=0){
                
-              //JOptionPane.showMessageDialog(null, "No has agregado ningun producto");
-              return;
-               
            }else{
 
               String precioSinSigno="";//etiquetaGranTotal.getText().substring(1,etiquetaGranTotal.getText().length());
@@ -236,85 +243,66 @@ public class VentasRepository {
               Double efectivoRecibido1=0.0;
               Double precioSinSigno1=0.0;
               
-              
-              if(efectivo.equals("")){
-                  //JOptionPane.showMessageDialog(null, "Se necesita saber cuanto efectivo recibiste");
-                  return;
-              }else{
-                  try{
-                   precioSinSigno1=Double.parseDouble(precioSinSigno);
-                   efectivoRecibido1=Double.parseDouble(efectivo);
-                   
-                  }catch(Exception e){
-                      //JOptionPane.showMessageDialog(null, "No introdujiste un numero");
-                      return;
-                  }
-                   if(efectivoRecibido1<precioSinSigno1){
-                       //JOptionPane.showMessageDialog(null, "La cantidad recibida no puede ser menor al costo");
-                       return;
-                   }
-              }
-              
                String sqlString="INSERT INTO `venta` (`total`,`cliente_idcliente`,`usuarios_idusuario`,`consecutivoVenta`,`efectivoRecib`,`cambio`) "
                        + " VALUES ('"+precioSinSigno+"','"+1+"', '"+2+"',"+consecutivoVenta+","+efectivoRecibido1+","+(efectivoRecibido1-precioSinSigno1)+" )";
 
-               int resultado=statement.executeUpdate(sqlString);
+               int resultado=jdbcTemplate.update(sqlString);
+            		   //statement.executeUpdate(sqlString);
                
                Utils u=new Utils();
                
-               String sqlMaxID="select max(consecutivoVenta) as max from Venta where "+u.obtenerBetweenParaConsulta("fechaVenta");
-               
-               ResultSet rs=statement.executeQuery(sqlMaxID);
                int ultimaVentaRealizada=1;
-               while(rs.next()){
-                   ultimaVentaRealizada=rs.getInt(1);
-               }
-               
-               //if(ultimaVentaRealizada<1){
-               //    ultimaVentaRealizada=1;
-               //}
-               
-               
-               ////obtenemos el max id de la ultima venta insertada
-               String sqlMaxIDM="select max(idVenta) as max from Venta where "+u.obtenerBetweenParaConsulta("fechaVenta");
-               
-               ResultSet rsM=statement.executeQuery(sqlMaxIDM);
+               try {
+                	//agregar a la consulta el usuario y tambien la sucursal
+            	   String sqlMaxID="select max(consecutivoVenta) as max from Venta where "+u.obtenerBetweenParaConsulta("fechaVenta");
+            	   Integer ultVenta=jdbcTemplate.queryForObject(sqlMaxID, Integer.class);
+            	   ultimaVentaRealizada=ultVenta;
+                }catch (Exception e){
+                	LOGGER.error("Error", e);
+                    throw e;
+                }
+
                int ultimaVentaRealizadaM=1;
-               while(rsM.next()){
-                   ultimaVentaRealizadaM=rsM.getInt(1);
-               }
-               
-               if(ultimaVentaRealizadaM<1){
-                   ultimaVentaRealizadaM=1;
+               try {
+               	//agregar a la consulta el usuario y tambien la sucursal
+                   ////obtenemos el max id de la ultima venta insertada
+                   String sqlMaxIDM="select max(idVenta) as max from Venta where "+u.obtenerBetweenParaConsulta("fechaVenta");
+            	   Integer ultVenta=jdbcTemplate.queryForObject(sqlMaxIDM, Integer.class);
+            	   ultimaVentaRealizadaM=ultVenta;
+               }catch (Exception e){
+               	LOGGER.error("Error", e);
+                   throw e;
                }
                
                
                ////Obtenemos el tamaño para el ticket
                //de la pizza
-               String tamañoTicket="";
+               String tamanioTicket="";
                if(resultado>0){
                
                    int errores=0;
-                   for(int i=0;i<model.getRowCount();i++){
+                   for(int i=0;i<venta.getDetalleVenta().size();i++){
                    //insertamos el detalle de la venta
-                       String consecutivo,cantidad,descripcion,precio,id;
+                	   DetalleVenta detalleVenta=venta.getDetalleVenta().get(i);
+                	   
+                	   String consecutivo,cantidad,descripcion,precio,id;
                    
-                           consecutivo=""+model.getValueAt(i,0);
-                           cantidad=""+model.getValueAt(i,1);
-                           descripcion=""+model.getValueAt(i,2);
-                           precio=""+model.getValueAt(i,3);
-                           id=""+model.getValueAt(i,5);
-                           tamañoTicket=""+model.getValueAt(i,6);
+                           consecutivo=""+detalleVenta.getConsecutivoVenta();
+                           cantidad=""+detalleVenta.getCantidad();
+                           descripcion=""+detalleVenta.getDescripcionProd();
+                           precio=""+detalleVenta.getPrecioTotal();
+                           id=""+detalleVenta.getProductos_idproductos();
+                           tamanioTicket=""+detalleVenta.getTamanio();
                            
                            String sqlString2="INSERT INTO `detalleVenta` (`consecutivoVenta`,`cantidad`,`precioTotal`,`descripcionProd`,`Productos_idProductos`,`Venta_idVenta`,`tamanio`) "
-                           + " VALUES ('"+consecutivo+"','"+cantidad+"', '"+precio+"','"+descripcion+"','"+id+"','"+ultimaVentaRealizadaM+"','"+tamañoTicket+"' )";
+                           + " VALUES ('"+consecutivo+"','"+cantidad+"', '"+precio+"','"+descripcion+"','"+id+"','"+ultimaVentaRealizadaM+"','"+tamanioTicket+"' )";
                        
-                           int resultado2=statement2.executeUpdate(sqlString2);
+                           int resultado2=jdbcTemplate.update(sqlString2);
                            
                            if(resultado2>0){
                                
                                String vendidos="select cantidadVendidos,unidadesEnCaja from productos where idProductos="+id;
-               
+                               //jdbcTemplate.query(vendidos, ResultSetExtractor<T>);
                                ResultSet rsP=statement.executeQuery(vendidos);
                                int cantidadVend=0;
                                int cantidadAlm=0;
@@ -455,6 +443,8 @@ public class VentasRepository {
       }catch(Exception e){
           e.printStackTrace();
       } 
+       
+       return 0;
        
    }                                                   
 
