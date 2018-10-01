@@ -285,7 +285,7 @@ public class VentasRepository {
                            String sqlNombreCompleto="select nombre,apellidop,apellidom, from usuarios where idusuario="+venta.getUsuarios_idusuario();
                            List<Map<String, Object>> rows = jdbcTemplate.queryForList(sqlNombreCompleto);
                            	for (Map row : rows) {
-                           		udFueAtendidoPor=(String) row.get("nombre") +" "+row.get("apellidop") +" "+row.get("apellidom");
+                           		udFueAtendidoPor=(String) row.get("nombre") +" "+ (String)row.get("apellidop") +" "+(String)row.get("apellidom");
                            	}
 
                          }catch(Exception e){
@@ -297,7 +297,9 @@ public class VentasRepository {
                            String sqlNombreCompleto="select * from cliente where idcliente="+venta.getCliente_idcliente();
                            List<Map<String, Object>> rows = jdbcTemplate.queryForList(sqlNombreCompleto);
                            	for (Map row : rows) {
-                           		(String) row.get("nombre");" "+row.get("apellidop") +" "+row.get("apellidom");
+                           		(String) row.get("nombre");
+                           		(String)row.get("apellidop");
+                           		(String)row.get("apellidom");
                            	}
 
                          }catch(Exception e){
