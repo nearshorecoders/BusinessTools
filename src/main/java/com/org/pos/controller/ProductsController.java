@@ -76,26 +76,32 @@ public class ProductsController {
 		return new ResponseEntity<Map<String,Object>>(flujoResult,HttpStatus.OK);
 	}
 	
-	@GetMapping("/getProduct/{id}")
-	public Object getToEvalById(@PathVariable Long id) {
+	@GetMapping("/getProductByDescription/{descripcion}")
+	public ResponseEntity<?> getProductoByDescription(Principal principal,@PathVariable String descripcion) {
 		try {
-			return new Object();
+			return new ResponseEntity<Map<String,Object>>(productosService.buscarProductoPorDescripcion(principal, descripcion),HttpStatus.OK);
+		}catch(Exception e) {
+			return null;
+		}
+	}
+	
+	@GetMapping("/getProductByCode/{codigo}")
+	public ResponseEntity<?> getProductByCode(Principal principal,@PathVariable String codigo) {
+		try {
+			return new ResponseEntity<Map<String,Object>>(productosService.buscarProductoPorCodigo(principal,codigo),HttpStatus.OK);
 		}catch(Exception e) {
 			return null;
 		}
 	}
 	
 	
-	@PostMapping(value = "/getAllProducts")
-	public @ResponseBody ResponseEntity<List<Map<String, Object>>> getAllProducts(@RequestParam String str, @RequestParam int type) {
-		if(type == 0) {
-			//return new ResponseEntity<List<Map<String, Object>>>(ticketRepository.getUserByName(str), HttpStatus.OK);
-			return null;
-		}else {
-			//return new ResponseEntity<List<Map<String, Object>>>(ticketRepository.getUserByEmail(str), HttpStatus.OK);
+	@GetMapping(value = "/getAllProducts")
+	public @ResponseBody ResponseEntity<?> getAllProducts(Principal principal) {
+		try {	
+			return new ResponseEntity<Map<String, Object>>(productosService.listarProductos(principal), HttpStatus.OK);
+		}catch(Exception e) {
 			return null;
 		}
-		
 	}
 	
 	@PutMapping(value = "/updateProduct/{id}")

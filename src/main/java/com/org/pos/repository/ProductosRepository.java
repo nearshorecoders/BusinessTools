@@ -6,8 +6,10 @@ import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.sql.DataSource;
@@ -23,6 +25,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.mysql.jdbc.Connection;
+import com.org.pos.model.Cliente;
 import com.org.pos.model.Productos;
 import com.org.pos.model.Usuario;
 import com.org.pos.repository.UserRepository.UsuarioRowMapper;
@@ -198,50 +201,111 @@ public class ProductosRepository {
         return resultado;
         
     }   
-    private void busquedaProductos(String descripcion) {                                                      
-        try{
+    public List<Productos> buscarProductoPorDescripcion(String descripcion) {                                                      
+    	List<Productos> productos = new ArrayList<Productos>();
+    	try{
 
           String descripcionVar=descripcion;
           
-          String sqlString="Select idProductos as 'Id',codigo,descripcion as 'Descripción',precioUnitarioC as 'Precio compra', precioUnitarioV as 'Precio venta',unidadesEnCaja as 'Cantidad'"
-                  + ",uMedida as 'Unidad medida', presentacion as 'Presentación' from  productos " +
+          String sqlString="Select * from  productos " +
                            " where estatus=0 ";
               
                	sqlString+= " And descripcion like '%"+descripcionVar+"%'";
-
-          
-            //ResultSet rs = jdbcTemplate.query(sqlString); 
-            //int contador=0;  
-     
-            //ResultSetMetaData rsMd = rs.getMetaData();
-            //La cantidad de columnas que tiene la consulta
-            //int cantidadColumnas = rsMd.getColumnCount();
-            //Establecer como cabezeras el nombre de las colimnas
-//            for (int i = 1; i <= cantidadColumnas; i++) {
-//             //productosEncontradosAModificar.addColumn(rsMd.getColumnLabel(i));
-//            }
-//            //Creando las filas para el JTable
-//            while (rs.next()) {
-//             contador++;
-//             Object[] fila = new Object[cantidadColumnas];
-//             for (int i = 0; i < cantidadColumnas; i++) {
-//               fila[i]=rs.getObject(i+1);
-//             }
-//             //productosEncontradosAModificar.addRow(fila);
-//            }
-//          
-//            if(contador==0){
-//                //JOptionPane.showMessageDialog(null, "No se encontro ningun producto con los datos proporcionados.");
-//            }
-            
-            
+            	
+            	List<Map<String, Object>> rows = jdbcTemplate.queryForList(sqlString);
+            	for (Map row : rows) {
+            		Productos producto = new Productos();
+            		producto.setCantidadAceptable((Double)(row.get("cantidadAceptable")));
+            		producto.setCantidadMinima((Double)(row.get("cantidadMinima")));
+            		producto.setCodigo((String)(row.get("codigo")));
+            		producto.setDescripcion((String)(row.get("descripcion")));
+            		producto.setId((Integer)(row.get("idProductos")));
+            		producto.setIdSucursal((Integer)(row.get("sucursal_idsucursal")));
+            		producto.setPrecioCompra((Double)(row.get("precioUnitarioC")));
+            		producto.setPrecioVenta((Double)(row.get("precioUnitarioV")));
+            		producto.setPresentacion((String)(row.get("cantidadMinima")));
+            		producto.setUnidadesEnCaja((Double)(row.get("unidadesEnCaja")));
+            		producto.setUnidadMedida((String)(row.get("uMedida")));
+            		producto.setEstatus((Integer)(row.get("estatus")));
+            		productos.add(producto);
+            	}
+               	
         }catch(Exception e){
             e.printStackTrace();
         }
+        
+        return productos;
     } 
+    
+    public List<Productos> buscarProductoPorCodigo(String codigo) {                                                      
+    	List<Productos> productos = new ArrayList<Productos>();
+    	try{
+
+          
+          String sqlString="Select * from  productos " +
+                           " where estatus=0 ";
+               	sqlString+= " And codigo = '"+codigo+"'";
+            	
+            	List<Map<String, Object>> rows = jdbcTemplate.queryForList(sqlString);
+            	for (Map row : rows) {
+            		Productos producto = new Productos();
+            		producto.setCantidadAceptable((Double)(row.get("cantidadAceptable")));
+            		producto.setCantidadMinima((Double)(row.get("cantidadMinima")));
+            		producto.setCodigo((String)(row.get("codigo")));
+            		producto.setDescripcion((String)(row.get("descripcion")));
+            		producto.setId((Integer)(row.get("idProductos")));
+            		producto.setIdSucursal((Integer)(row.get("sucursal_idsucursal")));
+            		producto.setPrecioCompra((Double)(row.get("precioUnitarioC")));
+            		producto.setPrecioVenta((Double)(row.get("precioUnitarioV")));
+            		producto.setPresentacion((String)(row.get("cantidadMinima")));
+            		producto.setUnidadesEnCaja((Double)(row.get("unidadesEnCaja")));
+            		producto.setUnidadMedida((String)(row.get("uMedida")));
+            		producto.setEstatus((Integer)(row.get("estatus")));
+            		productos.add(producto);
+            	}  	
+               	
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        
+        return productos;
+    } 
+    
+    public List<Productos> listarProductos() {                                                      
+    	List<Productos> productos = new ArrayList<Productos>();
+    	try{
+          //listaqr solo productos del cliente logeado y de la sucursal
+          String sqlString="Select * from  productos " +
+                           " where estatus=0 ";
+            	
+            	List<Map<String, Object>> rows = jdbcTemplate.queryForList(sqlString);
+            	for (Map row : rows) {
+            		Productos producto = new Productos();
+            		producto.setCantidadAceptable((Double)(row.get("cantidadAceptable")));
+            		producto.setCantidadMinima((Double)(row.get("cantidadMinima")));
+            		producto.setCodigo((String)(row.get("codigo")));
+            		producto.setDescripcion((String)(row.get("descripcion")));
+            		producto.setId((Integer)(row.get("idProductos")));
+            		producto.setIdSucursal((Integer)(row.get("sucursal_idsucursal")));
+            		producto.setPrecioCompra((Double)(row.get("precioUnitarioC")));
+            		producto.setPrecioVenta((Double)(row.get("precioUnitarioV")));
+            		producto.setPresentacion((String)(row.get("cantidadMinima")));
+            		producto.setUnidadesEnCaja((Double)(row.get("unidadesEnCaja")));
+            		producto.setUnidadMedida((String)(row.get("uMedida")));
+            		producto.setEstatus((Integer)(row.get("estatus")));
+            		productos.add(producto);
+            	}
+               	
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        
+        return productos;
+    }
+    
     private Integer modificarProductos(Productos producto) {                                                          
 
-        String idProductoModificar=producto.getId();
+        String idProductoModificar=""+producto.getId();
         String codigo=producto.getCodigo();
         Integer resultado=0;
         try{

@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.mysql.jdbc.Connection;
 import com.org.pos.model.Cliente;
+import com.org.pos.model.Productos;
 
 @Repository
 public class ClienteRepository {
@@ -75,15 +77,29 @@ public class ClienteRepository {
 	
     
     @Transactional(readOnly=true)
-    public Map<String, Object> listarClientes(Integer idLoguedUser) {
+    public List<Cliente> listarClientes(Integer idLoguedUser) {
         try {
-        	String query = "SELECT b.* FROM clientes where idcliente = ?";
-        	
-        	List<Map<String, Object>> list = jdbcTemplate.queryForList(query,new Object[]{idLoguedUser});
-        	Map<String, Object> map = new HashMap<String, Object>();
-        	map.put("listaClientes", list);
-        	
-        	return map;
+        	//listar solo clintes del usuario logueado
+        	String query = "SELECT idcliente FROM cliente ";
+        	///corregir consulta
+        	List<Cliente> clientes = new ArrayList<Cliente>();
+        
+        	List<Map<String, Object>> map = jdbcTemplate.queryForList(query);
+        	for (Map row : map) {
+        		Cliente cliente = new Cliente();
+        		cliente.setIdClienteAModificar((Integer)(row.get("idcliente")));
+        		cliente.setVarNombre((String)(row.get("nombre")));
+        		cliente.setVarApellidoP((String)(row.get("apellidop")));
+        		cliente.setVarApellidoM((String)(row.get("apellidom")));
+        		cliente.setVarDireccion((String)(row.get("dirección")));
+        		cliente.setVarTelefono((String)(row.get("telefono")));
+        		cliente.setActivo((Integer)(row.get("activo")));
+        		cliente.setFechaDeRegistro((Date)(row.get("fechaDeRegistro")));
+        		clientes.add(cliente);
+        		
+        	}  
+
+        	return clientes;
         }catch (Exception e){
         	LOGGER.error("Error", e);
             throw e;
@@ -101,8 +117,8 @@ public class ClienteRepository {
 
           String varBusqueda=nombreVar+apellidoMVar+apellidoPVar;
 
-          String sqlString="Select idcliente as 'Cliente',concat(nombre,' ',apellidop,' ',apellidom) as 'Nombre completo',dirección as 'Dirección', " +
-                           " telefono as 'Teléfono' " +
+          String sqlString="Select idcliente as 'Cliente',concat(nombre,' ',apellidop,' ',apellidom) as 'nombreCompleto',dirección as 'Direccion', " +
+                           " telefono as 'telefono' " +
                            " from cliente where ";
 
           int indicadorAnd=0;
@@ -129,8 +145,22 @@ public class ClienteRepository {
               indicadorAnd++;
           }
           
+          Cliente cliente=null;
+          try{
+             
+              List<Map<String, Object>> rows = jdbcTemplate.queryForList(sqlString);
+              	for (Map row : rows) {
+              		cliente=new Cliente();
+              		cliente.setVarNombre(row.get("nombreCompleto")!=null?(String) row.get("nombreCompleto"):"");
+              		cliente.setVarDireccion(row.get("Direccion")!=null ? (String) row.get("Direccion") :"");
+              		cliente.setVarTelefono(row.get("telefono")!=null ? (String) row.get("telefono") :"");
+              		
+              	}
 
-          //jdbcTemplate.query(sqlString, rse);
+              	return cliente;
+            }catch(Exception e){
+                e.printStackTrace();
+            }
           
 
         }catch(Exception e){

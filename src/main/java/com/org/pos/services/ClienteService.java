@@ -1,18 +1,27 @@
 package com.org.pos.services;
 
+import java.security.Principal;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.org.pos.model.Cliente;
+import com.org.pos.model.Productos;
+import com.org.pos.model.Usuario;
 import com.org.pos.repository.ClienteRepository;
+import com.org.pos.repository.UserRepository;
 
 @Service
 public class ClienteService {
 
 	@Autowired
 	ClienteRepository clienteRepository;
+	
+	@Autowired
+	UserRepository userRepository;
 	
 	public Integer createClient(Map<String,String> body) {
 		
@@ -27,9 +36,15 @@ public class ClienteService {
 	}
 	
 	
-	public  Map<String, Object> listarClientes(Integer idLoguedUser){
+	public  Map<String, Object> listarClientes(Principal principal){
+		Map<String,Object> result=new HashMap<String,Object>();
+		Usuario u=userRepository.findByUser(principal.getName());
+
+		List<Cliente> clientes=clienteRepository.listarClientes(u.getId());
 		
-		return clienteRepository.listarClientes(idLoguedUser);
+		result.put("listaClientesTodos", clientes);
+		
+		return result;
 		
 	}
 	

@@ -57,13 +57,8 @@ var clientes = (function() {
 				$.ajax({
 				    url: "/getAllClients",
 				    type: "GET",
-				    dataType : "json",
-				    headers: { 
-				        'Accept': 'application/json',
-				        'Content-Type': 'application/json' 
-				    },
 				}).done(function( json ) {
-					console.log("Getting main menu");
+					console.log("Getting all clients");
 					console.log(json);
 					
 				}).fail(function( xhr, status, errorThrown ) {
@@ -178,6 +173,7 @@ var clientes = (function() {
 
 $(document).ready(function () {
 	clientes.init();
+	clientes.events.getAllClients();
 });
 
 function navegacion(element){

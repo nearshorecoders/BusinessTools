@@ -48,18 +48,14 @@ public class ClientesController {
 	}
 	
 	
-	@PostMapping(value = "/getAllClients")
-	public @ResponseBody ResponseEntity<List<Map<String, Object>>> getAllClients(@RequestParam String str, @RequestParam int type) {
-		if(type == 0) {
-			//return new ResponseEntity<List<Map<String, Object>>>(clientesService.listarClientes(idLoguedUser), HttpStatus.OK);
-			return null;
-		}else {
-			//return new ResponseEntity<List<Map<String, Object>>>(ticketRepository.getUserByEmail(str), HttpStatus.OK);
+	@GetMapping(value = "/getAllClients")
+	public @ResponseBody ResponseEntity<?> getAllClients(Principal principal) {
+		try {	
+			return new ResponseEntity<Map<String, Object>>(clientesService.listarClientes(principal), HttpStatus.OK);
+		}catch(Exception e) {
 			return null;
 		}
-		
 	}
-	
 	@PutMapping(value = "/updateClient/{id}")
 	public Integer updateClient(@PathVariable Integer id,@PathVariable String varNombre,@PathVariable String varApellidoP, @PathVariable String varApellidoM, @PathVariable String varDireccion,@PathVariable String varTelefono) {
 		try {
