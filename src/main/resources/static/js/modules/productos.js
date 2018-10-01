@@ -96,7 +96,7 @@ var productos = (function() {
 									'<td>$'+fila.precioCompra+'</td>'+
 									'<td>$'+fila.precioVenta+'</td>'+
 									'<td>'+fila.unidadMedida+'</td>'+
-									'<td><a id=modificar"'+fila.id+'" class="btn btn-block btn-primary" type="button">Modificar</a></td>'+
+									'<td><a id=modificar"'+fila.id+'" class="btn btn-block btn-primary" data-toggle="modal" data-target="#modal-producto-modificar" type="button">Modificar</a></td>'+
 									'</tr>';	
 					}
 					
