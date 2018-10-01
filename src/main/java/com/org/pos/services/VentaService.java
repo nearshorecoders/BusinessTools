@@ -165,7 +165,7 @@ public class VentaService {
            contador++;
            
            productoParaCarrrito=new Productos();
-           productoParaCarrrito.setId(""+rs.getInt("idProductos"));
+           productoParaCarrrito.setId(rs.getInt("idProductos"));
            productoParaCarrrito.setCodigo(rs.getString("codigo"));
            productoParaCarrrito.setDescripcion(rs.getString("descripcion"));
            productoParaCarrrito.setEstatus(rs.getInt("estatus"));

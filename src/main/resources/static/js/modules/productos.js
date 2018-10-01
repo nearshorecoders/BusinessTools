@@ -57,13 +57,8 @@ var productos = (function() {
 				$.ajax({
 				    url: "/getAllProducts",
 				    type: "GET",
-				    dataType : "json",
-				    headers: { 
-				        'Accept': 'application/json',
-				        'Content-Type': 'application/json' 
-				    },
 				}).done(function( json ) {
-					console.log("Getting main menu");
+					console.log("All products");
 					console.log(json);
 					
 				}).fail(function( xhr, status, errorThrown ) {
@@ -187,6 +182,7 @@ var productos = (function() {
 
 $(document).ready(function () {
 	productos.init();
+	productos.events.getAllProducts();
 });
 
 function navegacion(element){
