@@ -289,7 +289,7 @@ public class ProductosRepository {
             		producto.setIdSucursal((Integer)(row.get("sucursal_idsucursal")));
             		producto.setPrecioCompra((Double)(row.get("precioUnitarioC")));
             		producto.setPrecioVenta((Double)(row.get("precioUnitarioV")));
-            		producto.setPresentacion((String)(row.get("cantidadMinima")));
+            		producto.setPresentacion((String)(row.get("presentacion")));
             		producto.setUnidadesEnCaja((Double)(row.get("unidadesEnCaja")));
             		producto.setUnidadMedida((String)(row.get("uMedida")));
             		producto.setEstatus((Integer)(row.get("estatus")));

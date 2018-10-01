@@ -58,8 +58,49 @@ var productos = (function() {
 				    url: "/getAllProducts",
 				    type: "GET",
 				}).done(function( json ) {
-					console.log("All products");
+					
 					console.log(json);
+					$("#tableProducts").empty();
+ 
+					var contentRow='';
+					for(i=0 ; i < json.listaProductosTodos.length ; i++){
+						
+						fila=json.listaProductosTodos[i];
+						stockString='';
+						
+						if(typeof(fila.cantidadAceptable)==='undefined' || fila.cantidadAceptable==null){
+							fila.cantidadAceptable=fila.unidadesEnCaja;
+						}
+						
+						if(typeof(fila.cantidadMinima)==='undefined' || fila.cantidadMinima==null){
+							fila.cantidadMinima=fila.unidadesEnCaja/2;
+						}
+						
+						if(fila.unidadesEnCaja<2){
+							stockString='<td><span class="label label-danger">' + fila.cantidadMinima +'</span></td>'
+						}else if(fila.unidadesEnCaja>=fila.cantidadAceptable){
+							stockString='<td><span class="label label-success">' + fila.cantidadAceptable +'</span></td>'
+						}else if(fila.unidadesEnCaja<fila.cantidadAceptable){
+							stockString='<td><span class="label label-warning">' + fila.cantidadAceptable +'</span></td>'
+						}else if(fila.unidadesEnCaja<=fila.cantidadMinima){
+							stockString='<td><span class="label label-danger">' + fila.cantidadMinima +'</span></td>'
+						}
+						
+						contentRow = contentRow+'<tr>'+
+									'<td>' + fila.id + '</td>'+
+									'<td>' + fila.codigo + '</td>'+
+									'<td>' + fila.descripcion + '</td>'+
+									'<td>' + fila.unidadesEnCaja + '</td>'+
+									'<td>' + fila.presentacion + '</td>'+
+									stockString+
+									'<td>$'+fila.precioCompra+'</td>'+
+									'<td>$'+fila.precioVenta+'</td>'+
+									'<td>'+fila.unidadMedida+'</td>'+
+									'<td><a id=modificar"'+fila.id+'" class="btn btn-block btn-primary" type="button">Modificar</a></td>'+
+									'</tr>';	
+					}
+					
+					$("#tableProducts").append(contentRow);
 					
 				}).fail(function( xhr, status, errorThrown ) {
 					//console.log( "Sorry, there was a problem!" );
