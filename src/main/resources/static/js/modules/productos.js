@@ -53,6 +53,57 @@ var productos = (function() {
 	};
 	
 	var events = {
+			getProductFromRowSelected : function(element) {
+				$row=$("#product"+element.id);
+				$tds = $row.find("td");             // Finds all children <td> elements
+
+			    //clean the form
+			    $('#inputIdMod').val('');
+			    $('#inputCodigoMod').val('');
+			    $('#inputDescripcionMod').val('');
+			    $('#inputCantidadMod').val('');
+			    $('#inputPrecioCompraMod').val('');
+			    $('#inputPrecioVentaMod').val('');
+			    $('#inputCantidadAceptableMod').val('');
+			    $('#inputCantidadMinimaMod').val('');
+			   ///checar selects
+			   //$('#unidadMedidaMod').val('');
+			   //$('#presentacionMod').val('');
+				index=0;
+				$.each($tds, function() {               // Visits every single <td> element
+				    console.log($(this).text());        // Prints out the text within the <td>
+				    switch(index){
+				    	case 0:
+				    		$('#inputIdMod').val($(this).text());
+				    	break;	
+				    	case 1:
+				    		$('#inputCodigoMod').val($(this).text());
+				    	break;	
+				    	case 2:
+				    		$('#inputDescripcionMod').val($(this).text());
+				    	break;	
+				    	case 3:
+				    		$('#inputCantidadMod').val($(this).text());
+				    	break;	
+				    	case 4:
+				    		precioCompra=$(this).text().replace('$','');
+				    		$('#inputPrecioCompraMod').val(precioCompra);
+				    	break;	
+				    	case 5:
+				    		precioVenta=$(this).text().replace('$','');
+				    		$('#inputPrecioVentaMod').val(precioVenta);
+				    	break;	
+				    	case 6:
+				    		$('#inputCantidadAceptableMod').val($(this).text());
+				    	break;	
+				    	case 7:
+				    		$('#inputCantidadMinimaMod').val($(this).text());
+				    	break;	
+				    }
+				    
+				    index++;
+				});
+			},
 			getAllProducts : function() {
 				$.ajax({
 				    url: "/getAllProducts",
@@ -86,7 +137,7 @@ var productos = (function() {
 							stockString='<td><span class="label label-danger">' + fila.cantidadMinima +'</span></td>'
 						}
 						
-						contentRow = contentRow+'<tr>'+
+						contentRow = contentRow+'<tr id="product'+fila.id+'">'+
 									'<td>' + fila.id + '</td>'+
 									'<td>' + fila.codigo + '</td>'+
 									'<td>' + fila.descripcion + '</td>'+
@@ -96,7 +147,7 @@ var productos = (function() {
 									'<td>$'+fila.precioCompra+'</td>'+
 									'<td>$'+fila.precioVenta+'</td>'+
 									'<td>'+fila.unidadMedida+'</td>'+
-									'<td><a id=modificar"'+fila.id+'" class="btn btn-block btn-primary" data-toggle="modal" data-target="#modal-producto-modificar" type="button">Modificar</a></td>'+
+									'<td><a id="'+fila.id+'" class="btn btn-block btn-primary" onclick="productos.events.getProductFromRowSelected(this);" data-toggle="modal"  data-target="#modal-producto-modificar" type="button">Modificar</a></td>'+
 									'</tr>';	
 					}
 					

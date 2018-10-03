@@ -73,6 +73,18 @@ var ventas = (function() {
 				}).done(function( json ) {
 					console.log("Getting product by desc");
 					console.log(json);
+					$("#tableBusqueda").empty();
+					var productsString="";
+					for(i=0;i<json.listaProductosPorDescripcion.length;i++){
+						currentProducto=json.listaProductosPorDescripcion[i];
+						productsString=productsString + '<tr>'+
+										                '<td>'+currentProducto.id+'</td>'+
+														'<td>'+ currentProducto.descripcion+'</td>'+
+										                '<td>'+currentProducto.unidadesEnCaja +'</td>'+
+														'<td>'+currentProducto.precioVenta.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' });+'</td>'+
+										                '</tr>;'
+					}	
+					$("#tableBusqueda").append(productsString);
 					
 				}).fail(function( xhr, status, errorThrown ) {
 					//console.log( "Sorry, there was a problem!" );
@@ -94,7 +106,27 @@ var ventas = (function() {
 				}).done(function( json ) {
 					console.log("Get producto by code");
 					console.log(json);
-					
+					var productsString="";
+					for(i=0;i<json.listaProductosPorCodigo.length;i++){
+						currentProducto=json.listaProductosPorCodigo[i];
+						cantidadAgregar=$("#cantidadCodigo").val() != "" ? parseFloat($("#cantidadCodigo").val()) : 1.0;
+						cantidadSubtotal=currentProducto.precioVenta*cantidadAgregar;
+						
+						productsString=productsString + '<tr>'+
+										                '<td>'+currentProducto.id+'</td>'+
+														'<td>'+ currentProducto.descripcion+'</td>'+
+										                '<td>'+ cantidadAgregar +'</td>'+
+														'<td>'+currentProducto.precioVenta.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' });+'</td>'+
+														'<td>'+cantidadSubtotal.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' });+'</td>'+
+														'<td><a idMod="'+fila.id+'" class="btn btn-block btn-primary" onclick="" type="button">Modificar</a></td>'+
+														'<td><a idDel="'+fila.id+'" class="btn btn-block btn-danger" onclick="" type="button">Eliminar</a></td>'+
+										                '</tr>;'
+					}
+					if(json.listaProductosPorCodigo.length>0){
+						$("#tableSell").append(productsString);
+					}else{
+						///show notification not found product by code
+					}
 				}).fail(function( xhr, status, errorThrown ) {
 					//console.log( "Sorry, there was a problem!" );
 				    console.log( "Error: " + errorThrown );
