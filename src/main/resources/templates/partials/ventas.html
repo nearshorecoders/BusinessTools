@@ -127,15 +127,17 @@
             <!-- /.box-header -->
             <div class="box-body table-responsive no-padding">
               <table class="table table-hover">
-                <tr>
-                  <th>ID</th>
-				  <th>Descripción</th>
-                  <th>Cantidad</th>
-                  <th>Precio</th>
-				  <th>Subtotal</th>
-				  <th></th>
-				  <th></th>
-                </tr>
+                <thead>
+	                <tr>
+	                  <th>ID</th>
+					  <th>Descripción</th>
+	                  <th>Cantidad</th>
+	                  <th>Precio</th>
+					  <th>Subtotal</th>
+					  <th></th>
+					  <th></th>
+	                </tr>
+                </thead>
                 <tbody id="tableSell">
 	                <tr>
 	                  <td>1</td>
@@ -198,28 +200,16 @@
               </div>
               <div class="modal-body">
                 <div class="box">
-		            <div class="box-header">
-		              <h3 class="box-title">Se encontraron los siguientes productos:</h3>
-		
-		              <div class="box-tools">
-		                <div class="input-group input-group-sm" style="width: 150px;">
-		                  <input type="text" name="table_search" class="form-control pull-right" placeholder="Search">
-		
-		                  <div class="input-group-btn">
-		                    <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
-		                  </div>
-		                </div>
-		              </div>
-		            </div>
-		            <!-- /.box-header -->
 		            <div class="box-body table-responsive no-padding">
-		              <table class="table table-hover">
-		                <tr>
-		                  <th>ID</th>
-						  <th>Descripción</th>
-		                  <th>Cantidad restante</th>
-		                  <th>Precio</th>
-		                </tr>
+		              <table class="table table-hover" id="tableBusquedaProductos">
+		                <thead>
+			                <tr>
+			                  <th>ID</th>
+							  <th>Descripción</th>
+			                  <th>Cantidad restante</th>
+			                  <th>Precio</th>
+			                </tr>
+		                </thead>
 		                <tbody id="tableBusqueda">
 			                <tr>
 			                  <td>1</td>
@@ -244,11 +234,33 @@
 		            </div>
 		          </div>
 		          <!-- /.box -->
+		          <div class="box">
+		            <div class="box-header">
+		              <h3 class="box-title">Introduce la cantidad que deseas agregar:</h3>
+		            </div>
+		            <!-- /.box-header -->
+		            <div class="box-body table-responsive no-padding">
+		              <table class="table table-hover" id="tableAgregarProducto">
+		                <thead>
+			                <tr>
+			                  <th>ID</th>
+							  <th>Descripción</th>
+			                  <th>Disponible</th>
+			                  <th>Cantidad a agregar</th>
+			                </tr>
+		                </thead>
+		                <tbody id="tableProductoAAgregar">
+  
+		                <tbody>           
+		              </table>
+		            </div>
+		          </div>
+		          <!-- /.box --> 
               </div><!-- /.modal-body -->
               <br/>
               <div class="modal-footer">
                 <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Cerrar</button>
-                <button type="button" class="btn btn-primary pull-rigth">Agregar a venta</button>
+                <button type="button" class="btn btn-primary pull-rigth" onclick="ventas.events.addProductToSell();">Agregar a venta</button>
               </div>
             </div>
             <!-- /.modal-content -->
