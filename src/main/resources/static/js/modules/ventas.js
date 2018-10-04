@@ -18,6 +18,10 @@ var ventas = (function() {
 	var chart1 = null;
 	var mainDataSet;
 	var i = 0;
+	var currentProductFromSearch;
+	var lastIdItemAdded=0;
+	var productsStringSell='';
+	var listaProductosSeleccionados=[];
 	
 	var initProperties = function() {
 		events.slowNetworkDetection();	
@@ -66,6 +70,13 @@ var ventas = (function() {
 	var events = {
 			addProductToSell : function() {
 				console.log("producto agregado");
+				lastIdItemAdded=lastIdItemAdded+1;
+				//productsStringSell='<tr>';
+				productsStringSell='<tr><td>' + lastIdItemAdded + '</td>'+productsStringSell;
+				
+		    	$("#tableSell").append(productsStringSell);
+		    	currentProductFromSearch='';
+		    	$("#modal-producto-seleccion").modal('hide');
 			},
 			getProductByDescription : function() {
 				console.log("buscando producto por descripcion");
@@ -101,6 +112,7 @@ var ventas = (function() {
 				    
 				    $('#tableBusquedaProductos tbody').on( 'click', 'tr', function () {
 						$row=$(this);
+						currentProductFromSearch=$row;
 						$tds = $row.find("td");             // Finds all children <td> elements
 						//clean the form
 				    	$('#tableProductoAAgregar').html('');
@@ -137,12 +149,49 @@ var ventas = (function() {
 						});
 
 						function doCallToValidate() {
-							qtyAdd=parseFloat($('#inputCantidadAgregar').val());
-							avaliableQty=parseFloat($('#avaliableQty').html());
+							qtyAdd=parseFloat($("#inputCantidadAgregar").val());
+							avaliableQty=parseFloat($("#avaliableQty").html());
 						    if(qtyAdd>avaliableQty){
-						    	console.log("NO se puede agregar no existen suficientes");
+						    	alert("NO se puede agregar, no existen cantidad suficiente en almacen");
 						    }else{
-						    	console.log("Agregado sin problema")
+						    	//lastIdItemAdded=lastIdItemAdded+1;
+						    	$tds = $row.find("td");
+						    	productsStringSell='';
+						    	//productsStringSell='<tr>';
+						    	index=0;
+						    	$.each($tds, function() {               // Visits every single <td> element
+									stPrice=0.0;
+								    switch(index){
+								    	case 0:
+								    		//id
+								    		//productsStringSell=productsStringSell+'<td>' + lastIdItemAdded + '</td>';
+								    	break;	
+								    	case 1:
+								    		//descripcion
+								    		productsStringSell=productsStringSell+'<td>'+ $(this).text() + '</td>';
+								    	break;	
+								    	case 2:
+								    		//cantidadAgregada
+								    		productsStringSell=productsStringSell+'<td id="addedQty'+lastIdItemAdded+'">'+ qtyAdd + '</td>';
+								    	break;
+								    	case 3:
+								    		//precio
+								    		precioSinSigno=$(this).text().replace('$','');
+								    		stPrice=parseFloat(precioSinSigno);
+								    		productsStringSell=productsStringSell+'<td id="price'+lastIdItemAdded+'">'+ $(this).text() + '</td>';
+								    	break;
+								    }
+								    index++;
+								});
+								
+								stPrice=stPrice*qtyAdd;
+								//agregando precio subtotal
+								productsStringSell=productsStringSell + '<td id="stPrice'+lastIdItemAdded+'">$'+ stPrice + '</td>';    
+						    	
+								//agregar botones de eliminar y modificar
+								
+								productsStringSell=productsStringSell + '</tr>';  
+						    	
 						    }
 						}
 				    	
