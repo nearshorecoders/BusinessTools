@@ -87,10 +87,11 @@ var ventas = (function() {
 				}).done(function( json ) {
 					console.log("Getting product by desc");
 					console.log(json);
-					$("#tableBusqueda").empty();
+					$("#tableBusqueda").html('');
 					var preTable=$('#tableBusquedaProductos').DataTable();
 					preTable.destroy();
 					var productsString="";
+					$('#inputCantidadAgregar').val('');
 					for(i=0;i<json.listaProductosPorDescripcion.length;i++){
 						currentProducto=json.listaProductosPorDescripcion[i];
 						productsString=productsString + '<tr>'+
@@ -100,7 +101,7 @@ var ventas = (function() {
 														'<td>'+currentProducto.precioVenta.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' });+'</td>'+
 										                '</tr>;'
 					}	
-					$("#tableBusqueda").append(productsString);
+					$("#tableBusqueda").html(productsString);
 					 var table = $('#tableBusquedaProductos').DataTable({
 				        'paging'      : true,
 				        'lengthChange': false,
@@ -189,7 +190,12 @@ var ventas = (function() {
 								productsStringSell=productsStringSell + '<td id="stPrice'+lastIdItemAdded+'">$'+ stPrice + '</td>';    
 						    	
 								//agregar botones de eliminar y modificar
-								
+								productsStringSell=productsStringSell +'<td><div class="btn-group">'+
+							    '<div class="btn-group">'+
+							    '	<button type="button" class="btn btn-default">Modificar cantidad</button>'+
+							    '	<button type="button" class="btn btn-default" disabled>|</button>'+
+							    '	<button type="button" class="btn btn-danger">Eliminar producto</button>'+
+								'</div> </td>';							
 								productsStringSell=productsStringSell + '</tr>';  
 						    	
 						    }
