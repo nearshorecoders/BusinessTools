@@ -1,13 +1,11 @@
 package com.org.pos.repository;
 
-import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
@@ -20,7 +18,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.stereotype.Repository;
 
 import com.mysql.jdbc.Connection;
@@ -285,7 +282,7 @@ public class VentasRepository {
                            String sqlNombreCompleto="select nombre,apellidop,apellidom, from usuarios where idusuario="+venta.getUsuarios_idusuario();
                            List<Map<String, Object>> rows = jdbcTemplate.queryForList(sqlNombreCompleto);
                            	for (Map row : rows) {
-                           		udFueAtendidoPor=(String) row.get("nombre") +" "+row.get("apellidop") +" "+row.get("apellidom");
+                           		udFueAtendidoPor=(String) row.get("nombre") +" "+ (String)row.get("apellidop") +" "+(String)row.get("apellidom");
                            	}
 
                          }catch(Exception e){
@@ -304,7 +301,6 @@ public class VentasRepository {
                            		clienteAquienSeVendio.setVarDireccion(row.get("direccion")!=null ? (String) row.get("direccion") :"");
                            		clienteAquienSeVendio.setVarTelefono(row.get("telefono")!=null ? (String) row.get("telefono") :"");
                            		clienteAquienSeVendio.setIdClienteAModificar(venta.getCliente_idcliente());
-                           		
                            	}
 
                          }catch(Exception e){

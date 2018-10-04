@@ -53,13 +53,105 @@ var productos = (function() {
 	};
 	
 	var events = {
+			getProductFromRowSelected : function(element) {
+				$row=$("#product"+element.id);
+				$tds = $row.find("td");             // Finds all children <td> elements
+
+			    //clean the form
+			    $('#inputIdMod').val('');
+			    $('#inputCodigoMod').val('');
+			    $('#inputDescripcionMod').val('');
+			    $('#inputCantidadMod').val('');
+			    $('#inputPrecioCompraMod').val('');
+			    $('#inputPrecioVentaMod').val('');
+			    $('#inputCantidadAceptableMod').val('');
+			    $('#inputCantidadMinimaMod').val('');
+			   ///checar selects
+			   //$('#unidadMedidaMod').val('');
+			   //$('#presentacionMod').val('');
+				index=0;
+				$.each($tds, function() {               // Visits every single <td> element
+				    console.log($(this).text());        // Prints out the text within the <td>
+				    switch(index){
+				    	case 0:
+				    		$('#inputIdMod').val($(this).text());
+				    	break;	
+				    	case 1:
+				    		$('#inputCodigoMod').val($(this).text());
+				    	break;	
+				    	case 2:
+				    		$('#inputDescripcionMod').val($(this).text());
+				    	break;	
+				    	case 3:
+				    		$('#inputCantidadMod').val($(this).text());
+				    	break;	
+				    	case 4:
+				    		precioCompra=$(this).text().replace('$','');
+				    		$('#inputPrecioCompraMod').val(precioCompra);
+				    	break;	
+				    	case 5:
+				    		precioVenta=$(this).text().replace('$','');
+				    		$('#inputPrecioVentaMod').val(precioVenta);
+				    	break;	
+				    	case 6:
+				    		$('#inputCantidadAceptableMod').val($(this).text());
+				    	break;	
+				    	case 7:
+				    		$('#inputCantidadMinimaMod').val($(this).text());
+				    	break;	
+				    }
+				    
+				    index++;
+				});
+			},
 			getAllProducts : function() {
 				$.ajax({
 				    url: "/getAllProducts",
 				    type: "GET",
 				}).done(function( json ) {
-					console.log("All products");
+					
 					console.log(json);
+					$("#tableProducts").empty();
+ 
+					var contentRow='';
+					for(i=0 ; i < json.listaProductosTodos.length ; i++){
+						
+						fila=json.listaProductosTodos[i];
+						stockString='';
+						
+						if(typeof(fila.cantidadAceptable)==='undefined' || fila.cantidadAceptable==null){
+							fila.cantidadAceptable=fila.unidadesEnCaja;
+						}
+						
+						if(typeof(fila.cantidadMinima)==='undefined' || fila.cantidadMinima==null){
+							fila.cantidadMinima=fila.unidadesEnCaja/2;
+						}
+						
+						if(fila.unidadesEnCaja<2){
+							stockString='<td><span class="label label-danger">' + fila.cantidadMinima +'</span></td>'
+						}else if(fila.unidadesEnCaja>=fila.cantidadAceptable){
+							stockString='<td><span class="label label-success">' + fila.cantidadAceptable +'</span></td>'
+						}else if(fila.unidadesEnCaja<fila.cantidadAceptable){
+							stockString='<td><span class="label label-warning">' + fila.cantidadAceptable +'</span></td>'
+						}else if(fila.unidadesEnCaja<=fila.cantidadMinima){
+							stockString='<td><span class="label label-danger">' + fila.cantidadMinima +'</span></td>'
+						}
+						
+						contentRow = contentRow+'<tr id="product'+fila.id+'">'+
+									'<td>' + fila.id + '</td>'+
+									'<td>' + fila.codigo + '</td>'+
+									'<td>' + fila.descripcion + '</td>'+
+									'<td>' + fila.unidadesEnCaja + '</td>'+
+									'<td>' + fila.presentacion + '</td>'+
+									stockString+
+									'<td>$'+fila.precioCompra+'</td>'+
+									'<td>$'+fila.precioVenta+'</td>'+
+									'<td>'+fila.unidadMedida+'</td>'+
+									'<td><a id="'+fila.id+'" class="btn btn-block btn-primary" onclick="productos.events.getProductFromRowSelected(this);" data-toggle="modal"  data-target="#modal-producto-modificar" type="button">Modificar</a></td>'+
+									'</tr>';	
+					}
+					
+					$("#tableProducts").append(contentRow);
 					
 				}).fail(function( xhr, status, errorThrown ) {
 					//console.log( "Sorry, there was a problem!" );

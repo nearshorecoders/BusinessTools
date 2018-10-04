@@ -86,24 +86,22 @@
                     <input type="text" class="form-control" id="inputCodigo" placeholder="Escanea el código de barras">
                   </div>
                 </div>
-				<div class="form-group">
-                  <label for="inputDescripcion" class="col-sm-2 control-label">Descripción</label>
-
+                <div class="form-group">
+                  <label for="inputCantidad" class="col-sm-2 control-label" id="cantidadCodigo">Cantidad</label>
                   <div class="col-sm-10">
-                    <input type="text" class="form-control" id="inputDescripcion" placeholder="Escribe un fragmento de la descripción del producto">
+                    <input type="text" class="form-control" id="inputCantidad" placeholder="La cantidad que deseas agregar por código">
                   </div>
                 </div>
 				<div class="form-group">
-                  <label for="inputCantidad" class="col-sm-2 control-label">Cantidad</label>
-
+                  <label for="inputDescripcion" class="col-sm-2 control-label">Descripción</label>
                   <div class="col-sm-10">
-                    <input type="text" class="form-control" id="inputCantidad" placeholder="La cantidad que deseas vender">
+                    <input type="text" class="form-control" id="inputDescripcion" placeholder="Escribe un fragmento de la descripción del producto">
                   </div>
                 </div>
               </div>
               <!-- /.box-body -->
               <div class="box-footer">
-                <a type="submit" class="btn btn-info pull-right" onclick="ventas.events.getProductByDescription();">Buscar por descripción</a>
+                <a type="submit" class="btn btn-info pull-right" onclick="ventas.events.getProductByDescription();" data-toggle="modal" data-target="#modal-producto-seleccion"> Buscar por descripción</a>
               </div>
               <!-- /.box-footer -->
             </form>
@@ -129,38 +127,43 @@
             <!-- /.box-header -->
             <div class="box-body table-responsive no-padding">
               <table class="table table-hover">
-                <tr>
-                  <th>ID</th>
-				  <th>Descripción</th>
-                  <th>Cantidad</th>
-                  <th>Precio</th>
-				  <th>Subtotal</th>
-				  <th>Acciones</th>
-                </tr>
-                <tr>
-                  <td>1</td>
-				  <td>Refresco</td>
-                  <td>2</td>
-                  <td>20.00</td>
-				  <td>40.00</td>
-				  <td>eliminar-cambiar</td>
-                </tr>      
-                <tr>
-                  <td>2</td>
-				  <td>Te</td>
-                  <td>3</td>
-                  <td>25.00</td>
-				  <td>75.00</td>
-				  <td>eliminar-cambiar</td>
-                </tr> 
-                <tr>
-                  <td>3</td>
-				  <td>Comida del día</td>
-                  <td>5</td>
-                  <td>50.00</td>
-				  <td>250.00</td>
-				  <td>eliminar-cambiar</td>
-                </tr>           
+                <thead>
+	                <tr>
+	                  <th>ID</th>
+					  <th>Descripción</th>
+	                  <th>Cantidad</th>
+	                  <th>Precio</th>
+					  <th>Subtotal</th>
+					  <th></th>
+					  <th></th>
+	                </tr>
+                </thead>
+                <tbody id="tableSell">
+	                <tr>
+	                  <td>1</td>
+					  <td>Refresco</td>
+	                  <td>2</td>
+	                  <td>20.00</td>
+					  <td>40.00</td>
+					  <td>eliminar-cambiar</td>
+	                </tr>      
+	                <tr>
+	                  <td>2</td>
+					  <td>Te</td>
+	                  <td>3</td>
+	                  <td>25.00</td>
+					  <td>75.00</td>
+					  <td>eliminar-cambiar</td>
+	                </tr> 
+	                <tr>
+	                  <td>3</td>
+					  <td>Comida del día</td>
+	                  <td>5</td>
+	                  <td>50.00</td>
+					  <td>250.00</td>
+					  <td>eliminar-cambiar</td>
+	                </tr>
+                <tbody>           
               </table>
             </div>
           </div>
@@ -187,6 +190,84 @@
     </section>
     <!-- section content---> 
   <!-- /.content-wrapper --> 
+  <div class="modal fade" id="modal-producto-seleccion">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Seleccionar producto</h4>
+              </div>
+              <div class="modal-body">
+                <div class="box">
+		            <div class="box-body table-responsive no-padding">
+		              <table class="table table-hover" id="tableBusquedaProductos">
+		                <thead>
+			                <tr>
+			                  <th>ID</th>
+							  <th>Descripción</th>
+			                  <th>Cantidad restante</th>
+			                  <th>Precio</th>
+			                </tr>
+		                </thead>
+		                <tbody id="tableBusqueda">
+			                <tr>
+			                  <td>1</td>
+							  <td>Refresco</td>
+			                  <td>2</td>
+							  <td>40.00</td>
+			                </tr>      
+			                <tr>
+			                  <td>2</td>
+							  <td>Te</td>
+			                  <td>3</td>
+							  <td>75.00</td>
+			                </tr> 
+			                <tr>
+			                  <td>3</td>
+							  <td>Comida del día</td>
+			                  <td>5</td>
+			                  <td>250.00</td>
+			                </tr>
+		                <tbody>           
+		              </table>
+		            </div>
+		          </div>
+		          <!-- /.box -->
+		          <div class="box">
+		            <div class="box-header">
+		              <h3 class="box-title">Introduce la cantidad que deseas agregar:</h3>
+		            </div>
+		            <!-- /.box-header -->
+		            <div class="box-body table-responsive no-padding">
+		              <table class="table table-hover" id="tableAgregarProducto">
+		                <thead>
+			                <tr>
+			                  <th>ID</th>
+							  <th>Descripción</th>
+			                  <th>Disponible</th>
+			                  <th>Cantidad a agregar</th>
+			                </tr>
+		                </thead>
+		                <tbody id="tableProductoAAgregar">
+  
+		                <tbody>           
+		              </table>
+		            </div>
+		          </div>
+		          <!-- /.box --> 
+              </div><!-- /.modal-body -->
+              <br/>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary pull-rigth" onclick="ventas.events.addProductToSell();">Agregar a venta</button>
+              </div>
+            </div>
+            <!-- /.modal-content -->
+          </div>
+          <!-- /.modal-dialog -->
+     </div>
+  
 	<script src="js/modules/ventas.js"></script>
 </body>
 </html>
