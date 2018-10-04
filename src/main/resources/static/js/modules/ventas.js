@@ -68,11 +68,18 @@ var ventas = (function() {
 	};
 	
 	var events = {
+			removeRow : function(element) {
+				$("#sellRow"+element).remove();
+				console.log("re ordenando tabla ventas");
+			},
 			addProductToSell : function() {
 				console.log("producto agregado");
 				lastIdItemAdded=lastIdItemAdded+1;
 				//productsStringSell='<tr>';
-				productsStringSell='<tr><td>' + lastIdItemAdded + '</td>'+productsStringSell;
+				productsStringSell='<tr id="sellRow'+lastIdItemAdded+'"><td>' + lastIdItemAdded + '</td>'+productsStringSell;
+				
+				productsStringSell=productsStringSell.replace("idxxx",lastIdItemAdded);
+				
 				
 		    	$("#tableSell").append(productsStringSell);
 		    	currentProductFromSearch='';
@@ -194,7 +201,7 @@ var ventas = (function() {
 							    '<div class="btn-group">'+
 							    '	<button type="button" class="btn btn-default">Modificar cantidad</button>'+
 							    '	<button type="button" class="btn btn-default" disabled>|</button>'+
-							    '	<button type="button" class="btn btn-danger">Eliminar producto</button>'+
+							    '	<button type="button" class="btn btn-danger" onclick="ventas.events.removeRow(idxxx)">Eliminar producto</button>'+
 								'</div> </td>';							
 								productsStringSell=productsStringSell + '</tr>';  
 						    	
