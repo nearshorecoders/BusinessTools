@@ -24,7 +24,8 @@ var ventas = (function() {
 	var lastProductRemoved='';
 	var lastProductRecovered=0;
 	var listaProductosSeleccionados=[];
-	
+	var lastB=0.0;
+	var arrP=[];
 	var initProperties = function() {
 		events.slowNetworkDetection();	
 	}
@@ -70,6 +71,37 @@ var ventas = (function() {
 	};
 	
 	var events = {
+			calcSellAmount : function() {
+				var table = $("#tableSell");
+				index=1;
+				totalSum=0.0;
+			    table.find('tr').each(function (i) {
+			        var $tds = $(this).find('td'),
+			            productId = $tds.eq(0).text(index),
+			            subtotal=$tds.eq(4).text();
+			        	subtotal=subtotal.replace('$','');
+			        totalSum=totalSum+parseFloat(subtotal);
+			        index++;
+			    });
+			    $("#totalSellAmount").text("Total: "+totalSum);
+			    lastB=totalSum;
+			},
+//			lessSellAmount : function() {
+//				var table = $("#tableSell");
+//				index=1;
+//				totalSum=0.0;
+//			    table.find('tr').each(function (i) {
+//			        var $tds = $(this).find('td'),
+//			            productId = $tds.eq(0).text(index),
+//			            subtotal=$tds.eq(4).text();
+//			        	subtotal=subtotal.replace('$','');
+//			        totalSum=totalSum-parseFloat(subtotal);
+//			        console.log(totalSum);
+//			        index++;
+//			    });
+//			    $("#totalSellAmount").text("Total: "+totalSum);
+//			    lastB=totalSum;
+//			},
 			undoneRemoveRow : function(element) {
 //				if(element==lastProductRecovered){
 //			    	$.notify({
@@ -97,14 +129,19 @@ var ventas = (function() {
 
 				originalTable=$("#tableSell").html();
 				$("#sellRow"+element).remove();
-				
-				var table = $("#tableSell");
-				index=1;
-			    table.find('tr').each(function (i) {
-			        var $tds = $(this).find('td'),
-			            productId = $tds.eq(0).text(index);
-			        index++;
-			    });
+				events.calcSellAmount();
+//				var table = $("#tableSell");
+//				index=1;
+//			    table.find('tr').each(function (i) {
+//			        var $tds = $(this).find('td'),
+//			            productId = $tds.eq(0).text(index),
+//			            subtotal=$tds.eq(4).text();
+//			        	subtotal=subtotal.replace('$','');
+//			        totalSum=totalSum+parseFloat(subtotal);
+//			        console.log(totalSum);
+//			        $("#totalSellAmount").text("Total: "+totalSum);
+//			        index++;
+//			    });
 				
 		    	$.notify({
 		    		title: '<strong>Error!</strong>',
@@ -127,6 +164,7 @@ var ventas = (function() {
 		    	currentProductFromSearch='';
 		    	$("#addToSellButton").attr("disabled", true);
 		    	$("#modal-producto-seleccion").modal('hide');
+		    	events.calcSellAmount();
 			},
 			getProductByDescription : function() {
 				console.log("buscando producto por descripcion");
@@ -315,6 +353,7 @@ var ventas = (function() {
 					}
 					if(json.listaProductosPorCodigo.length>0){
 						$("#tableSell").append(productsString);
+						events.calcSellAmount();
 					}else{
 						///show notification not found product by code
 					}
