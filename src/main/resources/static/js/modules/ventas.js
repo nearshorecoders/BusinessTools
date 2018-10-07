@@ -10,7 +10,7 @@ var ventas = (function() {
 	var pathArray = window.location.pathname;
 	var stompClient = null;
 	var stompClientChat = null;
-
+	var originalTable='';
 	var wallType = {};		
 	var intCurrenntWall = 1;
 	
@@ -21,8 +21,11 @@ var ventas = (function() {
 	var currentProductFromSearch;
 	var lastIdItemAdded=0;
 	var productsStringSell='';
+	var lastProductRemoved='';
+	var lastProductRecovered=0;
 	var listaProductosSeleccionados=[];
-	
+	var lastB=0.0;
+	var arrP=[];
 	var initProperties = function() {
 		events.slowNetworkDetection();	
 	}
@@ -68,15 +71,100 @@ var ventas = (function() {
 	};
 	
 	var events = {
+			calcSellAmount : function() {
+				var table = $("#tableSell");
+				index=1;
+				totalSum=0.0;
+			    table.find('tr').each(function (i) {
+			        var $tds = $(this).find('td'),
+			            productId = $tds.eq(0).text(index),
+			            subtotal=$tds.eq(4).text();
+			        	subtotal=subtotal.replace('$','');
+			        totalSum=totalSum+parseFloat(subtotal);
+			        index++;
+			    });
+			    $("#totalSellAmount").text("Total: "+totalSum);
+			    lastB=totalSum;
+			},
+//			lessSellAmount : function() {
+//				var table = $("#tableSell");
+//				index=1;
+//				totalSum=0.0;
+//			    table.find('tr').each(function (i) {
+//			        var $tds = $(this).find('td'),
+//			            productId = $tds.eq(0).text(index),
+//			            subtotal=$tds.eq(4).text();
+//			        	subtotal=subtotal.replace('$','');
+//			        totalSum=totalSum-parseFloat(subtotal);
+//			        console.log(totalSum);
+//			        index++;
+//			    });
+//			    $("#totalSellAmount").text("Total: "+totalSum);
+//			    lastB=totalSum;
+//			},
+			undoneRemoveRow : function(element) {
+//				if(element==lastProductRecovered){
+//			    	$.notify({
+//			    		title: '<strong>Ya se recupero el producto!</strong>',
+//			    		message: ''
+//			    	},{
+//			    		type: 'success',
+//			    		z_index: 2000,
+//			    	});
+//					return;
+//				}
+//				recoveredProduct='<tr id="sellRow'+element+'">'+lastProductRemoved+'</tr>';
+				//$("#tableSell").append(recoveredProduct);
+				//lastProductRecovered=element;
+				$("#tableSell").html(originalTable);
+			},
+			removeRow : function(element) {
+				lastProductRemoved=$("#sellRow"+element).html();
+				
+//			     $('#tableSell tr').each(function (i, row){
+//			    	  console.log(i,row);
+//			    	  console.log("---------");
+//			    	  console.log(row.firstElementChild.html());
+//			     });
+
+				originalTable=$("#tableSell").html();
+				$("#sellRow"+element).remove();
+				events.calcSellAmount();
+//				var table = $("#tableSell");
+//				index=1;
+//			    table.find('tr').each(function (i) {
+//			        var $tds = $(this).find('td'),
+//			            productId = $tds.eq(0).text(index),
+//			            subtotal=$tds.eq(4).text();
+//			        	subtotal=subtotal.replace('$','');
+//			        totalSum=totalSum+parseFloat(subtotal);
+//			        console.log(totalSum);
+//			        $("#totalSellAmount").text("Total: "+totalSum);
+//			        index++;
+//			    });
+				
+		    	$.notify({
+		    		title: '<strong>Error!</strong>',
+		    		message: 'Se elimino un producto. <a onclick="ventas.events.undoneRemoveRow('+element+');">Deshacer</a>'
+		    	},{
+		    		type: 'danger',
+		    		z_index: 2000,
+		    	});
+			},
 			addProductToSell : function() {
 				console.log("producto agregado");
 				lastIdItemAdded=lastIdItemAdded+1;
 				//productsStringSell='<tr>';
-				productsStringSell='<tr><td>' + lastIdItemAdded + '</td>'+productsStringSell;
+				productsStringSell='<tr id="sellRow'+lastIdItemAdded+'"><td id="sellRowNumber'+lastIdItemAdded+'">' + lastIdItemAdded + '</td>'+productsStringSell;
+				
+				productsStringSell=productsStringSell.replace("idxxx",lastIdItemAdded);
+				
 				
 		    	$("#tableSell").append(productsStringSell);
 		    	currentProductFromSearch='';
+		    	$("#addToSellButton").attr("disabled", true);
 		    	$("#modal-producto-seleccion").modal('hide');
+		    	events.calcSellAmount();
 			},
 			getProductByDescription : function() {
 				console.log("buscando producto por descripcion");
@@ -92,6 +180,7 @@ var ventas = (function() {
 					preTable.destroy();
 					var productsString="";
 					$('#inputCantidadAgregar').val('');
+					$('#tableProductoAAgregar').html('');
 					for(i=0;i<json.listaProductosPorDescripcion.length;i++){
 						currentProducto=json.listaProductosPorDescripcion[i];
 						productsString=productsString + '<tr>'+
@@ -145,6 +234,7 @@ var ventas = (function() {
 				    	
 						var timerC = null;
 						$('#inputCantidadAgregar').keydown(function(){
+							   $("#addToSellButton").attr("disabled", true);
 						       clearTimeout(timerC); 
 						       timerC = setTimeout(doCallToValidate, 1000)
 						});
@@ -153,9 +243,19 @@ var ventas = (function() {
 							qtyAdd=parseFloat($("#inputCantidadAgregar").val());
 							avaliableQty=parseFloat($("#avaliableQty").html());
 						    if(qtyAdd>avaliableQty){
-						    	alert("NO se puede agregar, no existen cantidad suficiente en almacen");
+						    	//types of notifications 
+						    	//warning
+						    	//success
+						    	$.notify({
+						    		title: '<strong>Error!</strong>',
+						    		message: 'NO se puede agregar, no existen cantidad suficiente en almacen.'
+						    	},{
+						    		type: 'danger',
+						    		z_index: 2000,
+						    	});
 						    }else{
 						    	//lastIdItemAdded=lastIdItemAdded+1;
+						    	$("#addToSellButton").attr("disabled", false);
 						    	$tds = $row.find("td");
 						    	productsStringSell='';
 						    	//productsStringSell='<tr>';
@@ -194,7 +294,7 @@ var ventas = (function() {
 							    '<div class="btn-group">'+
 							    '	<button type="button" class="btn btn-default">Modificar cantidad</button>'+
 							    '	<button type="button" class="btn btn-default" disabled>|</button>'+
-							    '	<button type="button" class="btn btn-danger">Eliminar producto</button>'+
+							    '	<button type="button" class="btn btn-danger" onclick="ventas.events.removeRow(idxxx)">Eliminar producto</button>'+
 								'</div> </td>';							
 								productsStringSell=productsStringSell + '</tr>';  
 						    	
@@ -253,6 +353,7 @@ var ventas = (function() {
 					}
 					if(json.listaProductosPorCodigo.length>0){
 						$("#tableSell").append(productsString);
+						events.calcSellAmount();
 					}else{
 						///show notification not found product by code
 					}
