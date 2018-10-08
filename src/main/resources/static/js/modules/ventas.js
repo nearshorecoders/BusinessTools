@@ -23,7 +23,8 @@ var ventas = (function() {
 	var productsStringSell='';
 	var lastProductRemoved='';
 	var lastProductRecovered=0;
-	var listaProductosSeleccionados=[];
+	var listaProductosAgregadosAVenta=[];
+	var productoAAgregarOriginal={};
 	var lastB=0.0;
 	var arrP=[];
 	var initProperties = function() {
@@ -117,6 +118,7 @@ var ventas = (function() {
 				//$("#tableSell").append(recoveredProduct);
 				//lastProductRecovered=element;
 				$("#tableSell").html(originalTable);
+				events.calcSellAmount();
 			},
 			removeRow : function(element) {
 				lastProductRemoved=$("#sellRow"+element).html();
@@ -165,6 +167,8 @@ var ventas = (function() {
 		    	$("#addToSellButton").attr("disabled", true);
 		    	$("#modal-producto-seleccion").modal('hide');
 		    	events.calcSellAmount();
+		    	
+		    	listaProductosAgregadosAVenta.push(productoAAgregarOriginal);
 			},
 			getProductByDescription : function() {
 				console.log("buscando producto por descripcion");
@@ -259,26 +263,34 @@ var ventas = (function() {
 						    	$tds = $row.find("td");
 						    	productsStringSell='';
 						    	//productsStringSell='<tr>';
+						    	
+						    	//listaProductosAgregadosAVenta=[];
+						    	//productoAAgregarOriginal={};
+						    	
 						    	index=0;
 						    	$.each($tds, function() {               // Visits every single <td> element
 									stPrice=0.0;
 								    switch(index){
 								    	case 0:
 								    		//id
-								    		//productsStringSell=productsStringSell+'<td>' + lastIdItemAdded + '</td>';
+								    		productoAAgregarOriginal.idProducto=$(this).text();
+								    		//productsStringSell=productsStringSell+'<td id="idProduct'+lastIdItemAdded+'">' + $(this).text() + '</td>';
 								    	break;	
 								    	case 1:
+								    		productoAAgregarOriginal.descripcion=$(this).text();
 								    		//descripcion
 								    		productsStringSell=productsStringSell+'<td>'+ $(this).text() + '</td>';
 								    	break;	
 								    	case 2:
 								    		//cantidadAgregada
+								    		productoAAgregarOriginal.cantidadOriginal=$(this).text();
 								    		productsStringSell=productsStringSell+'<td id="addedQty'+lastIdItemAdded+'">'+ qtyAdd + '</td>';
 								    	break;
 								    	case 3:
 								    		//precio
 								    		precioSinSigno=$(this).text().replace('$','');
 								    		stPrice=parseFloat(precioSinSigno);
+								    		productoAAgregarOriginal.precio=precioSinSigno;
 								    		productsStringSell=productsStringSell+'<td id="price'+lastIdItemAdded+'">'+ $(this).text() + '</td>';
 								    	break;
 								    }
