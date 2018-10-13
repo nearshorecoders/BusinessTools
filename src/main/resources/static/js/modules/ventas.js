@@ -61,7 +61,7 @@ var ventas = (function() {
 			lastI=amountEntered;
 			changeAmount=amountEntered-lastB;
 			lastC=changeAmount;
-			$("#changeAmount").val(changeAmount);
+			$("#changeAmount").text(changeAmount);
 		}
 		
 		$(".navbar-brand.pitch-logo").on("click", function(){ 
