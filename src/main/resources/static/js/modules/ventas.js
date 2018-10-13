@@ -26,6 +26,8 @@ var ventas = (function() {
 	var listaProductosAgregadosAVenta=[];
 	var productoAAgregarOriginal={};
 	var lastB=0.0;
+	var lastI=0.0;
+	var lastC=0.0;
 	var arrP=[];
 	var initProperties = function() {
 		events.slowNetworkDetection();	
@@ -46,6 +48,20 @@ var ventas = (function() {
 		function doCallToGetProductByCode() {
 		    console.log('get product by code executing');
 		    events.getProductByCode();
+		}
+		
+		var timer2 = null;
+		$('#inputCantidadEfectivo').keydown(function(){
+		       clearTimeout(timer2); 
+		       timer2 = setTimeout(doCallToUpdateChange, 1000)
+		});
+
+		function doCallToUpdateChange() {
+			amountEntered=parseFloat($('#inputCantidadEfectivo').val());
+			lastI=amountEntered;
+			changeAmount=amountEntered-lastB;
+			lastC=changeAmount;
+			$("#changeAmount").val(changeAmount);
 		}
 		
 		$(".navbar-brand.pitch-logo").on("click", function(){ 
@@ -72,6 +88,87 @@ var ventas = (function() {
 	};
 	
 	var events = {
+			vender : function() {
+				if(lastB==0.0){
+			    	$.notify({
+			    		title: '<strong>Error!</strong>',
+			    		message: 'No se han agregado productos'
+			    	},{
+			    		type: 'danger',
+			    		z_index: 2000,
+			    	});
+			    	return;
+				}
+				
+				var amountReceived = $("#inputCantidadEfectivo").val();
+				if(amountReceived==""){
+			    	$.notify({
+			    		title: '<strong>Error!</strong>',
+			    		message: 'No se ha ingresado pago'
+			    	},{
+			    		type: 'danger',
+			    		z_index: 2000,
+			    	});
+			    	return;
+				}else{
+					amountReceived=parseFloat(amountReceived);
+				}
+
+				if(amountReceived < 0.00){
+			    	$.notify({
+			    		title: '<strong>Error!</strong>',
+			    		message: 'El pago no puede ser menor a cero'
+			    	},{
+			    		type: 'danger',
+			    		z_index: 2000,
+			    	});
+			    	return;
+				}else if(amountReceived < lastB){
+			    	$.notify({
+			    		title: '<strong>Error!</strong>',
+			    		message: 'El pago no puede ser menor al total'
+			    	},{
+			    		type: 'danger',
+			    		z_index: 2000,
+			    	});
+			    	return;
+				}
+				
+//				dataToSend={
+//						cambio : lastC,
+//						cliente : 1,
+//						consecutivoVenta : 0,
+//						total : lastB,
+//						efectivo :lastI,
+//						usuario:1,
+//						listaDetalle:listaProductosAgregadosAVenta,
+//				};
+//				$.ajax({
+//						
+//					    url: "/createVenta",
+//					    type: "POST",
+//					    dataType : "json",
+//					    data:JSON.stringify(dataToSend),
+//					    headers: { 
+//					        'Accept': 'application/json',
+//					        'Content-Type': 'application/json' 
+//					    },
+//					    
+//				}).done(function( json ) {
+//						console.log("Executing sell");
+//						console.log(json);
+//						lastB=0.0;
+//						listaProductosAgregadosAVenta=[];
+//				}).fail(function( xhr, status, errorThrown ) {
+//						//console.log( "Sorry, there was a problem!" );
+//					    console.log( "Error: " + errorThrown );
+//					    console.log( "Status: " + status );
+//					    //console.dir( xhr );
+//				}).always(function( xhr, status ) {
+//					    //console.log( "The request is complete!" );
+//				});
+				
+			},
 			calcSellAmount : function() {
 				var table = $("#tableSell");
 				index=1;
