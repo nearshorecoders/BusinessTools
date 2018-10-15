@@ -109,59 +109,118 @@
         </div>
 
         <div class="row">
-        <div class="col-xs-12">
-          <div class="box">
-            <div class="box-header">
-              <h3 class="box-title">Listado de productos en venta</h3>
-
-              <div class="box-tools">
-                <div class="input-group input-group-sm" style="width: 150px;">
-                  <input type="text" name="table_search" class="form-control pull-right" placeholder="Search">
-
-                  <div class="input-group-btn">
-                    <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <!-- /.box-header -->
-            <div class="box-body table-responsive no-padding">
-              <table class="table table-hover">
-                <thead>
-	                <tr>
-	                  <th>ID</th>
-					  <th>Descripción</th>
-	                  <th>Cantidad</th>
-	                  <th>Precio</th>
-					  <th>Subtotal</th>
-					  <th></th>
-					  <th></th>
-	                </tr>
-                </thead>
-                <tbody id="tableSell">
-                <tbody>           
-              </table>
-            </div>
-          </div>
-          <!-- /.box -->
-          <div class="box-footer">
-                <div class="form-group">
-                	<div class="col-sm-4">
-                   		<h1 id="totalSellAmount" class="col-sm-2 control-label">Total: $0.00 </h1>
-                   	</div>
-		        </div>
-                <div class="form-group">
-		           <label for="inputCantidad" class="col-sm-4 control-label">Efectivo recibido </label>
-		           <div class="col-sm-2">
-		              <input type="text" class="form-control" id="inputCantidad" placeholder="Efectivo que el cliente proporciono">
-		           </div>
-		           <div class="col-sm-4">
-		           	<button type="submit" class="btn-lg btn-success pull-left">Confirmar venta</button>
-		           </div>
-		        </div>
-          </div>
-        </div>
+	        <div class="col-xs-12">
+	          <div class="box">
+	            <div class="box-header">
+	              <h3 class="box-title">Listado de productos en venta</h3>
+	
+	              <div class="box-tools">
+	                <div class="input-group input-group-sm" style="width: 150px;">
+	                  <input type="text" name="table_search" class="form-control pull-right" placeholder="Search">
+	
+	                  <div class="input-group-btn">
+	                    <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+	                  </div>
+	                </div>
+	              </div>
+	            </div>
+	            <!-- /.box-header -->
+	            <div class="box-body table-responsive no-padding">
+	              <table class="table table-hover">
+	                <thead>
+		                <tr>
+		                  <th>ID</th>
+						  <th>Descripción</th>
+		                  <th>Cantidad</th>
+		                  <th>Precio</th>
+						  <th>Subtotal</th>
+						  <th></th>
+						  <th></th>
+		                </tr>
+	                </thead>
+	                <tbody id="tableSell">
+	                <tbody>           
+	              </table>
+	            </div>
+	          </div>
+	          <!-- /.box -->
+	          <div class="box-footer" style="display:none">
+	                <div class="form-group">
+	                	<div class="col-sm-4">
+	                   		<h1 id="totalSellAmountOld" class="col-sm-2 control-label">Total: $0.00 </h1>
+	                   	</div>
+			        </div>
+	                <div class="form-group">
+			           <label for="inputCantidadOld" class="col-sm-4 control-label">Efectivo recibido </label>
+			           <div class="col-sm-2">
+			              <input type="text" class="form-control" id="inputCantidadOld" placeholder="Efectivo que el cliente proporciono">
+			           </div>
+			           <div class="col-sm-4">
+			           	<button type="submit" class="btn-lg btn-success pull-left" id="confirmButtonOld">Confirmar venta</button>
+			           </div>
+			        </div>
+	          </div>
+	        </div>
       </div>
+      	        <!-- Info boxes cobro -->
+      <div class="row">
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="info-box">
+            <span class="info-box-icon bg-aqua" id="colorTotal"><i class="fa fa-dollar"></i></span>
+
+            <div class="info-box-content">
+              <span class="info-box-text">Total</span>
+              <span class="info-box-number" id="totalSellAmount"><big>0.00</big></span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="info-box">
+            <span class="info-box-icon bg-aqua" id="colorEfectivo"><i class="fa fa-dollar"></i></span>
+
+            <div class="info-box-content">
+              <span class="info-box-text">Pago</span>
+              <input type="text" class="form-control" id="inputCantidadEfectivo" placeholder="Efectivo recibido Ej. 5.00" >
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+
+        <!-- fix for small devices only -->
+        <div class="clearfix visible-sm-block"></div>
+
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="info-box">
+            <span class="info-box-icon bg-aqua" id="colorCambio"><i class="ion ion-cash"></i></span>
+
+            <div class="info-box-content">
+              <span class="info-box-text">Cambio</span>
+              <span class="info-box-number" id="changeAmount">0.00</span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="info-box">
+            <span class="info-box-icon bg-green" id="colorConfirmarVenta"><i class="ion ion-ios-checkmark-outline"></i></span>
+
+            <div class="info-box-content">
+				<button type="submit" class="btn-lg btn-success pull-left" onclick="ventas.events.vender();" >Confirmar venta</button>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row cobro details -->
     </div>
     </section>
     <!-- section content---> 
