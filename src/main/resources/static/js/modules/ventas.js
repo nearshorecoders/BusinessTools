@@ -13,7 +13,7 @@ var ventas = (function() {
 	var originalTable='';
 	var wallType = {};		
 	var intCurrenntWall = 1;
-	
+	var inputCantidad=0.0;
 	var canvas = null;
 	var chart1 = null;
 	var mainDataSet;
@@ -264,8 +264,11 @@ var ventas = (function() {
 		    	$("#addToSellButton").attr("disabled", true);
 		    	$("#modal-producto-seleccion").modal('hide');
 		    	events.calcSellAmount();
+		    	productoAAgregarOriginal.cantidadAgregada=inputCantidad;
+		    	productoAAgregarOriginal.cantidadRestante=productoAAgregarOriginal.cantidadOriginal-inputCantidad;
+		    	listaProductosAgregadosAVenta[productoAAgregarOriginal.idProducto]=productoAAgregarOriginal;
 		    	
-		    	listaProductosAgregadosAVenta.push(productoAAgregarOriginal);
+		    	inputCantidad=0.0;
 			},
 			getProductByDescription : function() {
 				console.log("buscando producto por descripcion");
@@ -284,12 +287,24 @@ var ventas = (function() {
 					$('#tableProductoAAgregar').html('');
 					for(i=0;i<json.listaProductosPorDescripcion.length;i++){
 						currentProducto=json.listaProductosPorDescripcion[i];
-						productsString=productsString + '<tr>'+
-										                '<td>'+currentProducto.id+'</td>'+
-														'<td>'+ currentProducto.descripcion+'</td>'+
-										                '<td>'+currentProducto.unidadesEnCaja +'</td>'+
-														'<td>'+currentProducto.precioVenta.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' });+'</td>'+
-										                '</tr>;'
+						
+						productoRestante=listaProductosAgregadosAVenta[currentProducto.id];
+						
+						if(typeof(productoRestante)==='undefined'){
+							productsString=productsString + '<tr>'+
+			                '<td>'+currentProducto.id+'</td>'+
+							'<td>'+ currentProducto.descripcion+'</td>'+
+			                '<td>'+currentProducto.unidadesEnCaja +'</td>'+
+							'<td>'+currentProducto.precioVenta.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' });+'</td>'+
+			                '</tr>;'	
+						}else{
+							productsString=productsString + '<tr>'+
+			                '<td>'+currentProducto.id+'</td>'+
+							'<td>'+ currentProducto.descripcion+'</td>'+
+			                '<td>'+productoRestante.cantidadRestante +'</td>'+
+							'<td>'+currentProducto.precioVenta.toLocaleString('es-MX', { style: 'currency', currency: 'MXN' });+'</td>'+
+			                '</tr>;'
+						}
 					}	
 					$("#tableBusqueda").html(productsString);
 					 var table = $('#tableBusquedaProductos').DataTable({
@@ -342,6 +357,7 @@ var ventas = (function() {
 
 						function doCallToValidate() {
 							qtyAdd=parseFloat($("#inputCantidadAgregar").val());
+							inputCantidad=qtyAdd;
 							avaliableQty=parseFloat($("#avaliableQty").html());
 						    if(qtyAdd>avaliableQty){
 						    	//types of notifications 
@@ -380,7 +396,7 @@ var ventas = (function() {
 								    	break;	
 								    	case 2:
 								    		//cantidadAgregada
-								    		productoAAgregarOriginal.cantidadOriginal=$(this).text();
+								    		productoAAgregarOriginal.cantidadOriginal=ParseFloat($(this).text());
 								    		productsStringSell=productsStringSell+'<td id="addedQty'+lastIdItemAdded+'">'+ qtyAdd + '</td>';
 								    	break;
 								    	case 3:
