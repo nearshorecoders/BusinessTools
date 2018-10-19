@@ -134,39 +134,43 @@ var ventas = (function() {
 			    	return;
 				}
 				
-//				dataToSend={
-//						cambio : lastC,
-//						cliente : 1,
-//						consecutivoVenta : 0,
-//						total : lastB,
-//						efectivo :lastI,
-//						usuario:1,
-//						listaDetalle:listaProductosAgregadosAVenta,
-//				};
-//				$.ajax({
-//						
-//					    url: "/createVenta",
-//					    type: "POST",
-//					    dataType : "json",
-//					    data:JSON.stringify(dataToSend),
-//					    headers: { 
-//					        'Accept': 'application/json',
-//					        'Content-Type': 'application/json' 
-//					    },
-//					    
-//				}).done(function( json ) {
-//						console.log("Executing sell");
-//						console.log(json);
-//						lastB=0.0;
-//						listaProductosAgregadosAVenta=[];
-//				}).fail(function( xhr, status, errorThrown ) {
-//						//console.log( "Sorry, there was a problem!" );
-//					    console.log( "Error: " + errorThrown );
-//					    console.log( "Status: " + status );
-//					    //console.dir( xhr );
-//				}).always(function( xhr, status ) {
-//					    //console.log( "The request is complete!" );
-//				});
+				var filtered = listaProductosAgregadosAVenta.filter(function (el) {
+					  return el != null;
+					});
+				
+				dataToSend={
+						cambio : lastC,
+						cliente : 1,
+						consecutivoVenta : 0,
+						total : lastB,
+						efectivo :lastI,
+						usuario:1,
+						listaDetalle:filtered,
+				};
+				$.ajax({
+						
+					    url: "/createVenta",
+					    type: "POST",
+					    dataType : "json",
+					    data:JSON.stringify(dataToSend),
+					    headers: { 
+					        'Accept': 'application/json',
+					        'Content-Type': 'application/json' 
+					    },
+					    
+				}).done(function( json ) {
+						console.log("Executing sell");
+						console.log(json);
+						lastB=0.0;
+						listaProductosAgregadosAVenta=[];
+				}).fail(function( xhr, status, errorThrown ) {
+						//console.log( "Sorry, there was a problem!" );
+					    console.log( "Error: " + errorThrown );
+					    console.log( "Status: " + status );
+					    //console.dir( xhr );
+				}).always(function( xhr, status ) {
+					    //console.log( "The request is complete!" );
+				});
 				
 			},
 			calcSellAmount : function() {
@@ -396,7 +400,7 @@ var ventas = (function() {
 								    	break;	
 								    	case 2:
 								    		//cantidadAgregada
-								    		productoAAgregarOriginal.cantidadOriginal=ParseFloat($(this).text());
+								    		productoAAgregarOriginal.cantidadOriginal=parseFloat($(this).text());
 								    		productsStringSell=productsStringSell+'<td id="addedQty'+lastIdItemAdded+'">'+ qtyAdd + '</td>';
 								    	break;
 								    	case 3:
