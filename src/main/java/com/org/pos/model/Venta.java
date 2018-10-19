@@ -1,7 +1,9 @@
 package com.org.pos.model;
 
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Venta {
 
@@ -69,6 +71,5 @@ public class Venta {
 	public void setDetalleVenta(List<DetalleVenta> detalleVenta) {
 		this.detalleVenta = detalleVenta;
 	}
-	
 	
 }

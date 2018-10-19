@@ -2,7 +2,9 @@ package com.org.pos.model;
 
 public class DetalleVenta {
 	private Integer idDetalleVenta;
-	private Double cantidad;
+	private Double cantidadAgregada;
+	private Double cantidadOriginal;
+	private Double cantidadRestante;
 	private Double precioTotal;
 	private String descripcionProd;
 	private String tamanio;
@@ -18,11 +20,11 @@ public class DetalleVenta {
 	public void setIdDetalleVenta(Integer idDetalleVenta) {
 		this.idDetalleVenta = idDetalleVenta;
 	}
-	public Double getCantidad() {
-		return cantidad;
+	public Double getCantidadAgregada() {
+		return cantidadAgregada;
 	}
-	public void setCantidad(Double cantidad) {
-		this.cantidad = cantidad;
+	public void setCantidadAgregada(Double cantidadAgregada) {
+		this.cantidadAgregada = cantidadAgregada;
 	}
 	public Double getPrecioTotal() {
 		return precioTotal;
@@ -71,6 +73,18 @@ public class DetalleVenta {
 	}
 	public void setConsecutivoVenta(Integer consecutivoVenta) {
 		this.consecutivoVenta = consecutivoVenta;
+	}
+	public Double getCantidadOriginal() {
+		return cantidadOriginal;
+	}
+	public void setCantidadOriginal(Double cantidadOriginal) {
+		this.cantidadOriginal = cantidadOriginal;
+	}
+	public Double getCantidadRestante() {
+		return cantidadRestante;
+	}
+	public void setCantidadRestante(Double cantidadRestante) {
+		this.cantidadRestante = cantidadRestante;
 	}
 	
 }

@@ -3,6 +3,7 @@ package com.org.pos.controller;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -30,25 +31,43 @@ public class VentasController {
 	VentaService ventasService;
 	
 	@PostMapping("/createVenta")
-	public ResponseEntity<?> getMenu(@RequestBody Map<String, String> body,Principal principal) {
-		
-		List<DetalleVenta> listaDetalleVentas=new ArrayList<DetalleVenta>();
+	public ResponseEntity<?> getMenu(@RequestBody LinkedHashMap<Object, ?> body,Principal principal) {
 		
 		Venta venta=new Venta();
-		
-		venta.setCambio(body.get("cambio")!=null ? Double.parseDouble(body.get("cambio")) : 0.0);
-		venta.setCliente_idcliente(body.get("cliente")!=null ? Integer.parseInt(body.get("cliente")) : 0);
+		List<DetalleVenta> listaDetalleVentas=new ArrayList<DetalleVenta>();
+		venta.setCambio(body.get("cambio")!=null ? Double.parseDouble(body.get("cambio").toString()) : 0.0);
+		venta.setCliente_idcliente(body.get("cliente")!=null ? Integer.parseInt(body.get("cliente").toString()) : 0);
 		venta.setConsecutivoVenta(0);
-		venta.setEfectivoRecib(body.get("efectivo")!=null ? Double.parseDouble(body.get("efectivo")) : 0.0);
+		venta.setEfectivoRecib(body.get("efectivo")!=null ? Double.parseDouble(body.get("efectivo").toString()) : 0.0);
 		venta.setFechaVenta(new Date());
 		venta.setIdVenta(0);
-		venta.setTotal(body.get("total")!=null ? Double.parseDouble(body.get("total")) : 0.0);
-		venta.setUsuarios_idusuario(body.get("usuario")!=null ? Integer.parseInt(body.get("usuario")) : 1);
+		venta.setTotal(body.get("total")!=null ? Double.parseDouble(body.get("total").toString()) : 0.0);
+		venta.setUsuarios_idusuario(body.get("usuario")!=null ? Integer.parseInt(body.get("usuario").toString()): 1);
+		List<Map<String,Object>> mapaDetalle=(ArrayList<Map<String,Object>>)body.get("listaDetalle");
+		
+		for(Map<String,Object> detalle:mapaDetalle) {
+			DetalleVenta detalleVenta=new DetalleVenta();
+			detalleVenta.setCantidadAgregada(Double.parseDouble(detalle.get("cantidadAgregada").toString()));
+			detalleVenta.setCantidadOriginal(Double.parseDouble(detalle.get("cantidadOriginal").toString()));
+			detalleVenta.setCantidadRestante(Double.parseDouble(detalle.get("cantidadRestante").toString()));
+			detalleVenta.setDescripcionProd(detalle.get("descripcion").toString());
+			detalleVenta.setPrecioTotal(Double.parseDouble(detalle.get("precio").toString()));
+			detalleVenta.setProductos_idproductos(Integer.parseInt(detalle.get("idProducto").toString()));
+			
+			listaDetalleVentas.add(detalleVenta);
+		}
+		
+
+		//Map<String,Object> myLinkedHashMap =(Map<String, Object>) body.get("listaDetalle");
+		//Map<String,Object> myLinkedHashMap =  new LinkedHashMap<String, Object>();
+		//myLinkedHashMap.put("map", cadena);
+		//Map<String,Object> map = (Map) myLinkedHashMap.get("map");
 		venta.setDetalleVenta(listaDetalleVentas);
 		 
 		Map<String,Object> flujoResult=ventasService.insertarVenta(principal,venta);
-		//return new ResponseEntity<Map<String,Object>>(flujoResult,HttpStatus.OK);
-		return null;
+	
+		return new ResponseEntity<Map<String,Object>>(flujoResult,HttpStatus.OK);
+		
 	}
 	
 	@GetMapping("/getVenta/{id}")

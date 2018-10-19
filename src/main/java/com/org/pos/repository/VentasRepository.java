@@ -242,7 +242,7 @@ public class VentasRepository {
                 	   String consecutivo,cantidad,descripcion,precio,id;
                    
                            consecutivo=""+detalleVenta.getConsecutivoVenta();
-                           cantidad=""+detalleVenta.getCantidad();
+                           cantidad=""+detalleVenta.getCantidadAgregada();
                            descripcion=""+detalleVenta.getDescripcionProd();
                            precio=""+detalleVenta.getPrecioTotal();
                            id=""+detalleVenta.getProductos_idproductos();
