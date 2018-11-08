@@ -274,14 +274,14 @@ public class VentasRepository {
                                errores++;
                            }
                    }
-                   
+                   //hasta aqui esta ok
                    if(errores==0){
                        String itemsVenta="";//obtenerProductosParaTicket(tablaDetalleVenta);
                        String udFueAtendidoPor="";
                        
                        ///obtenemos el nombre completo del usuario para insertarlo al ticket
                        try{
-                           String sqlNombreCompleto="select nombre,apellidop,apellidom, from usuarios where idusuario="+venta.getUsuarios_idusuario();
+                           String sqlNombreCompleto="select nombre,apellidop,apellidom from usuarios where idusuario="+venta.getUsuarios_idusuario();
                            List<Map<String, Object>> rows = jdbcTemplate.queryForList(sqlNombreCompleto);
                            	for (Map row : rows) {
                            		udFueAtendidoPor=(String) row.get("nombre") +" "+ (String)row.get("apellidop") +" "+(String)row.get("apellidom");
@@ -358,7 +358,7 @@ public class VentasRepository {
           e.printStackTrace();
       } 
        
-       return 0;
+       return consecutivoVenta;
        
    }                                                   
 

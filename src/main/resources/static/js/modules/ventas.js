@@ -161,8 +161,21 @@ var ventas = (function() {
 				}).done(function( json ) {
 						console.log("Executing sell");
 						console.log(json);
+						console.log(json.insertedVenta);
+						console.log(json.insertedVenta.consecutivoVenta);
+				    	$.notify({
+				    		title: '<strong>OK!</strong>',
+				    		message: 'Se ha realizado correctamente la venta #'+json.insertedVenta.consecutivoVenta+'.'
+				    	},{
+				    		type: 'success',
+				    		z_index: 2000,
+				    	});
 						lastB=0.0;
 						listaProductosAgregadosAVenta=[];
+						$('#tableSell').html('');
+						$("#inputCantidadEfectivo").val('');
+						$("#changeAmount").text('0');
+						$("totalSellAmount").text('Total:0');
 				}).fail(function( xhr, status, errorThrown ) {
 						//console.log( "Sorry, there was a problem!" );
 					    console.log( "Error: " + errorThrown );
@@ -226,6 +239,9 @@ var ventas = (function() {
 		    	listaProductosAgregadosAVenta[productoAAgregarOriginal.idProducto]=productoAAgregarOriginal;
 		    	productoAAgregarOriginal={};
 		    	inputCantidad=0.0;
+		    	$("#inputDescripcion").val('');
+		    	$("#inputCodigo").val('');
+		    	$("#inputCantidad").val(''); 
 			},
 			getProductByDescription : function() {
 				console.log("buscando producto por descripcion");
