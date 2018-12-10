@@ -157,7 +157,7 @@ public class VentasRepository {
     
     public Integer insertarVentaBD(Venta venta) {                                                    
        
-       DefaultTableModel model =null;
+    	DefaultTableModel model =null;
 
        	int consecutivoVenta=1;
 
@@ -241,14 +241,12 @@ public class VentasRepository {
                    //insertamos el detalle de la venta
                 	   DetalleVenta detalleVenta=venta.getDetalleVenta().get(i);
                 	   
-                	   String consecutivo,cantidad,descripcion,precio,id;
-                	   	   
+                	   String consecutivo,cantidad,descripcion,precio,id; 
                 	   	   if(detalleVenta.getConsecutivoVenta()==null) {
                 	   		consecutivo="1";
                 	   	   }else {
                                consecutivo=""+detalleVenta.getConsecutivoVenta();
                 	   	   }
-
                            cantidad=""+detalleVenta.getCantidadAgregada();
                            descripcion=""+detalleVenta.getDescripcionProd();
                            precio=""+detalleVenta.getPrecioTotal();
@@ -279,7 +277,7 @@ public class VentasRepository {
                                errores++;
                            }
                    }
-                   
+                   //hasta aqui esta ok
                    if(errores==0){
                        String itemsVenta="";//obtenerProductosParaTicket(tablaDetalleVenta);
                        String udFueAtendidoPor="";
@@ -363,7 +361,7 @@ public class VentasRepository {
           e.printStackTrace();
       } 
        
-       return 0;
+       return consecutivoVenta;
        
    }                                                   
 

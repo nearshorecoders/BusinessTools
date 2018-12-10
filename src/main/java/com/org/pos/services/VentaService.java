@@ -48,7 +48,8 @@ public class VentaService {
 		
 		Integer resultadoInsert=ventasRepository.insertarVentaBD(venta);
 		
-		if(resultadoInsert==1){
+		if(resultadoInsert>=1){
+			venta.setConsecutivoVenta(resultadoInsert);
 			result.put("insertedVenta", venta);
 		}
 		
