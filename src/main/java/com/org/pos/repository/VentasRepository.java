@@ -178,7 +178,9 @@ public class VentasRepository {
          	//agregar a la consulta el usuario y tambien la sucursal
             String sqlString="select max(consecutivoVenta) from Venta where (fechaVenta BETWEEN '"+fi+"' AND '"+ff+"')";
          	Integer consecMax=jdbcTemplate.queryForObject(sqlString, Integer.class);
-         	consecutivoVenta=consecMax;
+         	if(consecMax!=null) {
+         		consecutivoVenta=consecMax;
+         	}
          }catch (Exception e){
          	LOGGER.error("Error", e);
              throw e;
@@ -197,8 +199,8 @@ public class VentasRepository {
               String precioSinSigno=""+venta.getTotal();
               
               String efectivo="";//efectivoRecibido.getText();
-              Double efectivoRecibido1=0.0;
-              Double precioSinSigno1=0.0;
+              Double efectivoRecibido1=venta.getEfectivoRecib();
+              Double precioSinSigno1=venta.getTotal();
               
                String sqlString="INSERT INTO `venta` (`total`,`cliente_idcliente`,`usuarios_idusuario`,`consecutivoVenta`,`efectivoRecib`,`cambio`) "
                        + " VALUES ('"+precioSinSigno+"','"+1+"', '"+2+"',"+consecutivoVenta+","+efectivoRecibido1+","+(efectivoRecibido1-precioSinSigno1)+" )";
@@ -240,8 +242,13 @@ public class VentasRepository {
                 	   DetalleVenta detalleVenta=venta.getDetalleVenta().get(i);
                 	   
                 	   String consecutivo,cantidad,descripcion,precio,id;
-                   
-                           consecutivo=""+detalleVenta.getConsecutivoVenta();
+                	   	   
+                	   	   if(detalleVenta.getConsecutivoVenta()==null) {
+                	   		consecutivo="1";
+                	   	   }else {
+                               consecutivo=""+detalleVenta.getConsecutivoVenta();
+                	   	   }
+
                            cantidad=""+detalleVenta.getCantidadAgregada();
                            descripcion=""+detalleVenta.getDescripcionProd();
                            precio=""+detalleVenta.getPrecioTotal();
@@ -279,7 +286,7 @@ public class VentasRepository {
                        
                        ///obtenemos el nombre completo del usuario para insertarlo al ticket
                        try{
-                           String sqlNombreCompleto="select nombre,apellidop,apellidom, from usuarios where idusuario="+venta.getUsuarios_idusuario();
+                           String sqlNombreCompleto="select nombre,apellidop,apellidom from usuarios where idusuario="+venta.getUsuarios_idusuario();
                            List<Map<String, Object>> rows = jdbcTemplate.queryForList(sqlNombreCompleto);
                            	for (Map row : rows) {
                            		udFueAtendidoPor=(String) row.get("nombre") +" "+ (String)row.get("apellidop") +" "+(String)row.get("apellidom");

@@ -77,11 +77,11 @@
         <div class="col-xs-12">
           <div class="box">
             <div class="box-header">
-              <h3 class="box-title">Listado de productos</h3>
+              <h3 class="box-title">Listado de clientes</h3>
 
               <div class="box-tools">
-                <div class="input-group input-group-sm" style="width: 150px;">
-                  <input type="text" name="table_search" class="form-control pull-right" placeholder="Search">
+                <div class="input-group input-group-sm" style="width: 200px;">
+                  <input id="searchClient" onkeyup="clientes.events.filterClients();" type="text" name="table_search" class="form-control pull-right" placeholder="Buscar por nombre o apellidos">
 
                   <div class="input-group-btn">
                     <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
@@ -91,97 +91,21 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body table-responsive no-padding">
-              <table class="table table-hover">
-                <tr>
-                  <th>ID</th>
-				  <th>Nombre</th>
-                  <th>Apellido paterno</th>
-                  <th>Apellido materno</th>
-				  <th>Teléfono</th>
-                  <th>Direccion</th>
-                  <th>Acción</th>
-                </tr>
-                <tr>
-                  <td>1</td>
-				  <td>Jose</td>
-                  <td>Jose</td>
-                  <td></td>
-				  <td>44-55-6622</td>
-                  <td>CD MX en algun AA</td>
-                  <td>Botones</td>
-                </tr>
-                <tr>
-                  <td>2</td>
-				  <td>Andres Manuel</td>
-                  <td>Lopez</td>
-                  <td>Obrador</td>
-				  <td>55-55-6622</td>
-                  <td>CD MXen la peje mansion</td>
-                  <td>Botones</td>
-                </tr>
-                <tr>
-                  <td>3</td>
-				  <td>Enrique</td>
-                  <td>Peña</td>
-                  <td>Nieto</td>
-				  <td>51-55-6622</td>
-                  <td>Los pinos</td>
-                  <td>Botones</td>
-                </tr>
-                <tr>
-                  <td>4</td>
-				  <td>Jose</td>
-                  <td>Jose</td>
-                  <td></td>
-				  <td>44-55-6622</td>
-                  <td>CD MX en algun AA</td>
-                  <td>Botones</td>
-                </tr>
-                <tr>
-                  <td>5</td>
-				  <td>Andres Manuel</td>
-                  <td>Lopez</td>
-                  <td>Obrador</td>
-				  <td>55-55-6622</td>
-                  <td>CD MXen la peje mansion</td>
-                  <td>Botones</td>
-                </tr>
-                <tr>
-                  <td>6</td>
-				  <td>Enrique</td>
-                  <td>Peña</td>
-                  <td>Nieto</td>
-				  <td>51-55-6622</td>
-                  <td>Los pinos</td>
-                  <td>Botones</td>
-                </tr>
-                <tr>
-                  <td>7</td>
-				  <td>Jose</td>
-                  <td>Jose</td>
-                  <td></td>
-				  <td>44-55-6622</td>
-                  <td>CD MX en algun AA</td>
-                  <td>Botones</td>
-                </tr>
-                <tr>
-                  <td>8</td>
-				  <td>Andres Manuel</td>
-                  <td>Lopez</td>
-                  <td>Obrador</td>
-				  <td>55-55-6622</td>
-                  <td>CD MXen la peje mansion</td>
-                  <td>Botones</td>
-                </tr>
-                <tr>
-                  <td>9</td>
-				  <td>Enrique</td>
-                  <td>Peña</td>
-                  <td>Nieto</td>
-				  <td>51-55-6622</td>
-                  <td>Los pinos</td>
-                  <td>Botones</td>
-                </tr>                
+              <table id="tableClientsAll" class="table table-hover">
+                <thead>
+                	<tr>
+                  		<th>ID</th>
+				  		<th>Nombre</th>
+                  		<th>Apellido paterno</th>
+                  		<th>Apellido materno</th>
+				  		<th>Teléfono</th>
+                  		<th>Direccion</th>
+                  		<th>Acción</th>
+                	</tr>
+                </thead>
+                <tbody id="tableClients">
+  
+	            </tbody>            
               </table>
             </div>
             <!-- /.box-body -->

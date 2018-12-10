@@ -80,7 +80,7 @@ public class ClienteRepository {
     public List<Cliente> listarClientes(Integer idLoguedUser) {
         try {
         	//listar solo clintes del usuario logueado
-        	String query = "SELECT idcliente FROM cliente ";
+        	String query = "SELECT idcliente,nombre,apellidop,apellidom,dirección,telefono,activo,fechaDeRegistro FROM cliente ";
         	///corregir consulta
         	List<Cliente> clientes = new ArrayList<Cliente>();
         

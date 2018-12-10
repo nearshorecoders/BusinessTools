@@ -49,6 +49,16 @@ public class HomeController {
         return "/ventas";
     }
     
+    @GetMapping("/administrarMesas")
+    public String administrarMesas() {
+        return "/administrarMesas";
+    }
+    
+    @GetMapping("/asignarMesas")
+    public String asignarMesas() {
+        return "/asignarMesas";
+    }
+    
     @GetMapping("/productos")
     public String productos() {
         return "/productos";

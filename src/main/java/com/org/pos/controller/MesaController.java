@@ -38,6 +38,14 @@ public class MesaController {
 		}
 	}
 	
+	@GetMapping("/getAllForClean")
+	public Object getAllForClean(@PathVariable Long id) {
+		try {
+			return new Object();
+		}catch(Exception e) {
+			return null;
+		}
+	}
 	
 	@PostMapping(value = "/getAllAvaliable")
 	public @ResponseBody ResponseEntity<List<Map<String, Object>>> getAllProducts(@RequestParam String str, @RequestParam int type) {
