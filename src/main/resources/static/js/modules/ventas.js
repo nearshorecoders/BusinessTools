@@ -161,8 +161,21 @@ var ventas = (function() {
 				}).done(function( json ) {
 						console.log("Executing sell");
 						console.log(json);
+						console.log(json.insertedVenta);
+						console.log(json.insertedVenta.consecutivoVenta);
+				    	$.notify({
+				    		title: '<strong>OK!</strong>',
+				    		message: 'Se ha realizado correctamente la venta #'+json.insertedVenta.consecutivoVenta+'.'
+				    	},{
+				    		type: 'success',
+				    		z_index: 2000,
+				    	});
 						lastB=0.0;
 						listaProductosAgregadosAVenta=[];
+						$('#tableSell').html('');
+						$("#inputCantidadEfectivo").val('');
+						$("#changeAmount").text('0');
+						$("totalSellAmount").text('Total:0');
 				}).fail(function( xhr, status, errorThrown ) {
 						//console.log( "Sorry, there was a problem!" );
 					    console.log( "Error: " + errorThrown );
@@ -188,63 +201,16 @@ var ventas = (function() {
 			    $("#totalSellAmount").text("Total: "+totalSum);
 			    lastB=totalSum;
 			},
-//			lessSellAmount : function() {
-//				var table = $("#tableSell");
-//				index=1;
-//				totalSum=0.0;
-//			    table.find('tr').each(function (i) {
-//			        var $tds = $(this).find('td'),
-//			            productId = $tds.eq(0).text(index),
-//			            subtotal=$tds.eq(4).text();
-//			        	subtotal=subtotal.replace('$','');
-//			        totalSum=totalSum-parseFloat(subtotal);
-//			        console.log(totalSum);
-//			        index++;
-//			    });
-//			    $("#totalSellAmount").text("Total: "+totalSum);
-//			    lastB=totalSum;
-//			},
 			undoneRemoveRow : function(element) {
-//				if(element==lastProductRecovered){
-//			    	$.notify({
-//			    		title: '<strong>Ya se recupero el producto!</strong>',
-//			    		message: ''
-//			    	},{
-//			    		type: 'success',
-//			    		z_index: 2000,
-//			    	});
-//					return;
-//				}
-//				recoveredProduct='<tr id="sellRow'+element+'">'+lastProductRemoved+'</tr>';
-				//$("#tableSell").append(recoveredProduct);
-				//lastProductRecovered=element;
 				$("#tableSell").html(originalTable);
 				events.calcSellAmount();
 			},
 			removeRow : function(element) {
 				lastProductRemoved=$("#sellRow"+element).html();
-				
-//			     $('#tableSell tr').each(function (i, row){
-//			    	  console.log(i,row);
-//			    	  console.log("---------");
-//			    	  console.log(row.firstElementChild.html());
-//			     });
 
 				originalTable=$("#tableSell").html();
 				$("#sellRow"+element).remove();
 				events.calcSellAmount();
-//				var table = $("#tableSell");
-//				index=1;
-//			    table.find('tr').each(function (i) {
-//			        var $tds = $(this).find('td'),
-//			            productId = $tds.eq(0).text(index),
-//			            subtotal=$tds.eq(4).text();
-//			        	subtotal=subtotal.replace('$','');
-//			        totalSum=totalSum+parseFloat(subtotal);
-//			        console.log(totalSum);
-//			        $("#totalSellAmount").text("Total: "+totalSum);
-//			        index++;
-//			    });
 				
 		    	$.notify({
 		    		title: '<strong>Error!</strong>',
@@ -271,8 +237,11 @@ var ventas = (function() {
 		    	productoAAgregarOriginal.cantidadAgregada=inputCantidad;
 		    	productoAAgregarOriginal.cantidadRestante=productoAAgregarOriginal.cantidadOriginal-inputCantidad;
 		    	listaProductosAgregadosAVenta[productoAAgregarOriginal.idProducto]=productoAAgregarOriginal;
-		    	
+		    	productoAAgregarOriginal={};
 		    	inputCantidad=0.0;
+		    	$("#inputDescripcion").val('');
+		    	$("#inputCodigo").val('');
+		    	$("#inputCantidad").val(''); 
 			},
 			getProductByDescription : function() {
 				console.log("buscando producto por descripcion");
@@ -379,14 +348,11 @@ var ventas = (function() {
 						    	$("#addToSellButton").attr("disabled", false);
 						    	$tds = $row.find("td");
 						    	productsStringSell='';
-						    	//productsStringSell='<tr>';
-						    	
-						    	//listaProductosAgregadosAVenta=[];
-						    	//productoAAgregarOriginal={};
-						    	
+
 						    	index=0;
 						    	$.each($tds, function() {               // Visits every single <td> element
 									stPrice=0.0;
+									
 								    switch(index){
 								    	case 0:
 								    		//id
@@ -430,19 +396,7 @@ var ventas = (function() {
 						    }
 						}
 				    	
-				    	
-//				    	if ( $(this).hasClass('selected') ) {
-//				            $(this).removeClass('selected');
-//				        }
-//				        else {
-//				            table.$('tr.selected').removeClass('selected');
-//				            $(this).addClass('selected');
-//				        }
 				    });
-				 
-//				    $('#button').click( function () {
-//				        table.row('.selected').remove().draw( false );
-//				    } );
 				    
 				}).fail(function( xhr, status, errorThrown ) {
 					//console.log( "Sorry, there was a problem!" );
