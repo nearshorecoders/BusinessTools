@@ -61,4 +61,14 @@ public class ProductosService {
 		return result;
 	}
 	
+	public Map<String,Object> listarProductosParaInventario(Principal principal){
+		Map<String,Object> result=new HashMap<String,Object>();
+		
+		List<Productos> productos=productosRepository.listarProductosParaInventario();
+		
+		result.put("listaProductosTodos", productos);
+		
+		return result;
+	}
+	
 }

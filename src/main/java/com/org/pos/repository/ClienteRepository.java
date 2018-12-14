@@ -107,8 +107,9 @@ public class ClienteRepository {
     	
     }
     
-    public Cliente buscarCliente(String nombre, String apellidoP, String apellidoM) {                                                            
-        
+    public List<Cliente> buscarCliente(String nombre, String apellidoP, String apellidoM) {                                                            
+    	List<Cliente> listaClientes=new ArrayList<>();
+    	
         try{
 
           String nombreVar=nombre;
@@ -117,7 +118,7 @@ public class ClienteRepository {
 
           String varBusqueda=nombreVar+apellidoMVar+apellidoPVar;
 
-          String sqlString="Select idcliente as 'Cliente',concat(nombre,' ',apellidop,' ',apellidom) as 'nombreCompleto',dirección as 'Direccion', " +
+          String sqlString="Select idcliente,nombre,apellidop,apellidom,dirección as 'Direccion', " +
                            " telefono as 'telefono' " +
                            " from cliente where ";
 
@@ -145,19 +146,21 @@ public class ClienteRepository {
               indicadorAnd++;
           }
           
-          Cliente cliente=null;
           try{
              
               List<Map<String, Object>> rows = jdbcTemplate.queryForList(sqlString);
               	for (Map row : rows) {
-              		cliente=new Cliente();
-              		cliente.setVarNombre(row.get("nombreCompleto")!=null?(String) row.get("nombreCompleto"):"");
+              		Cliente cliente=new Cliente();
+              		cliente.setIdClienteAModificar(row.get("idcliente")!=null?(Integer) row.get("idcliente"):0);
+              		cliente.setVarNombre(row.get("nombre")!=null?(String) row.get("nombre"):"");
+              		cliente.setVarApellidoP(row.get("apellidop")!=null?(String) row.get("apellidop"):"");
+              		cliente.setVarApellidoM(row.get("apellidom")!=null?(String) row.get("apellidom"):"");
               		cliente.setVarDireccion(row.get("Direccion")!=null ? (String) row.get("Direccion") :"");
               		cliente.setVarTelefono(row.get("telefono")!=null ? (String) row.get("telefono") :"");
-              		
+              		listaClientes.add(cliente);
               	}
 
-              	return cliente;
+              	return listaClientes;
             }catch(Exception e){
                 e.printStackTrace();
             }

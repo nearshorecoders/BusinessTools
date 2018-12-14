@@ -12,6 +12,7 @@ public class Cliente {
 	private String varTelefono;
 	private Date fechaDeRegistro;
 	private Integer activo;
+	private String email;
 	
 	public Integer getIdClienteAModificar() {
 		return idClienteAModificar;
@@ -60,6 +61,12 @@ public class Cliente {
 	}
 	public void setActivo(Integer activo) {
 		this.activo = activo;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
 	}
 	
 }

@@ -116,6 +116,283 @@
     </div>
     </section>
     <!-- section content---> 
+        <div class="modal fade" id="modal-cliente-detalle">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Detalle cliente</h4>
+              </div>
+              <!-- /.modal-body -->
+              <div class="modal-body">
+              	<div class="row">
+                  <div class="form-group">
+	                  <label for="inputIdMod" class="col-sm-4 control-label">Nombre</label>
+	                  <div class="col-sm-8">
+	                    <input disabled type="text" class="form-control" id="inputIdMod" placeholder="Identificador del producto" value="Alfredo Rodrigez Gallegos">
+	                  </div>
+                  </div>
+                  <div class="form-group">
+	                  <label for="inputIdMod2" class="col-sm-4 control-label">Celular</label>
+	                  <div class="col-sm-8">
+	                    <input disabled type="text" class="form-control" id="inputIdMod2" placeholder="Identificador del producto" value="Lada (01 248) 248-156-156-7">
+	                  </div>
+                  </div>
+                  <div class="form-group">
+	                  <label for="inputIdMod3" class="col-sm-4 control-label">Telefono</label>
+	                  <div class="col-sm-8">
+	                    <input disabled type="text" class="form-control" id="inputIdMod3" placeholder="Identificador del producto" value="Lada (01 248) 248-46-2-28-09">
+	                  </div>
+                  </div>
+                  </div>
+                  <div class="row">
+				  <div class="box-body table-responsive no-padding">
+		              <table id="clienteVentasAll" class="table table-hover">
+		                <tr>
+		                  <th>Fecha</th>
+						  <th>Descripción</th>
+						  <th>Marca</th>
+		                  <th>Cantidad</th>
+						  <th>Total</th>
+		                  <th>Estatus</th>
+		                  <th>Factura</th>
+		                </tr>
+		                <tbody id="tableClienteVentas">
+			                <tr>
+			                  <td>10-05-2017</td>
+							  <td>Armazón negro carbono</td>
+			                  <td>Ray-Ban</td>
+			                  <td>1</td>
+							  <td>$2500</td>
+							  <td><button type="button" class="btn btn-block btn-success">Entregado 12-05-2017</button></td>
+							  <td><button type="button" class="btn btn-block btn-primary" onclick="clientes.events.getFacturaFromClient(1);">Factura</button></td>
+			                </tr>
+			                <tr>
+			                  <td>12-12-2017</td>
+							  <td>Armazón gris carbono</td>
+			                  <td>Lacoste</td>
+			                  <td>1</td>
+							  <td>$3000</td>
+							  <td><button type="button" class="btn btn-block btn-success">Entregado 12-12-2017</button></td>
+							  <td><button type="button" class="btn btn-block btn-primary" onclick="clientes.events.getFacturaFromClient(1);">Factura</button></td>
+			                </tr>
+			                <tr>
+			                  <td>11-11-2018</td>
+							  <td>Ray-Ban aviador verde</td>
+			                  <td>Ray-Ban</td>
+			                  <td>2</td>
+							  <td>$7000</td>
+							  <td><button type="button" class="btn btn-block btn-info">Por entregar</button></td>
+							  <td><button type="button" class="btn btn-block btn-primary" onclick="clientes.events.getFacturaFromClient(1);">Factura</button></td>
+			                </tr>
+			               	<tr>
+			                  <td>10-12-2018</td>
+							  <td>Lente antirreflejante y armazon plata</td>
+			                  <td>Tommy Hilfiger</td>
+			                  <td>1</td>
+							  <td>$5500</td>
+							  <td><button type="button" class="btn btn-block btn-warning">Pago no completado</button></td>
+							  <td><button type="button" class="btn btn-block btn-default">Sin factura disponible</button></td>
+			                </tr>
+			                <tr>
+			                  <td>23-08-2018</td>
+							  <td>Gafas topgun 44587</td>
+			                  <td>Top gun</td>
+			                  <td>1</td>
+							  <td>$3500</td>
+							  <td><button type="button" class="btn btn-block btn-danger">Pago atrasado</button></td>
+							  <td><button type="button" class="btn btn-block btn-default">Sin factura disponible</button></td>
+			                </tr>
+		                </tbody>						
+		              </table>
+	            	</div>
+	            	</div>
+              </div>
+              <!-- /.modal-body -->
+              <br/>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary pull-rigth">Guardar cambios</button>
+              </div>
+            </div>
+            <!-- /.modal-content -->
+          </div>
+          <!-- /.modal-dialog -->
+     </div>
+          <div class="modal fade" id="modal-compra-factura">
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Factura Alfredo Rodriguez Gallegos</h4>
+              </div>
+              <!-- /.modal-body -->
+              <div class="modal-body">
+                  <div class="pad margin no-print" style="display:none">
+				      <div class="callout callout-info" style="margin-bottom: 0!important;">
+				        <h4><i class="fa fa-info"></i> Note:</h4>
+				        This page has been enhanced for printing. Click the print button at the bottom of the invoice to test.
+				      </div>
+				    </div>
+				
+				    <!-- Main content -->
+				    <section class="invoice">
+				      <!-- title row -->
+				      <div class="row">
+				        <div class="col-xs-12">
+				          <h2 class="page-header">
+				            <i class="fa fa-globe"></i>Optica MIROSC, S.A. de C.V.
+				            <small class="pull-right">Date: 12/12/2018</small>
+				          </h2>
+				        </div>
+				        <!-- /.col -->
+				      </div>
+				      <!-- info row -->
+				      <div class="row invoice-info">
+				        <div class="col-sm-4 invoice-col">
+				          De
+				          <address>
+				            <strong>Optica MIROSC, S.A. de C.V.</strong><br>
+				            Avenida Juárez No. 46<br>
+				            Tlaxcala Centro, esquina Zitlaltopocatl<br>
+				            Telefono: (01 246) 46 2 65 61<br>
+				            Email: opticamirosc76@mirosc.com
+				          </address>
+				        </div>
+				        <!-- /.col -->
+				        <div class="col-sm-4 invoice-col">
+				          Para
+				          <address>
+				            <strong>Alfredo Rodriguez Gallegos</strong><br>
+				            Avenida La paz, No. 600<br>
+				            Apizaco Tlaxcala, CP 94107<br>
+				            Telefono: (241) 555-1037<br>
+				            Email: alfredo.rodriguez@hotmail.com
+				          </address>
+				        </div>
+				        <!-- /.col -->
+				        <div class="col-sm-4 invoice-col">
+				          <b>Factura #007612</b><br>
+				          <br>
+				          <b>ID Orden:</b> 4F3S8J<br>
+				          <b>Pago realizado:</b> 12/10/2018<br>
+				          <b>Cuenta:</b> 968-34567
+				        </div>
+				        <!-- /.col -->
+				      </div>
+				      <!-- /.row -->
+				
+				      <!-- Table row -->
+				      <div class="row">
+				        <div class="col-xs-12 table-responsive">
+				          <table class="table table-striped">
+				            <thead>
+				            <tr>
+				              <th>Cantidad</th>
+				              <th>Producto</th>
+				              <th>Serial #</th>
+				              <th>Descripcion</th>
+				              <th>Subtotal</th>
+				            </tr>
+				            </thead>
+				            <tbody>
+				            <tr>
+				              <td>1</td>
+				              <td>Armazon Hugo Boss</td>
+				              <td>455-981-221</td>
+				              <td>Armazon negra carbon</td>
+				              <td>$64.50</td>
+				            </tr>
+				            <tr>
+				              <td>1</td>
+				              <td>Lente gradual H1234</td>
+				              <td>247-925-726</td>
+				              <td>Respuesto lente Hugo Boss</td>
+				              <td>$50.00</td>
+				            </tr>
+				            <tr>
+				              <td>1</td>
+				              <td>Limpiador cristales</td>
+				              <td>735-845-642</td>
+				              <td>Limpiador antirayaduras para mica</td>
+				              <td>$10.70</td>
+				            </tr>
+				            <tr>
+				              <td>1</td>
+				              <td>Armazon 1443-2018</td>
+				              <td>422-568-642</td>
+				              <td>Armazon plateado desmontable Jhon Lenon</td>
+				              <td>$25.99</td>
+				            </tr>
+				            </tbody>
+				          </table>
+				        </div>
+				        <!-- /.col -->
+				      </div>
+				      <!-- /.row -->
+				
+				      <div class="row">
+				        <!-- accepted payments column -->
+				        <div class="col-xs-6" >
+
+				        </div>
+				        <!-- /.col -->
+				        <div class="col-xs-6">
+				          <p class="lead">Monto pagado el 12/10/2018</p>
+				
+				          <div class="table-responsive">
+				            <table class="table">
+				              <tbody><tr>
+				                <th style="width:50%">Subtotal:</th>
+				                <td>$250.30</td>
+				              </tr>
+				              <tr>
+				                <th>IVA (9.3%)</th>
+				                <td>$10.34</td>
+				              </tr>
+				              <tr>
+				                <th>Envio:</th>
+				                <td>$5.80</td>
+				              </tr>
+				              <tr>
+				                <th>Total:</th>
+				                <td>$265.24</td>
+				              </tr>
+				            </tbody></table>
+				          </div>
+				        </div>
+				        <!-- /.col -->
+				      </div>
+				      <!-- /.row -->
+				
+				      <!-- this row will not appear when printing -->
+				      <div class="row no-print" style="display:none">
+				        <div class="col-xs-12">
+				          <a href="invoice-print.html" target="_blank" class="btn btn-default"><i class="fa fa-print"></i> Print</a>
+				          <button type="button" class="btn btn-success pull-right"><i class="fa fa-credit-card"></i> Submit Payment
+				          </button>
+				          <button type="button" class="btn btn-primary pull-right" style="margin-right: 5px;">
+				            <i class="fa fa-download"></i> Generate PDF
+				          </button>
+				        </div>
+				      </div>
+				    </section>
+				    <!-- /.content -->
+				    <div class="clearfix"></div>
+              </div>
+              <!-- /.modal-body -->
+              <br/>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary pull-rigth" onclick="clientes.events.enviarMailFactura();">Enviar por mail</button>
+              </div>
+            </div>
+            <!-- /.modal-content -->
+          </div>
+          <!-- /.modal-dialog -->
+     </div>
   <!-- /.content-wrapper --> 
 	<script src="js/modules/clientes.js"></script>
 </body>

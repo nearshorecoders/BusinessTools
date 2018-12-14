@@ -21,7 +21,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.org.pos.model.DetalleVenta;
+import com.org.pos.model.Usuario;
 import com.org.pos.model.Venta;
+import com.org.pos.repository.UserRepository;
+import com.org.pos.services.UsuariosService;
 import com.org.pos.services.VentaService;
 
 
@@ -30,8 +33,13 @@ public class VentasController {
 	@Autowired
 	VentaService ventasService;
 	
+	@Autowired
+	UserRepository userRepository;
+	
 	@PostMapping("/createVenta")
 	public ResponseEntity<?> getMenu(@RequestBody LinkedHashMap<Object, ?> body,Principal principal) {
+		
+		Usuario u=userRepository.findByUser(principal.getName());
 		
 		Venta venta=new Venta();
 		List<DetalleVenta> listaDetalleVentas=new ArrayList<DetalleVenta>();
@@ -42,7 +50,7 @@ public class VentasController {
 		venta.setFechaVenta(new Date());
 		venta.setIdVenta(0);
 		venta.setTotal(body.get("total")!=null ? Double.parseDouble(body.get("total").toString()) : 0.0);
-		venta.setUsuarios_idusuario(body.get("usuario")!=null ? Integer.parseInt(body.get("usuario").toString()): 1);
+		venta.setUsuarios_idusuario(u.getId());
 		List<Map<String,Object>> mapaDetalle=(ArrayList<Map<String,Object>>)body.get("listaDetalle");
 		
 		for(Map<String,Object> detalle:mapaDetalle) {
@@ -89,6 +97,20 @@ public class VentasController {
 			//return new ResponseEntity<List<Map<String, Object>>>(ticketRepository.getUserByEmail(str), HttpStatus.OK);
 			return null;
 		}
+		
+	}
+	
+	@PostMapping(value = "/getReporteVentas")
+	public @ResponseBody ResponseEntity<Map<String, Object>> getReporteVentas(@RequestParam String fechaInicial, @RequestParam String fechaFinal,Principal principal) {
+		
+		return new ResponseEntity<Map<String, Object>>(ventasService.getReporte(principal,fechaInicial,fechaFinal), HttpStatus.OK);
+		
+	}
+	
+	@PostMapping(value = "/getReporteVentasByCliente")
+	public @ResponseBody ResponseEntity<Map<String, Object>> getReporteVentasByCliente(Principal principal,@RequestParam String idCliente) {
+		
+		return new ResponseEntity<Map<String, Object>>(ventasService.getVentasByCliente(principal, idCliente), HttpStatus.OK);
 		
 	}
 	

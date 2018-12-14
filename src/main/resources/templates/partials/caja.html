@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+</head>
+<body >
+    <!-- Content Header (Page header) -->
+    <!-- Replace your content here, in each section to preserve the ui look and feel -->
+    <!-- This page is going to be loaded on the id=btContent of the layout file-->
+    <section class="content-header">
+      <h1>
+        Administración de caja
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Inicio</a></li>
+        <li><a href="#">Punto de venta</a></li>
+        <li class="active">Caja</li>
+      </ol>
+    </section>
+
+        <!-- Main content -->
+    <section class="content">
+
+        <div class="col-md-12">
+           <div class="box box-info">
+            <div class="box-header with-border">
+              <h3 class="box-title">Registro de gastos</h3>
+            </div>
+            <!-- /.box-header -->
+            <!-- form start -->
+            <form id="formReporteVentas" class="form-horizontal">
+              <div class="box-body">
+                <div class="form-group">
+                  <label for="inputGasto" class="col-sm-2 control-label">Concepto de gasto</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="inputGasto" placeholder="Ejemplo: Proveedor Tommy Hilfiger">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="inputGastoCantidad" class="col-sm-2 control-label">Cantidad</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="inputGastoCantidad" placeholder="Introduce la cantidad a sustraer de la caja ej 500.50">
+                  </div>
+                </div>
+              </div>
+              <!-- /.box-body -->
+              <div class="box-footer">
+                <a type="submit" class="btn btn-info pull-right" onclick="productos.events.createNewProduct();">Realizar corte de caja</a>
+              </div>
+              <!-- /.box-footer -->
+            </form>
+          <!-- /.box -->
+        </div>
+          <!-- Horizontal Form -->
+          <div class="box box-info">
+            <div class="box-header with-border">
+              <h3 class="box-title">Corte de caja</h3>
+            </div>
+            <!-- /.box-header -->
+            <!-- form start -->
+            <form id="formReporteVentas" class="form-horizontal">
+              <div class="box-body">
+                <div class="form-group">
+                  <label for="inputFechaDesde" class="col-sm-2 control-label">Observaciones</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="inputCodigo" placeholder="Observaciones del día de hoy">
+                  </div>
+                </div>
+              </div>
+              <!-- /.box-body -->
+              <div class="box-footer">
+                <a type="submit" class="btn btn-info pull-right" onclick="productos.events.createNewProduct();">Realizar corte de caja</a>
+              </div>
+              <!-- /.box-footer -->
+            </form>
+          <!-- /.box -->
+        </div>
+      <div class="row">
+        <div class="col-xs-12">
+          <div class="box">
+            <div class="box-header">
+              <h3 class="box-title">Ventas del periodo</h3>
+
+              <div class="box-tools">
+                <div class="input-group input-group-sm" style="width: 150px;">
+                  <input id="searchVentas" onkeyup="productos.events.filterProducts();" type="text" name="table_search" class="form-control pull-right" placeholder="Buscar ventas">
+
+                  <div class="input-group-btn">
+                    <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body table-responsive no-padding">
+              <table id="tableVentasAll" class="table table-hover">
+                <tr>
+                  <th>ID</th>
+				  <th>Código</th>
+				  <th>Marca</th>
+                  <th>Descripción</th>
+                  <th>Cantidad</th>
+				  <th>U. medida</th>
+                  <th>Stock</th>
+				  <th>Precio de compra</th>
+				  <th>Precio de venta</th>
+				  <th>Presentación</th>
+				  <th>Izquierda</th>
+				  <th>Frontal</th>
+				  <th>Derecha</th>
+                  <th>Acción</th>
+                </tr>
+                <tbody id="tableVentasRows">
+	                <tr>
+	                  <td>1</td>
+					  <td>113454878988544</td>
+	                  <td>Cigarros marlboro</td>
+	                  <td>80</td>
+					  <td>Piezas</td>
+	                  <td><span class="label label-success">80</span></td>
+	                  <td>$40.00</td>
+					  <td>$54.00</td>
+					  <td>Caja</td>
+					  <td>Botones</td>
+	                </tr>
+	                <tr>
+	                  <td>2</td>
+					  <td>113454878988544</td>
+	                  <td>Cigarros Camel</td>
+	                  <td>30</td>
+					  <td>Piezas</td>
+	                  <td><span class="label label-warning">25</span></td>
+	                  <td>$35.00</td>
+					  <td>$45.00</td>
+					  <td>Caja</td>
+					  <td>Botones</td>
+	                </tr>
+	                <tr>
+	                  <td>3</td>
+					  <td>113454878988544</td>
+	                  <td>Cigarros marlboro light</td>
+	                  <td>80</td>
+					  <td>Piezas</td>
+	                  <td><span class="label label-success">80</span></td>
+	                  <td>$40.00</td>
+					  <td>$54.00</td>
+					  <td>Caja</td>
+					  <td>Botones</td>
+	                </tr>
+	                <tr>
+	                  <td>4</td>
+					  <td>113454878988544</td>
+	                  <td>Encendedores</td>
+	                  <td>10</td>
+					  <td>Piezas</td>
+	                  <td><span class="label label-danger">50</span></td>
+	                  <td>$5.00</td>
+					  <td>$12.00</td>
+					  <td>Unidad</td>
+					  <td>Botones</td>
+	                </tr>				
+	                <tr>
+	                  <td>5</td>
+					  <td>113454878988544</td>
+	                  <td>Cigarros marlboro</td>
+	                  <td>80</td>
+					  <td>Piezas</td>
+	                  <td><span class="label label-success">80</span></td>
+	                  <td>$40.00</td>
+					  <td>$54.00</td>
+					  <td>Caja</td>
+					  <td>Botones</td>
+	                </tr>
+	                <tr>
+	                  <td>6</td>
+					  <td>113454878988544</td>
+	                  <td>Cigarros Camel</td>
+	                  <td>30</td>
+					  <td>Piezas</td>
+	                  <td><span class="label label-warning">25</span></td>
+	                  <td>$35.00</td>
+					  <td>$45.00</td>
+					  <td>Caja</td>
+					  <td>Botones</td>
+	                </tr>
+	                <tr>
+	                  <td>7</td>
+					  <td>113454878988544</td>
+	                  <td>Cigarros marlboro light</td>
+	                  <td>80</td>
+					  <td>Piezas</td>
+	                  <td><span class="label label-success">80</span></td>
+	                  <td>$40.00</td>
+					  <td>$54.00</td>
+					  <td>Caja</td>
+					  <td>Botones</td>
+	                </tr>
+	                <tr>
+	                  <td>8</td>
+					  <td>113454878988544</td>
+	                  <td>Encendedores</td>
+	                  <td>10</td>
+					  <td>Piezas</td>
+	                  <td><span class="label label-danger">50</span></td>
+	                  <td>$5.00</td>
+					  <td>$12.00</td>
+					  <td>Unidad</td>
+					  <td>Botones</td>
+	                </tr>
+	                <tr>
+	                  <td>9</td>
+					  <td>113454878988544</td>
+	                  <td>Cigarros marlboro</td>
+	                  <td>80</td>
+					  <td>Piezas</td>
+	                  <td><span class="label label-success">80</span></td>
+	                  <td>$40.00</td>
+					  <td>$54.00</td>
+					  <td>Caja</td>
+					  <td>Botones</td>
+	                </tr>
+	                <tr>
+	                  <td>10</td>
+					  <td>113454878988544</td>
+	                  <td>Cigarros Camel</td>
+	                  <td>30</td>
+					  <td>Piezas</td>
+	                  <td><span class="label label-warning">25</span></td>
+	                  <td>$35.00</td>
+					  <td>$45.00</td>
+					  <td>Caja</td>
+					  <td>Botones</td>
+	                </tr>
+	                <tr>
+	                  <td>11</td>
+					  <td>113454878988544</td>
+	                  <td>Cigarros marlboro light</td>
+	                  <td>80</td>
+					  <td>Piezas</td>
+	                  <td><span class="label label-success">80</span></td>
+	                  <td>$40.00</td>
+					  <td>$54.00</td>
+					  <td>Caja</td>
+					  <td>Botones</td>
+	                </tr>
+	                <tr>
+	                  <td>12</td>
+					  <td>113454878988544</td>
+	                  <td>Encendedores</td>
+	                  <td>10</td>
+					  <td>Piezas</td>
+	                  <td><span class="label label-danger">50</span></td>
+	                  <td>$5.00</td>
+					  <td>$12.00</td>
+					  <td>Unidad</td>
+					  <td>Botones</td>
+	                </tr>
+                </tbody>						
+              </table>
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer clearfix">
+              <ul class="pagination pagination-sm no-margin pull-right">
+                <li><a href="#">&laquo;</a></li>
+                <li><a href="#">1</a></li>
+                <li><a href="#">2</a></li>
+                <li><a href="#">3</a></li>
+                <li><a href="#">&raquo;</a></li>
+              </ul>
+            </div>
+          </div>
+          <!-- /.box -->
+        </div>
+      </div>
+    </div>
+    </section>
+    <div class="modal fade" id="modal-reporte-ventas">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Modificar producto</h4>
+              </div>
+              <div class="modal-body">
+              </div><!-- /.modal-body -->
+              <br/>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary pull-rigth">Guardar cambios</button>
+              </div>
+            </div>
+            <!-- /.modal-content -->
+          </div>
+          <!-- /.modal-dialog -->
+     </div>
+    <!-- section content---> 
+  <!-- /.content-wrapper --> 
+	<script src="js/modules/caja.js"></script>
+</body>
+</html>

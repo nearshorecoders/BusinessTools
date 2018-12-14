@@ -46,4 +46,13 @@ public class SucursalController {
 		}
 	}
 	
+	@GetMapping("/getSucursal/{idUser}")
+	public Object getSucursalByLoguedUser(@PathVariable String idUser) {
+		try {
+			return new Object();
+		}catch(Exception e) {
+			return null;
+		}
+	}
+	
 }

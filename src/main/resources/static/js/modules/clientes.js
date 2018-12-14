@@ -53,6 +53,37 @@ var clientes = (function() {
 	};
 	
 	var events = {
+			getDetailClient : function(clientId) {
+				
+				$('#modal-cliente-detalle').modal('show');
+			},
+			getFacturaFromClient : function(clientId) {
+				$('#modal-compra-factura').modal('show');
+			},
+			enviarMailFactura : function(clientId) {
+
+				$.ajax({
+					    url: "/sendInvoice",
+					    type: "POST",
+					    
+				}).done(function( json ) {
+				    	$.notify({
+				    		title: '<strong>OK!</strong>',
+				    		message: 'Se envio la factura.'
+				    	},{
+				    		type: 'success',
+				    		z_index: 2000,
+				    	});
+
+				}).fail(function( xhr, status, errorThrown ) {
+						//console.log( "Sorry, there was a problem!" );
+					    console.log( "Error: " + errorThrown );
+					    console.log( "Status: " + status );
+					    //console.dir( xhr );
+				}).always(function( xhr, status ) {
+					    //console.log( "The request is complete!" );
+				});
+			},
 			cleanClientFields : function() {
 				$("#inputNombre").val('');
 				$("#inputApellidoP").val('');

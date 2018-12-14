@@ -49,6 +49,23 @@ public class HomeController {
         return "/ventas";
     }
     
+    @GetMapping("/reporteVentas")
+    public String reporteVentas() {
+        return "/reporteVentas";
+    }
+    @GetMapping("/caja")
+    public String caja() {
+        return "/caja";
+    }
+    @GetMapping("/config")
+    public String configuracion() {
+        return "/config";
+    }   
+    @GetMapping("/reporteInventario")
+    public String reporteInventario() {
+        return "/reporteInventario";
+    }
+    
     @GetMapping("/administrarMesas")
     public String administrarMesas() {
         return "/administrarMesas";

@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import com.mysql.jdbc.Connection;
 import com.org.pos.model.Productos;
+import com.org.pos.model.ReporteVentas;
 import com.org.pos.model.Venta;
 import com.org.pos.repository.VentasRepository;
 
@@ -56,6 +58,23 @@ public class VentaService {
 		return result;
 	}
     
+	public Map<String,Object> getReporte(Principal principal,String fechaInicial,String fechaFinal){
+		//Map<String,Object> result=new HashMap<String,Object>();
+		
+		Map<String,Object> ventas=ventasRepository.generarReporteVentas(fechaInicial,fechaFinal,0.0);
+		
+		//result.put("listaVentasPeriodo", ventas);
+		
+		return ventas;
+	}
+	
+	public Map<String,Object> getVentasByCliente(Principal principal,String idCliente){
+
+		Map<String,Object> ventas=ventasRepository.generarReporteVentasByClient(idCliente, 0.0);
+		
+		return ventas;
+	}
+	
     public void agregarProductoDesdeOtraVentana(Productos productoParaCarrritoDesdeOtraVentana){
         //DefaultTableModel model = (DefaultTableModel) tablaDetalleVenta.getModel();
         Vector row = new Vector();

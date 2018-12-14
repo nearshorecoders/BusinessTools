@@ -54,6 +54,13 @@ public class ClienteService {
 		return clienteRepository.modificarCliente(cliente);
 		
 	}
+	
+	public Map<String, Object> listarClientesByName (String nombre,String apellidoP, String apellidoM){
+		 Map<String, Object> result=new HashMap<String,Object>();
+		 List<Cliente> listaClientes=clienteRepository.buscarCliente(nombre, apellidoP, apellidoM);
+		 result.put("listadoClientesEncontrados", listaClientes);
+		 return result;
+	}
 
 	public  Integer desactivarCliente(Integer idCliente){
 		

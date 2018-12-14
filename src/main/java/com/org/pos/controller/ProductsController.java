@@ -72,6 +72,11 @@ public class ProductsController {
 		}
 		producto.setIdSucursal(idSucursal);
 		
+		producto.setMarca(body.get("marca"));
+		producto.setImagen1(body.get("imagen1"));
+		producto.setImagen2(body.get("imagen2"));
+		producto.setImagen3(body.get("imagen3"));
+		
 		 Map<String,Object> flujoResult=productosService.insertarProducto(principal,producto);
 		return new ResponseEntity<Map<String,Object>>(flujoResult,HttpStatus.OK);
 	}
@@ -99,6 +104,15 @@ public class ProductsController {
 	public @ResponseBody ResponseEntity<?> getAllProducts(Principal principal) {
 		try {	
 			return new ResponseEntity<Map<String, Object>>(productosService.listarProductos(principal), HttpStatus.OK);
+		}catch(Exception e) {
+			return null;
+		}
+	}
+	
+	@GetMapping(value = "/getAllProductsExistence")
+	public @ResponseBody ResponseEntity<?> getAllProductsExistence(Principal principal) {
+		try {	
+			return new ResponseEntity<Map<String, Object>>(productosService.listarProductosParaInventario(principal), HttpStatus.OK);
 		}catch(Exception e) {
 			return null;
 		}

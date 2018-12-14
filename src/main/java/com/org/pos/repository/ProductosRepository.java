@@ -149,6 +149,7 @@ public class ProductosRepository {
     public Integer agregarProductoABD(Productos producto) {                                                
     	Integer resultado=0;
         String tipoProdSel="0";
+        String tipoProd="0";
         try{
             String varDescripcion=producto.getDescripcion();
             Double varUnidades=producto.getUnidadesEnCaja();
@@ -164,9 +165,11 @@ public class ProductosRepository {
             String precioMediana="0";//pMediana.getText();
             String precioGrande="0";//pGrande.getText();
             String precioFamiliar="0";//pFamiliar.getText();
+            String marca=producto.getMarca();
+            String imagen1=producto.getImagen1();
+            String imagen2=producto.getImagen2();
+            String imagen3=producto.getImagen3();
             
-            String tipoProd="0";
-            //0 general
             //1 pizza
             
             if(tipoProdSel.equals("---")){
@@ -189,8 +192,8 @@ public class ProductosRepository {
                 precioFamiliar="0";
             }
             
-            String sqlString="INSERT INTO `productos` (`descripcion`, `unidadesEnCaja`, `precioUnitarioC`, `uMedida`, `presentacion`, `cantidadFraccion`, `codigo`,`precioUnitarioV`,`TipoProducto`,precioChica,precioMediana,precioGrande,precioFamiliar,cantidadMinima,cantidadAceptable,sucursal_idsucursal) "
-                    + " VALUES ('"+varDescripcion+"', '"+varUnidades+"', '"+varPrecioC+"', '"+varUMedida+"', '"+varPresentacion+"', '0', '"+varCodigo+"', '"+varPrecioV+"',"+tipoProd+","+precioChica+","+precioMediana+","+precioGrande+","+precioFamiliar+"," + cantidadMinima + "," + cantidadAceptable +","+idSucursal+ ")";
+            String sqlString="INSERT INTO `productos` (`descripcion`, `unidadesEnCaja`, `precioUnitarioC`, `uMedida`, `presentacion`, `cantidadFraccion`, `codigo`,`precioUnitarioV`,`TipoProducto`,precioChica,precioMediana,precioGrande,precioFamiliar,cantidadMinima,cantidadAceptable,sucursal_idsucursal,marca,imagen1,imagen2,imagen3) "
+                    + " VALUES ('"+varDescripcion+"', '"+varUnidades+"', '"+varPrecioC+"', '"+varUMedida+"', '"+varPresentacion+"', '0', '"+varCodigo+"', '"+varPrecioV+"',"+tipoProd+","+precioChica+","+precioMediana+","+precioGrande+","+precioFamiliar+"," + cantidadMinima + "," + cantidadAceptable +","+idSucursal+ ",'"+marca+"','"+imagen1+"','"+imagen2+"','"+imagen3+"')";
         
             resultado=jdbcTemplate.update(sqlString);
             
@@ -223,10 +226,14 @@ public class ProductosRepository {
             		producto.setIdSucursal((Integer)(row.get("sucursal_idsucursal")));
             		producto.setPrecioCompra((Double)(row.get("precioUnitarioC")));
             		producto.setPrecioVenta((Double)(row.get("precioUnitarioV")));
-            		producto.setPresentacion((String)(row.get("cantidadMinima")));
+            		producto.setPresentacion((String)(row.get("presentacion")));
             		producto.setUnidadesEnCaja((Double)(row.get("unidadesEnCaja")));
             		producto.setUnidadMedida((String)(row.get("uMedida")));
             		producto.setEstatus((Integer)(row.get("estatus")));
+            		producto.setImagen1((String)(row.get("imagen1")));
+            		producto.setImagen2((String)(row.get("imagen2")));
+            		producto.setImagen3((String)(row.get("imagen3")));
+            		producto.setMarca((String)(row.get("marca")));
             		productos.add(producto);
             	}
                	
@@ -261,6 +268,10 @@ public class ProductosRepository {
             		producto.setUnidadesEnCaja((Double)(row.get("unidadesEnCaja")));
             		producto.setUnidadMedida((String)(row.get("uMedida")));
             		producto.setEstatus((Integer)(row.get("estatus")));
+            		producto.setImagen1((String)(row.get("imagen1")));
+            		producto.setImagen2((String)(row.get("imagen2")));
+            		producto.setImagen3((String)(row.get("imagen3")));
+            		producto.setMarca((String)(row.get("marca")));
             		productos.add(producto);
             	}  	
                	
@@ -293,6 +304,47 @@ public class ProductosRepository {
             		producto.setUnidadesEnCaja((Double)(row.get("unidadesEnCaja")));
             		producto.setUnidadMedida((String)(row.get("uMedida")));
             		producto.setEstatus((Integer)(row.get("estatus")));
+            		producto.setImagen1((String)(row.get("imagen1")));
+            		producto.setImagen2((String)(row.get("imagen2")));
+            		producto.setImagen3((String)(row.get("imagen3")));
+            		producto.setMarca((String)(row.get("marca")));
+            		productos.add(producto);
+            	}
+               	
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        
+        return productos;
+    }
+    
+    public List<Productos> listarProductosParaInventario() {                                                      
+    	List<Productos> productos = new ArrayList<Productos>();
+    	try{
+          //listaqr solo productos del cliente logeado y de la sucursal
+          String sqlString="Select * from  productos " +
+                           " where estatus=0 ";
+            	
+            	List<Map<String, Object>> rows = jdbcTemplate.queryForList(sqlString);
+            	for (Map row : rows) {
+            		Productos producto = new Productos();
+            		producto.setCantidadAceptable((Double)(row.get("cantidadAceptable")));
+            		producto.setCantidadMinima((Double)(row.get("cantidadMinima")));
+            		producto.setCodigo((String)(row.get("codigo")));
+            		producto.setDescripcion((String)(row.get("descripcion")));
+            		producto.setId((Integer)(row.get("idProductos")));
+            		producto.setIdSucursal((Integer)(row.get("sucursal_idsucursal")));
+            		producto.setPrecioCompra((Double)(row.get("precioUnitarioC")));
+            		producto.setPrecioVenta((Double)(row.get("precioUnitarioV")));
+            		producto.setPresentacion((String)(row.get("presentacion")));
+            		producto.setUnidadesEnCaja((Double)(row.get("unidadesEnCaja")));
+            		producto.setUnidadMedida((String)(row.get("uMedida")));
+            		producto.setEstatus((Integer)(row.get("estatus")));
+            		producto.setImagen1((String)(row.get("imagen1")));
+            		producto.setImagen2((String)(row.get("imagen2")));
+            		producto.setImagen3((String)(row.get("imagen3")));
+            		producto.setMarca((String)(row.get("marca")));
+            		producto.setUnidadesVendidas((Double)(row.get("cantidadVendidos")));
             		productos.add(producto);
             	}
                	
@@ -316,9 +368,14 @@ public class ProductosRepository {
           Double cantidad=producto.getUnidadesEnCaja();
           String uM=producto.getUnidadMedida();
           String presentacion=producto.getPresentacion();
-
+          String marcaVar=producto.getMarca();
+          String imagen1Var=producto.getImagen1();
+          String imagen2Var=producto.getImagen2();
+          String imagen3Var=producto.getImagen3();
+          
           String sqlString="UPDATE productos set codigo='"+codigo+"' descripcion='"+descripcionVar+"',precioUnitarioC="+precioCVar+", "
                             + " precioUnitarioV="+precioVVar+",unidadesEnCaja="+cantidad+",uMedida='"+uM+"', presentacion='"+presentacion+"'"
+                            + " marca='"+marcaVar+"',imagen1='"+imagen1Var+"',imagen2='"+imagen2Var+"', imagen3='"+imagen3Var+"'"
                             +" where idProductos='"+idProductoModificar+"'";
           
           resultado=jdbcTemplate.update(sqlString);

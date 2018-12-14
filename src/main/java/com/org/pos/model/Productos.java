@@ -14,9 +14,44 @@ public class Productos {
     private Double cantidadMinima;
     private Double cantidadAceptable;
     private Integer idSucursal;
-    
-    
-    ///geters y setters 
+    private String imagen1;
+    private String imagen2;
+    private String imagen3;
+    private String marca;
+    private Double unidadesVendidas;
+    public String getImagen1() {
+		return imagen1;
+	}
+
+	public void setImagen1(String imagen1) {
+		this.imagen1 = imagen1;
+	}
+
+	public String getImagen2() {
+		return imagen2;
+	}
+
+	public void setImagen2(String imagen2) {
+		this.imagen2 = imagen2;
+	}
+
+	public String getImagen3() {
+		return imagen3;
+	}
+
+	public void setImagen3(String imagen3) {
+		this.imagen3 = imagen3;
+	}
+
+	public String getMarca() {
+		return marca;
+	}
+
+	public void setMarca(String marca) {
+		this.marca = marca;
+	}
+
+	///geters y setters 
     /**
      * @return the codigo
      */
@@ -165,6 +200,14 @@ public class Productos {
 
 	public void setIdSucursal(Integer idSucursal) {
 		this.idSucursal= idSucursal;
+	}
+
+	public Double getUnidadesVendidas() {
+		return unidadesVendidas;
+	}
+
+	public void setUnidadesVendidas(Double unidadesVendidas) {
+		this.unidadesVendidas = unidadesVendidas;
 	}
     
     
