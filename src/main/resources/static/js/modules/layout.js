@@ -99,7 +99,8 @@ var layout = (function() {
 					var levelFather="";
 					
 					if(numeroNiveles==2){
-						levelFather=levels[0];
+						//levelFather=levels[0];
+						levelFather=arreglolevels[0];
 					}else if(numeroNiveles==3){
 						levelFather=levels[0]+"."+levels[1];
 					}else if(numeroNiveles==4){

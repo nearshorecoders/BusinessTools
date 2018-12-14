@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.org.pos.model.Cliente;
 import com.org.pos.services.ClienteService;
+import com.org.pos.utils.MailSender;
 
 
 @Controller
@@ -56,6 +57,16 @@ public class ClientesController {
 			return null;
 		}
 	}
+	
+	@PostMapping("/getClientByName")
+	public @ResponseBody ResponseEntity<?> getClienteByName(Principal principal, @RequestParam String nombre,@RequestParam String apellidop, @RequestParam String apellidom) {
+		try {
+			return new ResponseEntity<Map<String, Object>>(clientesService.listarClientesByName(nombre, apellidop, apellidom), HttpStatus.OK);
+		}catch(Exception e) {
+			return null;
+		}
+	}
+	
 	@PutMapping(value = "/updateClient/{id}")
 	public Integer updateClient(@PathVariable Integer id,@PathVariable String varNombre,@PathVariable String varApellidoP, @PathVariable String varApellidoM, @PathVariable String varDireccion,@PathVariable String varTelefono) {
 		try {
@@ -85,5 +96,22 @@ public class ClientesController {
 		}catch(Exception e) {
 			return null;
 		}
+	}
+	
+	@PostMapping(value = "/sendInvoice")
+	public @ResponseBody ResponseEntity<String> getReporteVentas() {
+		MailSender mailSender=new MailSender();
+		 //String email1="opticamirosc76@hotmail.com";
+		 String email1="alfred0823@hotmail.com";
+		
+//		try {
+//			mailSender.enviarCorreo("hotmail", "Factura MIROSC venta 2018786645",email1, null, "Se ha enviado la factura que requirio via telefonica");
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		
+		return new ResponseEntity<String>("OK", HttpStatus.OK);
+		
 	}
 }

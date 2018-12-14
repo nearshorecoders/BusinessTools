@@ -28,7 +28,7 @@ var clientes = (function() {
 	};
 	
 	var suscribeEvents = function() {
-		
+		events.cleanClientFields();
 		$(".navbar-brand.pitch-logo").on("click", function(){ 
 			events.loadMainPage();
         });
@@ -53,6 +53,88 @@ var clientes = (function() {
 	};
 	
 	var events = {
+			getDetailClient : function(clientId) {
+				
+				$('#modal-cliente-detalle').modal('show');
+			},
+			getFacturaFromClient : function(clientId) {
+				$('#modal-compra-factura').modal('show');
+			},
+			enviarMailFactura : function(clientId) {
+
+				$.ajax({
+					    url: "/sendInvoice",
+					    type: "POST",
+					    
+				}).done(function( json ) {
+				    	$.notify({
+				    		title: '<strong>OK!</strong>',
+				    		message: 'Se envio la factura.'
+				    	},{
+				    		type: 'success',
+				    		z_index: 2000,
+				    	});
+
+				}).fail(function( xhr, status, errorThrown ) {
+						//console.log( "Sorry, there was a problem!" );
+					    console.log( "Error: " + errorThrown );
+					    console.log( "Status: " + status );
+					    //console.dir( xhr );
+				}).always(function( xhr, status ) {
+					    //console.log( "The request is complete!" );
+				});
+			},
+			cleanClientFields : function() {
+				$("#inputNombre").val('');
+				$("#inputApellidoP").val('');
+				$("#inputApellidoM").val('');
+				$("#inputTelefono").val('');
+				$("#inputDireccion").val('');
+			},
+			filterClients : function() {
+				// Declare variables 
+				console.log("Filtrar clientes");
+				  var input, filter, table, tr, td, i, txtValue;
+				  input = document.getElementById("searchClient");
+				  filter = input.value.toUpperCase();
+				  table = document.getElementById("tableClientsAll");
+				  tr = table.getElementsByTagName("tr");
+
+				  // Loop through all table rows, and hide those who don't match the search query
+				  for (i = 0; i < tr.length; i++) {
+				    //td = tr[i].getElementsByTagName("td")[0];
+				    
+				    tdName=tr[i].getElementsByTagName("td")[1];
+				    tdSurNamePat=tr[i].getElementsByTagName("td")[2];
+				    tdSurNameMat=tr[i].getElementsByTagName("td")[3];
+				    
+				    if (tdName || tdSurNamePat || tdSurNameMat) {
+				      
+				    	txtValueN1 = tdName.textContent || tdName.innerText;
+				    	txtValueN2 = tdSurNamePat.textContent || tdSurNamePat.innerText;
+				    	txtValueN3 = tdSurNameMat.textContent || tdSurNameMat.innerText;
+				    	
+				    	fullname=txtValueN1+" "+txtValueN2+" "+txtValueN3;
+				    	fullname2=txtValueN1+" "+txtValueN2;
+				    	fullname3=txtValueN1+" "+txtValueN3;
+				    	fullname4=txtValueN2+" "+txtValueN3;
+				    	
+				    	 if(fullname.toUpperCase().indexOf(filter) > -1 || fullname2.toUpperCase().indexOf(filter) > -1 || fullname3.toUpperCase().indexOf(filter) > -1 || fullname4.toUpperCase().indexOf(filter) > -1){
+					        	tr[i].style.display = "";
+					     }else{
+					        	tr[i].style.display = "none";
+					     }
+//				      if (txtValueN1.toUpperCase().indexOf(filter) > -1 || txtValueN2.toUpperCase().indexOf(filter) > -1 ||txtValueN3.toUpperCase().indexOf(filter) > -1) {
+//				        tr[i].style.display = "";
+//				      } else {  
+//				        tr[i].style.display = "none";
+//				       
+//				      }
+				      
+				    } 
+				  }
+				
+			},
 			getAllClients : function() {
 				$.ajax({
 				    url: "/getAllClients",
@@ -60,6 +142,23 @@ var clientes = (function() {
 				}).done(function( json ) {
 					console.log("Getting all clients");
 					console.log(json);
+					$("#tableClients").html("");
+					
+					stringTableClients="";
+					for(i=0;i<json.listaClientesTodos.length;i++){
+						clienteActual=json.listaClientesTodos[i];
+						stringTableClients=stringTableClients+'<tr>'
+											+'<td>'+clienteActual.idClienteAModificar+'</td>'
+											+'<td>'+clienteActual.varNombre+'</td>'
+											+'<td>'+clienteActual.varApellidoP+'</td>'
+											+'<td>'+clienteActual.varApellidoM+'</td>'
+											+'<td>'+clienteActual.varTelefono+'</td>'
+											+'<td>'+clienteActual.varDireccion+'</td>'
+											+'<td><a type="submit" class="btn btn-info pull-right" onclick="clientes.events.getDetailClient('+clienteActual.idClienteAModificar+');">Detalle</a></td>'
+											+'</tr>';
+					}
+					
+					$("#tableClients").html(stringTableClients);
 					
 				}).fail(function( xhr, status, errorThrown ) {
 					//console.log( "Sorry, there was a problem!" );
@@ -93,7 +192,15 @@ var clientes = (function() {
 				}).done(function( json ) {
 					console.log("creating client");
 					console.log(json);
-					
+					events.cleanClientFields();
+					events.getAllClients();
+			    	$.notify({
+			    		title: '<strong>Se creo el cliente correctamente </strong>',
+		    			message: ''
+			    	},{
+			    		type: 'success',
+			    		z_index: 2000,
+			    	});
 				}).fail(function( xhr, status, errorThrown ) {
 					//console.log( "Sorry, there was a problem!" );
 				    console.log( "Error: " + errorThrown );

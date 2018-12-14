@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+</head>
+<body >
+    <!-- Content Header (Page header) -->
+    <!-- Replace your content here, in each section to preserve the ui look and feel -->
+    <!-- This page is going to be loaded on the id=btContent of the layout file-->
+    <section class="content-header">
+      <h1>
+        Estación de cobro
+      </h1>
+      <ol class="breadcrumb">
+        <li><a href="#"><i class="fa fa-dashboard"></i> Inicio</a></li>
+        <li><a href="#">Punto de venta</a></li>
+        <li class="active">Ventas</li>
+      </ol>
+    </section>
+
+        <!-- Main content -->
+    <section class="content">
+
+        <div class="col-md-12">
+        <div class="row">
+        <div class="col-xs-12">
+          <div class="box">
+            <div class="box-header">
+              <h3 class="box-title">Venta a cliente</h3>
+
+              <div class="box-tools">
+                <div class="input-group input-group-sm" style="width: 150px;">
+                  <input type="text" name="table_search" class="form-control pull-right" placeholder="Search">
+
+                  <div class="input-group-btn">
+                    <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- /.box-header -->
+            <div class="box-body table-responsive no-padding">
+              <table class="table table-hover">
+                <tr>
+                  <th>ID</th>
+				  <th>Nombre</th>
+                  <th>Apellido paterno</th>
+                  <th>Apellido materno</th>
+				  <th>Teléfono</th>
+                  <th>Direccion</th>
+                  <th>Acción</th>
+                </tr>
+                <tr>
+                  <td>1</td>
+				  <td>Cliente</td>
+                  <td>Sin Registro</td>
+                  <td>---</td>
+				  <td>---</td>
+                  <td>---</td>
+                  <td>---</td>
+                </tr>             
+              </table>
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer">
+               <button type="submit" class="btn btn-info pull-right">Buscar cliente</button>
+            </div>
+          </div>
+          <!-- /.box -->
+        </div>
+      </div>
+        
+          <!-- Horizontal Form -->
+          <div class="box box-info">
+            <div class="box-header with-border">
+              <h3 class="box-title">Buscar producto</h3>
+            </div>
+            <!-- /.box-header -->
+            <!-- form start -->
+            <form class="form-horizontal">
+              <div class="box-body">
+                <div class="form-group">
+                  <label for="inputCodigo" class="col-sm-2 control-label">Código</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="inputCodigo" placeholder="Escanea el código de barras">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="inputCantidad" class="col-sm-2 control-label" id="cantidadCodigo">Cantidad</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="inputCantidad" placeholder="La cantidad que deseas agregar por código">
+                  </div>
+                </div>
+				<div class="form-group">
+                  <label for="inputDescripcion" class="col-sm-2 control-label">Descripción</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="inputDescripcion" placeholder="Escribe un fragmento de la descripción del producto">
+                  </div>
+                </div>
+              </div>
+              <!-- /.box-body -->
+              <div class="box-footer">
+                <a type="submit" class="btn btn-info pull-right" onclick="ventas.events.getProductByDescription();" data-toggle="modal" data-target="#modal-producto-seleccion"> Buscar por descripción</a>
+              </div>
+              <!-- /.box-footer -->
+            </form>
+          <!-- /.box -->
+        </div>
+
+        <div class="row">
+	        <div class="col-xs-12">
+	          <div class="box">
+	            <div class="box-header">
+	              <h3 class="box-title">Listado de productos en venta</h3>
+	
+	              <div class="box-tools">
+	                <div class="input-group input-group-sm" style="width: 150px;">
+	                  <input type="text" name="table_search" class="form-control pull-right" placeholder="Search">
+	
+	                  <div class="input-group-btn">
+	                    <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+	                  </div>
+	                </div>
+	              </div>
+	            </div>
+	            <!-- /.box-header -->
+	            <div class="box-body table-responsive no-padding">
+	              <table class="table table-hover">
+	                <thead>
+		                <tr>
+		                  <th>ID</th>
+						  <th>Descripción</th>
+		                  <th>Cantidad</th>
+		                  <th>Precio</th>
+						  <th>Subtotal</th>
+						  <th></th>
+						  <th></th>
+		                </tr>
+	                </thead>
+	                <tbody id="tableSell">
+	                <tbody>           
+	              </table>
+	            </div>
+	          </div>
+	          <!-- /.box -->
+	          <div class="box-footer" style="display:none">
+	                <div class="form-group">
+	                	<div class="col-sm-4">
+	                   		<h1 id="totalSellAmountOld" class="col-sm-2 control-label">Total: $0.00 </h1>
+	                   	</div>
+			        </div>
+	                <div class="form-group">
+			           <label for="inputCantidadOld" class="col-sm-4 control-label">Efectivo recibido </label>
+			           <div class="col-sm-2">
+			              <input type="text" class="form-control" id="inputCantidadOld" placeholder="Efectivo que el cliente proporciono">
+			           </div>
+			           <div class="col-sm-4">
+			           	<button type="submit" class="btn-lg btn-success pull-left" id="confirmButtonOld">Confirmar venta</button>
+			           </div>
+			        </div>
+	          </div>
+	        </div>
+      </div>
+      	        <!-- Info boxes cobro -->
+      <div class="row">
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="info-box">
+            <span class="info-box-icon bg-aqua" id="colorTotal"><i class="fa fa-dollar"></i></span>
+
+            <div class="info-box-content">
+              <span class="info-box-text">Total</span>
+              <span class="info-box-number" id="totalSellAmount"><big>0.00</big></span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="info-box">
+            <span class="info-box-icon bg-aqua" id="colorEfectivo"><i class="fa fa-dollar"></i></span>
+
+            <div class="info-box-content">
+              <span class="info-box-text">Pago</span>
+              <input type="text" class="form-control" id="inputCantidadEfectivo" placeholder="Efectivo recibido Ej. 5.00" >
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+
+        <!-- fix for small devices only -->
+        <div class="clearfix visible-sm-block"></div>
+
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="info-box">
+            <span class="info-box-icon bg-aqua" id="colorCambio"><i class="ion ion-cash"></i></span>
+
+            <div class="info-box-content">
+              <span class="info-box-text">Cambio</span>
+              <span class="info-box-number" id="changeAmount">0.00</span>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+        <div class="col-md-3 col-sm-6 col-xs-12">
+          <div class="info-box">
+            <span class="info-box-icon bg-green" id="colorConfirmarVenta"><i class="ion ion-ios-checkmark-outline"></i></span>
+
+            <div class="info-box-content">
+				<button type="submit" class="btn-lg btn-success pull-left" onclick="ventas.events.vender();" >Confirmar venta</button>
+            </div>
+            <!-- /.info-box-content -->
+          </div>
+          <!-- /.info-box -->
+        </div>
+        <!-- /.col -->
+      </div>
+      <!-- /.row cobro details -->
+    </div>
+    </section>
+    <!-- section content---> 
+  <!-- /.content-wrapper --> 
+  <div class="modal fade" id="modal-producto-seleccion">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Seleccionar producto</h4>
+              </div>
+              <div class="modal-body">
+                <div class="box">
+		            <div class="box-body table-responsive no-padding">
+		              <table class="table table-hover" id="tableBusquedaProductos">
+		                <thead>
+			                <tr>
+			                  <th>ID</th>
+							  <th>Descripción</th>
+			                  <th>Cantidad restante</th>
+			                  <th>Precio</th>
+			                </tr>
+		                </thead>
+		                <tbody id="tableBusqueda">
+
+		                <tbody>           
+		              </table>
+		            </div>
+		          </div>
+		          <!-- /.box -->
+		          <div class="box">
+		            <div class="box-header">
+		              <h3 class="box-title">Introduce la cantidad que deseas agregar:</h3>
+		            </div>
+		            <!-- /.box-header -->
+		            <div class="box-body table-responsive no-padding">
+		              <table class="table table-hover" id="tableAgregarProducto">
+		                <thead>
+			                <tr>
+			                  <th>ID</th>
+							  <th>Descripción</th>
+			                  <th>Disponible</th>
+			                  <th>Cantidad a agregar</th>
+			                </tr>
+		                </thead>
+		                <tbody id="tableProductoAAgregar">
+  
+		                <tbody>           
+		              </table>
+		            </div>
+		          </div>
+		          <!-- /.box --> 
+              </div><!-- /.modal-body -->
+              <br/>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Cerrar</button>
+                <button type="button" id="addToSellButton" class="btn btn-primary pull-rigth" onclick="ventas.events.addProductToSell();" disabled>Agregar a venta</button>
+              </div>
+            </div>
+            <!-- /.modal-content -->
+          </div>
+          <!-- /.modal-dialog -->
+     </div>
+  
+	<script src="js/modules/ventas.js"></script>
+</body>
+</html>
+

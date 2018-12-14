@@ -29,6 +29,8 @@ var ventas = (function() {
 	var lastI=0.0;
 	var lastC=0.0;
 	var arrP=[];
+	var listaClientesBusqueda=[];
+	var clienteSeleccionado=null;
 	var initProperties = function() {
 		events.slowNetworkDetection();	
 	}
@@ -88,6 +90,88 @@ var ventas = (function() {
 	};
 	
 	var events = {
+			limpiarBusquedaCliente:function(){
+				$('#inputNombreB').val('');
+				$('#inputApellidoPB').val('');
+				$('#inputApellidoMB').val('');
+			},
+			selectClient : function(element){
+				identificador=$(element).attr('id');
+				identificador=parseInt(identificador.replace('clienteSelected',''));
+				clienteSeleccionado=listaClientesBusqueda[identificador];
+				$("#tableClientesVenta").html('');
+				stringContenidoClientes='<tr>'
+                +'<td id="selectedClientId">'+clienteSeleccionado.idClienteAModificar+'</td>'
+                +'<td>'+clienteSeleccionado.varNombre+'</td>'
+                +'<td>'+clienteSeleccionado.varApellidoP+'</td>'
+                +'<td>'+clienteSeleccionado.varApellidoM+'</td>'
+                +'<td>'+clienteSeleccionado.varTelefono+'</td>'
+                +'<td>'+clienteSeleccionado.varDireccion+'</td>'
+                +'</tr>';
+				$("#modal-busqueda-clientes").modal('hide');
+				$("#tableClientesVenta").append(stringContenidoClientes);
+				
+			},
+			buscarCliente: function(){
+				nombreToSend=$('#inputNombreB').val();
+				apellidoPToSend=$('#inputApellidoPB').val();
+				apellidoMToSend=$('#inputApellidoMB').val();
+				
+				dataToSend={
+					nombre:nombreToSend,
+					apellidop:apellidoPToSend,
+					apellidom:apellidoMToSend,
+				}
+				$("#tableBusquedaCliente").html('');
+				$.ajax({
+				    url: "/getClientByName",
+				    type: "POST",
+				    data:dataToSend,
+				}).done(function( json ) {
+					console.log("getting clients");
+					console.log(json);
+					events.limpiarBusquedaCliente();
+					stringContenidoClientes='';
+					for(i=0;i<json.listadoClientesEncontrados.length;i++){
+						currentRow=json.listadoClientesEncontrados[i];
+						listaClientesBusqueda[currentRow.idClienteAModificar]=currentRow;
+						stringContenidoClientes=stringContenidoClientes+'<tr>'
+		                  +'<td>'+currentRow.idClienteAModificar+'</td>'
+		                  +'<td>'+currentRow.varNombre+'</td>'
+		                  +'<td>'+currentRow.varApellidoP+'</td>'
+		                  +'<td>'+currentRow.varApellidoM+'</td>'
+		                  +'<td><a id="clienteSelected'+currentRow.idClienteAModificar+'" type="submit" class="btn btn-info pull-right" onclick="ventas.events.selectClient(this);">Seleccionar</a></td>'
+		                  +'</tr>';
+					}
+					$("#tableBusquedaCliente").append(stringContenidoClientes);
+					if(json.listadoClientesEncontrados.length>0){
+				    	$.notify({
+				    		title: '<strong>Se encontrarón clientes </strong>',
+			    			message: ''
+				    	},{
+				    		type: 'success',
+				    		z_index: 2000,
+				    	});
+					}else{
+				    	$.notify({
+				    		title: '<strong>No se encontraron resultados</strong>',
+			    			message: ''
+				    	},{
+				    		type: 'danger',
+				    		z_index: 2000,
+				    	});						
+					}
+					
+
+				}).fail(function( xhr, status, errorThrown ) {
+					//console.log( "Sorry, there was a problem!" );
+				    console.log( "Error: " + errorThrown );
+				    console.log( "Status: " + status );
+				    //console.dir( xhr );
+				}).always(function( xhr, status ) {
+				    //console.log( "The request is complete!" );
+				});
+			},
 			vender : function() {
 				if(lastB==0.0){
 			    	$.notify({
@@ -137,10 +221,14 @@ var ventas = (function() {
 				var filtered = listaProductosAgregadosAVenta.filter(function (el) {
 					  return el != null;
 					});
-				
+				clienteSeleccionadoToSend=1;
+				if(clienteSeleccionado!=null){
+					clienteSeleccionadoToSend=clienteSeleccionado.idClienteAModificar;
+				}
+				//usuario:1, no importa por que en el back se va por el usuario logueado y se sobreescribe la variable
 				dataToSend={
 						cambio : lastC,
-						cliente : 1,
+						cliente : clienteSeleccionadoToSend,
 						consecutivoVenta : 0,
 						total : lastB,
 						efectivo :lastI,
@@ -159,10 +247,25 @@ var ventas = (function() {
 					    },
 					    
 				}).done(function( json ) {
+						listaClientesBusqueda=[];
+						clienteSeleccionado=null;
 						console.log("Executing sell");
 						console.log(json);
 						console.log(json.insertedVenta);
 						console.log(json.insertedVenta.consecutivoVenta);
+						
+						$("#tableClientesVenta").html('');
+						stringContenidoClientes='<tr>'
+			                  +'<td>1</td>'
+			                  +'<td>Cliente</td>'
+			                  +'<td>Sin Registro</td>'
+			                  +'<td>---</td>'
+			                  +'<td>---</td>'
+			                  +'<td>---</td>'
+			                  +'</tr> ';
+						$("#tableClientesVenta").append(stringContenidoClientes);
+						
+						
 				    	$.notify({
 				    		title: '<strong>OK!</strong>',
 				    		message: 'Se ha realizado correctamente la venta #'+json.insertedVenta.consecutivoVenta+'.'

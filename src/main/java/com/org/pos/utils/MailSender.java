@@ -28,7 +28,7 @@ public class MailSender{
 		//objeto donde almacenamos la configuración para conectarnos al servidor
         Properties properties = new Properties();
         //cargamos el archivo de configuracion
-        properties.load(new MailSender().getClass().getResourceAsStream("/com/cis/exchange/utils/mail/"+tipoServidor+".properties"));
+        properties.load(new MailSender().getClass().getResourceAsStream("com/org/pos/utils/mail/"+tipoServidor+".properties"));
         //creamos una sesión
         Session session = Session.getInstance(properties, null);
 		//creamos el mensaje a enviar

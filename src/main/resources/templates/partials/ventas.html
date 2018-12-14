@@ -39,32 +39,70 @@
                 </div>
               </div>
             </div>
+          <!-- Horizontal Form -->
+          <div class="box box-info">
+            <div class="box-header with-border">
+              <h3 class="box-title">Buscar cliente</h3>
+            </div>
+            <!-- /.box-header -->
+            <!-- form start -->
+            <form class="form-horizontal">
+              <div class="box-body">
+                <div class="form-group">
+                  <label for="inputNombreB" class="col-sm-2 control-label">Nombre</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="inputNombreB" placeholder="Nombre o nombres del cliente">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="inputApellidoPB" class="col-sm-2 control-label">Apellido paterno</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="inputApellidoPB" placeholder="Apellido paterno del cliente">
+                  </div>
+                </div>
+				<div class="form-group">
+                  <label for="inputApellidoMB" class="col-sm-2 control-label">Apellido materno</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="inputApellidoMB" placeholder="Apellido materno del cliente">
+                  </div>
+                </div>
+              </div>
+              <!-- /.box-body -->
+              <div class="box-footer">
+                <a type="submit" class="btn btn-info pull-right" onclick="ventas.events.buscarCliente();" data-toggle="modal" data-target="#modal-busqueda-clientes"> Buscar</a>
+              </div>
+              <!-- /.box-footer -->
+            </form>
+          <!-- /.box -->
+        </div>
             <!-- /.box-header -->
             <div class="box-body table-responsive no-padding">
-              <table class="table table-hover">
-                <tr>
-                  <th>ID</th>
-				  <th>Nombre</th>
-                  <th>Apellido paterno</th>
-                  <th>Apellido materno</th>
-				  <th>Teléfono</th>
-                  <th>Direccion</th>
-                  <th>Acción</th>
-                </tr>
-                <tr>
-                  <td>1</td>
-				  <td>Cliente</td>
-                  <td>Sin Registro</td>
-                  <td>---</td>
-				  <td>---</td>
-                  <td>---</td>
-                  <td>---</td>
-                </tr>             
+              <table id="tableClientesVentaAll" class="table table-hover">
+                <thead>
+	                <tr>
+	                  <th>ID</th>
+					  <th>Nombre</th>
+	                  <th>Apellido paterno</th>
+	                  <th>Apellido materno</th>
+					  <th>Teléfono</th>
+	                  <th>Dirección</th>
+	                </tr>
+                </thead>
+                <tbody id="tableClientesVenta">
+	                <tr>
+	                  <td id="selectedClientId">1</td>
+					  <td>Cliente</td>
+	                  <td>Sin Registro</td>
+	                  <td>---</td>
+					  <td>---</td>
+	                  <td>---</td>
+	                </tr> 
+                </tbody>            
               </table>
             </div>
             <!-- /.box-body -->
             <div class="box-footer">
-               <button type="submit" class="btn btn-info pull-right">Buscar cliente</button>
+               <!-- <button type="submit" class="btn btn-info pull-right" >Buscar cliente</button> -->
             </div>
           </div>
           <!-- /.box -->
@@ -285,7 +323,43 @@
           </div>
           <!-- /.modal-dialog -->
      </div>
-  
+  <div class="modal fade" id="modal-busqueda-clientes">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Seleccionar cliente</h4>
+              </div>
+              <div class="modal-body">
+                <div class="box">
+		            <div class="box-body table-responsive no-padding">
+		              <table class="table table-hover" id="tableBusquedaClienteAll">
+		                <thead>
+			                <tr>
+			                  <th>ID</th>
+							  <th>Nombre</th>
+			                  <th>Apellido paterno</th>
+			                  <th>Apellido materno</th>
+			                  <th>Acción</th>
+			                </tr>
+		                </thead>
+		                <tbody id="tableBusquedaCliente">
+
+		                <tbody>           
+		              </table>
+		            </div>
+		          </div>
+              </div><!-- /.modal-body -->
+              <br/>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Cerrar</button>
+              </div>
+            </div>
+            <!-- /.modal-content -->
+          </div>
+          <!-- /.modal-dialog -->
+     </div>
 	<script src="js/modules/ventas.js"></script>
 </body>
 </html>

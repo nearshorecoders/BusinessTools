@@ -30,7 +30,7 @@
             </div>
             <!-- /.box-header -->
             <!-- form start -->
-            <form class="form-horizontal">
+            <form id="formAltaProductos" class="form-horizontal">
               <div class="box-body">
                 <div class="form-group">
                   <label for="inputCodigo" class="col-sm-2 control-label">Código</label>
@@ -38,11 +38,24 @@
                     <input type="text" class="form-control" id="inputCodigo" placeholder="Escanea el código de barras">
                   </div>
                 </div>
+                <div class="form-group">
+                  <label for="selectMarca" class="col-sm-2 control-label">Marca</label>
+                  <div class="col-sm-10">
+                    <select id="selectMarca" class="form-control">
+                    <option>---</option>
+				    <option>Ray-Ban</option>
+					<option>Hugo Boss</option>
+                    <option>Tommy Hilfiger</option>
+                    <option>Lacoste</option>
+                    <option>Channel</option>
+                    <option>Diesel</option>
+                  </select>
+                  </div>
+                </div>
 				<div class="form-group">
                   <label for="inputDescripcion" class="col-sm-2 control-label">Descripción</label>
-
                   <div class="col-sm-10">
-                    <input type="text" class="form-control" id="inputDescripcion" placeholder="Ejemplo.- Bocinas bluetooth azules">
+                    <input type="text" class="form-control" id="inputDescripcion" placeholder="Ejemplo.- Lentes gota estilo aviador">
                   </div>
                 </div>
 				<div class="form-group">
@@ -96,13 +109,52 @@
                   </select>
                   </div>
                 </div>
-                <div class="form-group">
+                <div class="form-group" style="display:none">
                   <div class="col-sm-offset-2 col-sm-10">
                     <div class="checkbox">
                       <label>
                         <input type="checkbox"> Remember me
                       </label>
                     </div>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="imagenIzquierda" class="col-sm-2 control-label">Imagen izquierda</label>
+                  <div class="col-sm-offset-2 col-sm-10">
+                  	<input type="file" id="imagenIzquierda" onchange="productos.events.uploadFileImage1();">
+                  	<p class="help-block">Selecciona la imagen de vista lateral izquierda del lente.</p>
+                  </div>
+                </div>
+                <div class="form-group" style="display:none">
+                  <label for="urlImagen1" class="col-sm-2 control-label">urlImagen1</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="urlImagen1">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="imagenFrontal" class="col-sm-2 control-label">Imagen frontal</label>
+                  <div class="col-sm-offset-2 col-sm-10">
+                  	<input type="file" id="imagenFrontal" onchange="productos.events.uploadFileImage2();">
+                  	<p class="help-block">Selecciona la imagen de vista frontal del lente.</p>
+                  </div>
+                </div>
+                <div class="form-group" style="display:none">
+                  <label for="urlImagen2" class="col-sm-2 control-label">urlImagen2</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="urlImagen2">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="imagenDerecha" class="col-sm-2 control-label">Imagen derecha</label>
+                  <div class="col-sm-offset-2 col-sm-10">
+                  	<input type="file" id="imagenDerecha" onchange="productos.events.uploadFileImage3();">
+                  	<p class="help-block">Selecciona la imagen de vista lateral derecha del lente.</p>
+                  </div>
+                </div>
+                <div class="form-group" style="display:none">
+                  <label for="urlImagen3" class="col-sm-2 control-label">urlImagen3</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="urlImagen3">
                   </div>
                 </div>
               </div>
@@ -122,7 +174,7 @@
 
               <div class="box-tools">
                 <div class="input-group input-group-sm" style="width: 150px;">
-                  <input type="text" name="table_search" class="form-control pull-right" placeholder="Buscar producto">
+                  <input id="searchProduct" onkeyup="productos.events.filterProducts();" type="text" name="table_search" class="form-control pull-right" placeholder="Buscar producto">
 
                   <div class="input-group-btn">
                     <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
@@ -132,17 +184,21 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body table-responsive no-padding">
-              <table class="table table-hover">
+              <table id="tableProductsAll" class="table table-hover">
                 <tr>
                   <th>ID</th>
 				  <th>Código</th>
-                  <th>Descrición</th>
+				  <th>Marca</th>
+                  <th>Descripción</th>
                   <th>Cantidad</th>
 				  <th>U. medida</th>
                   <th>Stock</th>
 				  <th>Precio de compra</th>
 				  <th>Precio de venta</th>
 				  <th>Presentación</th>
+				  <th>Izquierda</th>
+				  <th>Frontal</th>
+				  <th>Derecha</th>
                   <th>Acción</th>
                 </tr>
                 <tbody id="tableProducts">
@@ -330,10 +386,24 @@
                     <input type="text" class="form-control" id="inputCodigoMod" placeholder="Escanea el código de barras">
                   </div>
                 </div>
+                <div class="form-group">
+                  <label for="selectMarcaMod" class="col-sm-4 control-label">Marca</label>
+                  <div class="col-sm-8">
+                    <select id="selectMarcaMod" class="form-control">
+                    <option>---</option>
+				    <option>Ray-Ban</option>
+					<option>Hugo Boss</option>
+                    <option>Tommy Hilfiger</option>
+                    <option>Lacoste</option>
+                    <option>Channel</option>
+                    <option>Diesel</option>
+                  </select>
+                  </div>
+                </div>
 				<div class="form-group">
                   <label for="inputDescripcionMod" class="col-sm-4 control-label">Descripción</label>
                   <div class="col-sm-8">
-                    <input type="text" class="form-control" id="inputDescripcionMod" placeholder="Ejemplo.- Bocinas bluetooth azules">
+                    <input type="text" class="form-control" id="inputDescripcionMod" placeholder="Ejemplo.- Lentes gota estilo aviador">
                   </div>
                 </div>
 				<div class="form-group">
@@ -384,6 +454,27 @@
 					<option>Caja</option>
                     <option>Bolsa</option>
                   </select>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="imagenIzquierda" class="col-sm-4 control-label">Imagen izquierda</label>
+                  <div class="col-sm-8">
+                  	<input type="file" id="imagenIzquierdaMod">
+                  	<p class="help-block">Selecciona la imagen de vista lateral izquierda del lente.</p>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="imagenFrontal" class="col-sm-4 control-label">Imagen frontal</label>
+                  <div class="col-sm-8">
+                  	<input type="file" id="imagenFrontalMod">
+                  	<p class="help-block">Selecciona la imagen de vista frontal del lente.</p>
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="imagenDerecha" class="col-sm-4 control-label">Imagen derecha</label>
+                  <div class="col-sm-8">
+                  	<input type="file" id="imagenDerechaMod">
+                  	<p class="help-block">Selecciona la imagen de vista lateral derecha del lente.</p>
                   </div>
                 </div>
                 <div class="form-group">
