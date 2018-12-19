@@ -204,7 +204,7 @@ public class ProductosRepository {
         return resultado;
         
     }   
-    public List<Productos> buscarProductoPorDescripcion(String descripcion) {                                                      
+    public List<Productos> buscarProductoPorDescripcion(Integer idSucursal,String descripcion) {                                                      
     	List<Productos> productos = new ArrayList<Productos>();
     	try{
 
@@ -213,7 +213,7 @@ public class ProductosRepository {
           String sqlString="Select * from  productos " +
                            " where estatus=0 ";
               
-               	sqlString+= " And descripcion like '%"+descripcionVar+"%'";
+               	sqlString+= " And descripcion like '%"+descripcionVar+"%' AND sucursal_idsucursal="+idSucursal;
             	
             	List<Map<String, Object>> rows = jdbcTemplate.queryForList(sqlString);
             	for (Map row : rows) {
@@ -282,12 +282,12 @@ public class ProductosRepository {
         return productos;
     } 
     
-    public List<Productos> listarProductos() {                                                      
+    public List<Productos> listarProductos(Integer idSucursal) {                                                      
     	List<Productos> productos = new ArrayList<Productos>();
     	try{
           //listaqr solo productos del cliente logeado y de la sucursal
           String sqlString="Select * from  productos " +
-                           " where estatus=0 ";
+                           " where estatus=0 and sucursal_idsucursal="+idSucursal;
             	
             	List<Map<String, Object>> rows = jdbcTemplate.queryForList(sqlString);
             	for (Map row : rows) {
@@ -318,12 +318,12 @@ public class ProductosRepository {
         return productos;
     }
     
-    public List<Productos> listarProductosParaInventario() {                                                      
+    public List<Productos> listarProductosParaInventario(Integer idSucursal) {                                                      
     	List<Productos> productos = new ArrayList<Productos>();
     	try{
           //listaqr solo productos del cliente logeado y de la sucursal
           String sqlString="Select * from  productos " +
-                           " where estatus=0 ";
+                           " where estatus=0 and sucursal_idsucursal="+idSucursal;
             	
             	List<Map<String, Object>> rows = jdbcTemplate.queryForList(sqlString);
             	for (Map row : rows) {

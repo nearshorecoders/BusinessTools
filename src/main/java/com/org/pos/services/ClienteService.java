@@ -12,7 +12,9 @@ import com.org.pos.model.Cliente;
 import com.org.pos.model.Productos;
 import com.org.pos.model.Usuario;
 import com.org.pos.repository.ClienteRepository;
+import com.org.pos.repository.EstadoDeCuentaRepository;
 import com.org.pos.repository.UserRepository;
+import com.org.pos.repository.VentasRepository;
 
 @Service
 public class ClienteService {
@@ -23,6 +25,12 @@ public class ClienteService {
 	@Autowired
 	UserRepository userRepository;
 	
+	@Autowired
+	VentasRepository ventasRepository;
+	
+	@Autowired
+	EstadoDeCuentaRepository estadoDeCuentaRepository;
+	
 	public Integer createClient(Map<String,String> body) {
 		
 		String nombre=body.get("nombre");
@@ -30,11 +38,30 @@ public class ClienteService {
 		String apellidoM=body.get("apellidoM");
 		String dir=body.get("direccion");
 		String tel=body.get("telefono");
-		
-		return clienteRepository.agregarCliente(nombre, apellidoP, apellidoM, dir, tel);
+		String email=body.get("email");
+		String telefono2=body.get("telefono2");
+		return clienteRepository.agregarCliente(nombre, apellidoP, apellidoM, dir, tel,email,telefono2);
 		
 	}
 	
+	public  Map<String, Object> getDetailByCliente(Principal principal,Integer idCliente){
+		Map<String, Object> resultado=new HashMap<String,Object>();
+		resultado.put("historialVentas", ventasRepository.generarReporteVentasByClient(idCliente,0.0));
+		resultado.put("estadoDeCuenta", estadoDeCuentaRepository.getEstadoDeCuentaByClient(idCliente));
+		return resultado;
+	}
+	
+	public  Map<String, Object> getDetailHistorialPagosByProduct(Principal principal,Integer idCliente,Integer idProducto){
+		Map<String, Object> resultado=new HashMap<String,Object>();
+		resultado.put("historialPagosDetalle", estadoDeCuentaRepository.getHistoricDetailByProduct(idCliente,idProducto));
+		return resultado;
+	}
+	
+	public Map<String,Object> getEstadoDeCuentaByClientAndStatus(Integer clientID,Integer status) {
+		Map<String, Object> resultado=new HashMap<String,Object>();
+		resultado.put("estadoDeCuentaPorEstatus", estadoDeCuentaRepository.getEstadoDeCuentaByClientAndStatus(clientID,status));
+		return resultado;		
+	}
 	
 	public  Map<String, Object> listarClientes(Principal principal){
 		Map<String,Object> result=new HashMap<String,Object>();

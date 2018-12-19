@@ -46,7 +46,7 @@
               </div>
               <!-- /.box-body -->
               <div class="box-footer">
-                <a type="submit" class="btn btn-info pull-right" onclick="productos.events.createNewProduct();">Realizar corte de caja</a>
+                <a type="submit" class="btn btn-info pull-right" onclick="caja.events.saveGasto();">Registrar gasto</a>
               </div>
               <!-- /.box-footer -->
             </form>
@@ -70,7 +70,7 @@
               </div>
               <!-- /.box-body -->
               <div class="box-footer">
-                <a type="submit" class="btn btn-info pull-right" onclick="productos.events.createNewProduct();">Realizar corte de caja</a>
+                <a type="submit" class="btn btn-info pull-right" onclick="caja.events.realizarCorteCaja();">Realizar corte de caja</a>
               </div>
               <!-- /.box-footer -->
             </form>
@@ -80,7 +80,7 @@
         <div class="col-xs-12">
           <div class="box">
             <div class="box-header">
-              <h3 class="box-title">Ventas del periodo</h3>
+              <h3 class="box-title">Gastos del día</h3>
 
               <div class="box-tools">
                 <div class="input-group input-group-sm" style="width: 150px;">
@@ -94,168 +94,17 @@
             </div>
             <!-- /.box-header -->
             <div class="box-body table-responsive no-padding">
-              <table id="tableVentasAll" class="table table-hover">
+              <table id="tableGastosAll" class="table table-hover">
                 <tr>
-                  <th>ID</th>
-				  <th>Código</th>
-				  <th>Marca</th>
-                  <th>Descripción</th>
-                  <th>Cantidad</th>
-				  <th>U. medida</th>
-                  <th>Stock</th>
-				  <th>Precio de compra</th>
-				  <th>Precio de venta</th>
-				  <th>Presentación</th>
-				  <th>Izquierda</th>
-				  <th>Frontal</th>
-				  <th>Derecha</th>
-                  <th>Acción</th>
+                  <th>Fecha</th>
+				  <th>Consecutivo</th>
+				  <th>Cantidad</th>
+                  <th>Motivo</th>
+                  <th>Usuario que registro gasto</th>
+				  <th>Sucursal</th>
                 </tr>
-                <tbody id="tableVentasRows">
-	                <tr>
-	                  <td>1</td>
-					  <td>113454878988544</td>
-	                  <td>Cigarros marlboro</td>
-	                  <td>80</td>
-					  <td>Piezas</td>
-	                  <td><span class="label label-success">80</span></td>
-	                  <td>$40.00</td>
-					  <td>$54.00</td>
-					  <td>Caja</td>
-					  <td>Botones</td>
-	                </tr>
-	                <tr>
-	                  <td>2</td>
-					  <td>113454878988544</td>
-	                  <td>Cigarros Camel</td>
-	                  <td>30</td>
-					  <td>Piezas</td>
-	                  <td><span class="label label-warning">25</span></td>
-	                  <td>$35.00</td>
-					  <td>$45.00</td>
-					  <td>Caja</td>
-					  <td>Botones</td>
-	                </tr>
-	                <tr>
-	                  <td>3</td>
-					  <td>113454878988544</td>
-	                  <td>Cigarros marlboro light</td>
-	                  <td>80</td>
-					  <td>Piezas</td>
-	                  <td><span class="label label-success">80</span></td>
-	                  <td>$40.00</td>
-					  <td>$54.00</td>
-					  <td>Caja</td>
-					  <td>Botones</td>
-	                </tr>
-	                <tr>
-	                  <td>4</td>
-					  <td>113454878988544</td>
-	                  <td>Encendedores</td>
-	                  <td>10</td>
-					  <td>Piezas</td>
-	                  <td><span class="label label-danger">50</span></td>
-	                  <td>$5.00</td>
-					  <td>$12.00</td>
-					  <td>Unidad</td>
-					  <td>Botones</td>
-	                </tr>				
-	                <tr>
-	                  <td>5</td>
-					  <td>113454878988544</td>
-	                  <td>Cigarros marlboro</td>
-	                  <td>80</td>
-					  <td>Piezas</td>
-	                  <td><span class="label label-success">80</span></td>
-	                  <td>$40.00</td>
-					  <td>$54.00</td>
-					  <td>Caja</td>
-					  <td>Botones</td>
-	                </tr>
-	                <tr>
-	                  <td>6</td>
-					  <td>113454878988544</td>
-	                  <td>Cigarros Camel</td>
-	                  <td>30</td>
-					  <td>Piezas</td>
-	                  <td><span class="label label-warning">25</span></td>
-	                  <td>$35.00</td>
-					  <td>$45.00</td>
-					  <td>Caja</td>
-					  <td>Botones</td>
-	                </tr>
-	                <tr>
-	                  <td>7</td>
-					  <td>113454878988544</td>
-	                  <td>Cigarros marlboro light</td>
-	                  <td>80</td>
-					  <td>Piezas</td>
-	                  <td><span class="label label-success">80</span></td>
-	                  <td>$40.00</td>
-					  <td>$54.00</td>
-					  <td>Caja</td>
-					  <td>Botones</td>
-	                </tr>
-	                <tr>
-	                  <td>8</td>
-					  <td>113454878988544</td>
-	                  <td>Encendedores</td>
-	                  <td>10</td>
-					  <td>Piezas</td>
-	                  <td><span class="label label-danger">50</span></td>
-	                  <td>$5.00</td>
-					  <td>$12.00</td>
-					  <td>Unidad</td>
-					  <td>Botones</td>
-	                </tr>
-	                <tr>
-	                  <td>9</td>
-					  <td>113454878988544</td>
-	                  <td>Cigarros marlboro</td>
-	                  <td>80</td>
-					  <td>Piezas</td>
-	                  <td><span class="label label-success">80</span></td>
-	                  <td>$40.00</td>
-					  <td>$54.00</td>
-					  <td>Caja</td>
-					  <td>Botones</td>
-	                </tr>
-	                <tr>
-	                  <td>10</td>
-					  <td>113454878988544</td>
-	                  <td>Cigarros Camel</td>
-	                  <td>30</td>
-					  <td>Piezas</td>
-	                  <td><span class="label label-warning">25</span></td>
-	                  <td>$35.00</td>
-					  <td>$45.00</td>
-					  <td>Caja</td>
-					  <td>Botones</td>
-	                </tr>
-	                <tr>
-	                  <td>11</td>
-					  <td>113454878988544</td>
-	                  <td>Cigarros marlboro light</td>
-	                  <td>80</td>
-					  <td>Piezas</td>
-	                  <td><span class="label label-success">80</span></td>
-	                  <td>$40.00</td>
-					  <td>$54.00</td>
-					  <td>Caja</td>
-					  <td>Botones</td>
-	                </tr>
-	                <tr>
-	                  <td>12</td>
-					  <td>113454878988544</td>
-	                  <td>Encendedores</td>
-	                  <td>10</td>
-					  <td>Piezas</td>
-	                  <td><span class="label label-danger">50</span></td>
-	                  <td>$5.00</td>
-					  <td>$12.00</td>
-					  <td>Unidad</td>
-					  <td>Botones</td>
-	                </tr>
+                <tbody id="tableGastosRows">
+
                 </tbody>						
               </table>
             </div>

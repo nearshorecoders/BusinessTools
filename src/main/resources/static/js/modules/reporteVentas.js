@@ -28,7 +28,7 @@ var reporteVentas = (function() {
 	};
 	
 	var suscribeEvents = function() {
-		events.cleanProductFields();
+		events.cleanReportFields();
 		$(".navbar-brand.pitch-logo").on("click", function(){ 
 			events.loadMainPage();
         });
@@ -217,113 +217,6 @@ var reporteVentas = (function() {
 					minutoHasta="00";
 				}
 				
-//				if(meridianDesde=="AM"){
-//					if(horaDesde=="1"){
-//						horaDesde="01";
-//					}else if(horaDesde=="2"){
-//						horaDesde="02";
-//					}else if(horaDesde=="3"){
-//						horaDesde="03";
-//					}else if(horaDesde=="4"){
-//						horaDesde="04";
-//					}else if(horaDesde=="5"){
-//						horaDesde="05";
-//					}else if(horaDesde=="6"){
-//						horaDesde="06";
-//					}else if(horaDesde=="7"){
-//						horaDesde="07";
-//					}else if(horaDesde=="8"){
-//						horaDesde="08";
-//					}else if(horaDesde=="9"){
-//						horaDesde="09";
-//					}else if(horaDesde=="10"){
-//						horaDesde="10";
-//					}else if(horaDesde=="11"){
-//						horaDesde="11";
-//					}else if(horaDesde=="12"){
-//						horaDesde="12";
-//					}
-//				}else if(meridianDesde="PM"){
-//					if(horaDesde=="1"){
-//						horaDesde="13";
-//					}else if(horaDesde=="2"){
-//						horaDesde="14";
-//					}else if(horaDesde=="3"){
-//						horaDesde="15";
-//					}else if(horaDesde=="4"){
-//						horaDesde="16";
-//					}else if(horaDesde=="5"){
-//						horaDesde="17";
-//					}else if(horaDesde=="6"){
-//						horaDesde="18";
-//					}else if(horaDesde=="7"){
-//						horaDesde="19";
-//					}else if(horaDesde=="8"){
-//						horaDesde="20";
-//					}else if(horaDesde=="9"){
-//						horaDesde="21";
-//					}else if(horaDesde=="10"){
-//						horaDesde="22";
-//					}else if(horaDesde=="11"){
-//						horaDesde="23";
-//					}else if(horaDesde=="12"){
-//						horaDesde="00";
-//					}
-//				}
-				
-//				if(meridianHasta=="AM"){
-//					if(horaHasta=="1"){
-//						horaHasta="01";
-//					}else if(horaHasta=="2"){
-//						horaHasta="02";
-//					}else if(horaHasta=="3"){
-//						horaHasta="03";
-//					}else if(horaHasta=="4"){
-//						horaHasta="04";
-//					}else if(horaHasta=="5"){
-//						horaHasta="05";
-//					}else if(horaHasta=="6"){
-//						horaHasta="06";
-//					}else if(horaHasta=="7"){
-//						horaHasta="07";
-//					}else if(horaHasta=="8"){
-//						horaHasta="08";
-//					}else if(horaHasta=="9"){
-//						horaHasta="09";
-//					}else if(horaHasta=="10"){
-//						horaHasta="10";
-//					}else if(horaHasta=="11"){
-//						horaHasta="11";
-//					}else if(horaHasta=="12"){
-//						horaHasta="12";
-//					}
-//				}else if(meridianHasta="PM"){
-//					if(horaHasta=="1"){
-//						horaHasta="13";
-//					}else if(horaHasta=="2"){
-//						horaHasta="14";
-//					}else if(horaHasta=="3"){
-//						horaHasta="15";
-//					}else if(horaHasta=="4"){
-//						horaHasta="16";
-//					}else if(horaHasta=="5"){
-//						horaHasta="17";
-//					}else if(horaHasta=="6"){
-//						horaHasta="18";
-//					}else if(horaHasta=="7"){
-//						horaHasta="19";
-//					}else if(horaHasta=="8"){
-//						horaHasta="20";
-//					}else if(horaHasta=="9"){
-//						horaHasta="21";
-//					}else if(horaHasta=="10"){
-//						horaHasta="22";
-//					}else if(horaHasta=="11"){
-//						horaHasta="23";
-//					}else if(horaHasta=="12"){
-//						horaHasta="00";
-//					}
-//				}
 				
 				horaDesdeFormateada=fechaDesde+' '+horaDesde+':'+minutoDesde+':00'
 				horaHastaFormateada=fechaHasta+' '+horaHasta+':'+minutoHasta+':00'
@@ -355,7 +248,7 @@ var reporteVentas = (function() {
 							+'<tr>'
 							+'  <td>'+currentRow.consecutivoVenta+'</td>'
 							+'  <td>'+currentRow.total+'</td>'
-							+'  <td>'+currentRow.fecha+'</td>'
+							+'  <td>'+layout.events.formatMillisDate(currentRow.fecha)+'</td>'
 							+'  <td>'+currentRow.descripcion+'</td>'
 							+'  <td>'+currentRow.direccion+'</td>'
 							+'  <td>'+currentRow.precioTotal+'</td>'

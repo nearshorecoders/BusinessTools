@@ -39,7 +39,7 @@ public class ClienteRepository {
 	
     
     @Transactional(readOnly=false)
-	public int agregarCliente(String nombre,String apellidoP,String apellidoM,String dir,String tel){
+	public int agregarCliente(String nombre,String apellidoP,String apellidoM,String dir,String tel,String email,String tel2){
 	     int idCliente=0;
 	        
 	        try{
@@ -55,8 +55,8 @@ public class ClienteRepository {
 	            
 	            String fechaActual=formatoFecha.format(fecha);
 	            
-	            String sqlString="INSERT INTO `cliente` (`nombre`, `apellidop`, `apellidom`,`dirección`,`fechaDeRegistro`,`telefono`) "
-	                    + " VALUES ('"+varNombre+"', '"+varPaterno+"', '"+varMaterno+"', '"+varDireccion+"','"+fechaActual+"','"+tel+"' )";
+	            String sqlString="INSERT INTO `cliente` (`nombre`, `apellidop`, `apellidom`,`dirección`,`fechaDeRegistro`,`telefono`,email,telefono2) "
+	                    + " VALUES ('"+varNombre+"', '"+varPaterno+"', '"+varMaterno+"', '"+varDireccion+"','"+fechaActual+"','"+tel+"','"+email+"','"+tel2+"' )";
 	        
 	            int resultado=jdbcTemplate.update(sqlString);
 	       
@@ -80,7 +80,7 @@ public class ClienteRepository {
     public List<Cliente> listarClientes(Integer idLoguedUser) {
         try {
         	//listar solo clintes del usuario logueado
-        	String query = "SELECT idcliente,nombre,apellidop,apellidom,dirección,telefono,activo,fechaDeRegistro FROM cliente ";
+        	String query = "SELECT idcliente,nombre,apellidop,apellidom,dirección,telefono,activo,fechaDeRegistro,telefono2,email FROM cliente ";
         	///corregir consulta
         	List<Cliente> clientes = new ArrayList<Cliente>();
         
@@ -95,6 +95,8 @@ public class ClienteRepository {
         		cliente.setVarTelefono((String)(row.get("telefono")));
         		cliente.setActivo((Integer)(row.get("activo")));
         		cliente.setFechaDeRegistro((Date)(row.get("fechaDeRegistro")));
+        		cliente.setTelefono2((String)(row.get("telefono2")));
+        		cliente.setEmail((String)(row.get("email")));
         		clientes.add(cliente);
         		
         	}  

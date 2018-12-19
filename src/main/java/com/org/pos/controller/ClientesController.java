@@ -67,6 +67,37 @@ public class ClientesController {
 		}
 	}
 	
+	@PostMapping("/getClientDetail")
+	public @ResponseBody ResponseEntity<?> getClienteById(Principal principal, @RequestParam String clientId) {
+		try {
+			Integer clienteId=Integer.parseInt(clientId);
+			return new ResponseEntity<Map<String, Object>>(clientesService.getDetailByCliente(principal,clienteId), HttpStatus.OK);
+		}catch(Exception e) {
+			return null;
+		}
+	}
+	@PostMapping("/getEdoCuentaDetail")
+	public @ResponseBody ResponseEntity<?> getEstadoDeCuentaDetail(Principal principal, @RequestParam String clientId,@RequestParam String productId) {
+		try {
+			Integer clienteId=Integer.parseInt(clientId);
+			Integer productoId=Integer.parseInt(clientId);
+			return new ResponseEntity<Map<String, Object>>(clientesService.getDetailHistorialPagosByProduct(principal, clienteId, productoId), HttpStatus.OK);
+		}catch(Exception e) {
+			return null;
+		}
+	}
+	
+	@PostMapping("/getEdoCuentaByStatus")
+	public @ResponseBody ResponseEntity<?> getEstadoDeCuentaBystatus(Principal principal, @RequestParam String clientId,@RequestParam String status) {
+		try {
+			Integer clienteId=Integer.parseInt(clientId);
+			Integer statusId=Integer.parseInt(status);
+			return new ResponseEntity<Map<String, Object>>(clientesService.getDetailHistorialPagosByProduct(principal, clienteId, statusId), HttpStatus.OK);
+		}catch(Exception e) {
+			return null;
+		}
+	}
+	
 	@PutMapping(value = "/updateClient/{id}")
 	public Integer updateClient(@PathVariable Integer id,@PathVariable String varNombre,@PathVariable String varApellidoP, @PathVariable String varApellidoM, @PathVariable String varDireccion,@PathVariable String varTelefono) {
 		try {

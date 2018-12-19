@@ -69,8 +69,8 @@ public class VentaService {
 	}
 	
 	public Map<String,Object> getVentasByCliente(Principal principal,String idCliente){
-
-		Map<String,Object> ventas=ventasRepository.generarReporteVentasByClient(idCliente, 0.0);
+		Integer cliente=Integer.parseInt(idCliente);
+		Map<String,Object> ventas=ventasRepository.generarReporteVentasByClient(cliente, 0.0);
 		
 		return ventas;
 	}

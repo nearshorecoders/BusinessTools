@@ -367,11 +367,9 @@ private void actualizarPermisosUsuario(java.awt.event.ActionEvent evt) {
         	usuario.setApellidom(rs.getString("apellidom"));
         	usuario.setNombreUsuario(rs.getString("nombreUsuario"));
         	usuario.setPassword(rs.getString("password"));
+        	usuario.setEmail(rs.getString("email"));
         	usuario.setIdRol(rs.getInt("rol_idrol"));
-        	//usuario.setCorreo(rs.getString("correo"));
-        	//usuario.setTelefono(rs.getString("telefono"));
-        	//usuario.setId_rol(rs.getInt("id_rol"));
-        	//usuario.setId_supervisor(rs.getInt("id_supervisor"));
+        	usuario.setSucursal_idsucursal(rs.getInt("sucursal_idsucursal"));
             return usuario;
         }
         

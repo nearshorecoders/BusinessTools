@@ -52,10 +52,22 @@
                     <input type="text" class="form-control" id="inputApellidoM" placeholder="Apellido materno del cliente">
                   </div>
                 </div>
-				<div class="form-group">
-                  <label for="inputTelefono" class="col-sm-2 control-label">Teléfono</label>
+                <div class="form-group">
+                  <label for="inputEmail" class="col-sm-2 control-label">Email</label>
                   <div class="col-sm-10">
-                    <input type="text" class="form-control" id="inputTelefono" placeholder="Número de contacto">
+                    <input type="text" class="form-control" id="inputEmail" placeholder="Correo electronico de contacto">
+                  </div>
+                </div>
+				<div class="form-group">
+                  <label for="inputTelefono" class="col-sm-2 control-label">Celular</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="inputTelefono" placeholder="Número de celular de contacto">
+                  </div>
+                </div>
+                <div class="form-group">
+                  <label for="inputTelefonoCasa" class="col-sm-2 control-label">Teléfono casa</label>
+                  <div class="col-sm-10">
+                    <input type="text" class="form-control" id="inputTelefonoCasa" placeholder="Número de casa de contacto">
                   </div>
                 </div>
 				<div class="form-group">
@@ -98,6 +110,8 @@
 				  		<th>Nombre</th>
                   		<th>Apellido paterno</th>
                   		<th>Apellido materno</th>
+                  		<th>Email</th>
+                  		<th>Celular</th>
 				  		<th>Teléfono</th>
                   		<th>Direccion</th>
                   		<th>Acción</th>
@@ -126,28 +140,52 @@
               </div>
               <!-- /.modal-body -->
               <div class="modal-body">
-              	<div class="row">
-                  <div class="form-group">
-	                  <label for="inputIdMod" class="col-sm-4 control-label">Nombre</label>
-	                  <div class="col-sm-8">
-	                    <input disabled type="text" class="form-control" id="inputIdMod" placeholder="Identificador del producto" value="Alfredo Rodrigez Gallegos">
-	                  </div>
-                  </div>
-                  <div class="form-group">
-	                  <label for="inputIdMod2" class="col-sm-4 control-label">Celular</label>
-	                  <div class="col-sm-8">
-	                    <input disabled type="text" class="form-control" id="inputIdMod2" placeholder="Identificador del producto" value="Lada (01 248) 248-156-156-7">
-	                  </div>
-                  </div>
-                  <div class="form-group">
-	                  <label for="inputIdMod3" class="col-sm-4 control-label">Telefono</label>
-	                  <div class="col-sm-8">
-	                    <input disabled type="text" class="form-control" id="inputIdMod3" placeholder="Identificador del producto" value="Lada (01 248) 248-46-2-28-09">
-	                  </div>
-                  </div>
-                  </div>
-                  <div class="row">
-				  <div class="box-body table-responsive no-padding">
+              	<div class="box">
+		            <div class="box-header">
+		              <h3 class="box-title">Datos de contacto</h3>
+		
+		              <div class="box-tools">
+
+		              </div>
+		            </div>
+		            <!-- /.box-header -->
+		            <div class="box-body table-responsive no-padding">
+		                  <div class="form-group">
+			                  <label for="inputIdMod" class="col-sm-4 control-label">Nombre</label>
+			                  <div class="col-sm-8">
+			                    <input disabled type="text" class="form-control" id="inputIdMod" placeholder="Identificador del producto" value="Alfredo Rodrigez Gallegos">
+			                  </div>
+		                  </div>
+		                  <div class="form-group">
+			                  <label for="inputEmailMod" class="col-sm-4 control-label">Email</label>
+			                  <div class="col-sm-8">
+			                    <input disabled type="text" class="form-control" id="inputEmailMod" placeholder="Identificador del producto" value="alfred0823@hotmail.com">
+			                  </div>
+		                  </div>
+		                  <div class="form-group">
+			                  <label for="inputIdMod2" class="col-sm-4 control-label">Celular</label>
+			                  <div class="col-sm-8">
+			                    <input disabled type="text" class="form-control" id="inputIdMod2" placeholder="Identificador del producto" value="Lada (01 248) 248-156-156-7">
+			                  </div>
+		                  </div>
+		                  <div class="form-group">
+			                  <label for="inputIdMod3" class="col-sm-4 control-label">Telefono</label>
+			                  <div class="col-sm-8">
+			                    <input disabled type="text" class="form-control" id="inputIdMod3" placeholder="Identificador del producto" value="Lada (01 248) 248-46-2-28-09">
+			                  </div>
+		                  </div>
+		            </div>
+		            <!-- /.box-body -->
+		          </div>
+		          <!-- /.box -->
+              	<div class="box">
+		            <div class="box-header">
+		              <h3 class="box-title">Historial de compras</h3>
+		              <div class="box-tools">
+		              </div>
+		            </div>
+		            <!-- /.box-header -->
+		            <div class="box-body table-responsive no-padding">
 		              <table id="clienteVentasAll" class="table table-hover">
 		                <tr>
 		                  <th>Fecha</th>
@@ -159,55 +197,46 @@
 		                  <th>Factura</th>
 		                </tr>
 		                <tbody id="tableClienteVentas">
-			                <tr>
-			                  <td>10-05-2017</td>
-							  <td>Armazón negro carbono</td>
-			                  <td>Ray-Ban</td>
-			                  <td>1</td>
-							  <td>$2500</td>
-							  <td><button type="button" class="btn btn-block btn-success">Entregado 12-05-2017</button></td>
-							  <td><button type="button" class="btn btn-block btn-primary" onclick="clientes.events.getFacturaFromClient(1);">Factura</button></td>
-			                </tr>
-			                <tr>
-			                  <td>12-12-2017</td>
-							  <td>Armazón gris carbono</td>
-			                  <td>Lacoste</td>
-			                  <td>1</td>
-							  <td>$3000</td>
-							  <td><button type="button" class="btn btn-block btn-success">Entregado 12-12-2017</button></td>
-							  <td><button type="button" class="btn btn-block btn-primary" onclick="clientes.events.getFacturaFromClient(1);">Factura</button></td>
-			                </tr>
-			                <tr>
-			                  <td>11-11-2018</td>
-							  <td>Ray-Ban aviador verde</td>
-			                  <td>Ray-Ban</td>
-			                  <td>2</td>
-							  <td>$7000</td>
-							  <td><button type="button" class="btn btn-block btn-info">Por entregar</button></td>
-							  <td><button type="button" class="btn btn-block btn-primary" onclick="clientes.events.getFacturaFromClient(1);">Factura</button></td>
-			                </tr>
-			               	<tr>
-			                  <td>10-12-2018</td>
-							  <td>Lente antirreflejante y armazon plata</td>
-			                  <td>Tommy Hilfiger</td>
-			                  <td>1</td>
-							  <td>$5500</td>
-							  <td><button type="button" class="btn btn-block btn-warning">Pago no completado</button></td>
-							  <td><button type="button" class="btn btn-block btn-default">Sin factura disponible</button></td>
-			                </tr>
-			                <tr>
-			                  <td>23-08-2018</td>
-							  <td>Gafas topgun 44587</td>
-			                  <td>Top gun</td>
-			                  <td>1</td>
-							  <td>$3500</td>
-							  <td><button type="button" class="btn btn-block btn-danger">Pago atrasado</button></td>
-							  <td><button type="button" class="btn btn-block btn-default">Sin factura disponible</button></td>
-			                </tr>
 		                </tbody>						
 		              </table>
-	            	</div>
-	            	</div>
+		            </div>
+		            <!-- /.box-body -->
+		          </div>
+		          <!-- /.box -->
+		          <div class="box">
+		            <div class="box-header">
+		              <h3 class="box-title">Estado de cuenta</h3>
+		
+		              <div class="box-tools">
+		                <div class="input-group input-group-sm" style="width: 200px;">
+		                  <div class="input-group-btn">
+		                    <a type="submit" class="btn btn-info pull-right" onclick="clientes.events.createNewClient();">Crear nuevo crédito</a>
+		                  </div>
+		                </div>
+		              </div>
+		            </div>
+		            <!-- /.box-header -->
+		            <div class="box-body table-responsive no-padding">
+		              <table id="clienteEstadoCuentaAll" class="table table-hover">
+		                <tr>
+		                  <th>No. ingreso</th>	
+		                  <th>Fecha</th>
+						  <th>Descripción</th>
+						  <th>Marca</th>
+		                  <th>Cantidad</th>
+						  <th>Cuenta total</th>
+		                  <th>Restante</th>
+		                  <th>Nuevo restante</th>
+		                  <th>Estatus</th>
+		                  <th>Factura</th>
+		                </tr>
+		                <tbody id="tableEstadoCuenta">
+		                </tbody>						
+		              </table>
+		            </div>
+		            <!-- /.box-body -->
+		          </div>
+		          <!-- /.box -->
               </div>
               <!-- /.modal-body -->
               <br/>

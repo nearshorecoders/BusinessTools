@@ -109,7 +109,7 @@ public class ProductsController {
 		}
 	}
 	
-	@GetMapping(value = "/getAllProductsExistence")
+	@PostMapping(value = "/getAllProductsExistence")
 	public @ResponseBody ResponseEntity<?> getAllProductsExistence(Principal principal) {
 		try {	
 			return new ResponseEntity<Map<String, Object>>(productosService.listarProductosParaInventario(principal), HttpStatus.OK);

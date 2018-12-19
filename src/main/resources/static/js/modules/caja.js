@@ -28,7 +28,8 @@ var caja = (function() {
 	};
 	
 	var suscribeEvents = function() {
-		events.cleanProductFields();
+		events.cleanFields();
+		events.getAllGastos();
 		$(".navbar-brand.pitch-logo").on("click", function(){ 
 			events.loadMainPage();
         });
@@ -53,10 +54,138 @@ var caja = (function() {
 	};
 	
 	var events = {
-			cleanReportFields : function() {
-				$("#totalPeriodoAmount").text('$ 0.0');
-				$("#totalPeriodoIVAAmount").text('$ 0.0');
+			getAllGastos:function(){
+				var event = new Date();
+				mes=parseInt(event.getMonth())+1
+				fechaInicial=event.getFullYear()+'-'+mes+'-'+event.getDate()+' 00:00:00';
+				fechaFinal=event.getFullYear()+'-'+mes+'-'+event.getDate()+' 23:59:59' ;
 				
+				fiToSend=fechaInicial;
+				ffToSend=fechaFinal;
+				dataToSend={
+						fi:fiToSend,
+						ff:ffToSend
+				}
+				$.ajax({
+				    url: "/getGastosByDayAndSucursal",
+				    type: "POST",
+				    data:dataToSend,
+				}).done(function( json ) {
+					console.log("Obteniendo gastos del dia");
+					console.log(json);
+					$('#tableGastosRows').html('');
+					stringContent='';
+					
+					if(json.listadoRetiros.length==0){
+						$.notify({
+				    		title: '<strong>No se han registrado gastos el día de hoy</strong>',
+			    			message: ''
+				    	},{
+				    		type: 'danger',
+				    		z_index: 2000,
+				    	});		
+					}
+					
+					for(i=0;i<json.listadoRetiros.length;i++){
+						currentRow=json.listadoRetiros[i];
+						stringContent=stringContent+'<tr>'
+			                  +'<td>'+layout.events.formatMillisDate(currentRow.fecha)+'</td>'
+							  +'<td>'+currentRow.consecutivo+'</td>'
+			                  +'<td>'+currentRow.cantidad+'</td>'
+			                  +'<td>'+currentRow.descripcion+'</td>'
+							  +'<td>'+currentRow.nombreDeQuienRetiro+'</td>'
+			                  +'<td>'+currentRow.nombreSucursal+'</td>'
+			                  +'</tr>';
+					}
+					
+					$('#tableGastosRows').append(stringContent);
+					
+				}).fail(function( xhr, status, errorThrown ) {
+					//console.log( "Sorry, there was a problem!" );
+				    console.log( "Error: " + errorThrown );
+				    console.log( "Status: " + status );
+				    //console.dir( xhr );
+				}).always(function( xhr, status ) {
+				    //console.log( "The request is complete!" );
+				});
+			},
+			saveGasto : function() {
+				descripcionToSend=$("#inputGasto").val();
+				cantidadTosent=$("#inputGastoCantidad").val();
+				dataToSend={
+						descripcion:descripcionToSend,
+						cantidad:cantidadTosent
+				}
+				
+				$.ajax({
+				    url: "/registrarGasto",
+				    type: "POST",
+				    data:dataToSend,
+				}).done(function( json ) {
+					console.log("Registering gasto");
+					console.log(json);
+					events.getAllGastos();
+					events.cleanFields();
+				}).fail(function( xhr, status, errorThrown ) {
+					//console.log( "Sorry, there was a problem!" );
+				    console.log( "Error: " + errorThrown );
+				    console.log( "Status: " + status );
+				    //console.dir( xhr );
+				}).always(function( xhr, status ) {
+				    //console.log( "The request is complete!" );
+				});
+			},
+			realizarCorteCaja : function() {
+				var event = new Date();
+				mes=parseInt(event.getMonth())+1
+				fechaInicial=event.getFullYear()+'-'+mes+'-'+event.getDate()+' 00:00:00';
+				fechaFinal=event.getFullYear()+'-'+mes+'-'+event.getDate()+' 23:59:59' ;
+				
+				fiToSend=fechaInicial;
+				ffToSend=fechaFinal;
+				dataToSend={
+						fi:fiToSend,
+						ff:ffToSend
+				}
+				
+				$.ajax({
+				    url: "/getBalanceByDateAndSucursal",
+				    type: "POST",
+				    data:dataToSend,
+				}).done(function( json ) {
+					console.log("Gettingbalance by date and sucursal");
+					console.log(json);
+					balanceToSend=json.totalBalance;
+					dataToSend2={
+							balance:balanceToSend,
+					}
+					$.ajax({
+					    url: "/realizarCorteDeCaja",
+					    type: "POST",
+					    data:dataToSend2,
+					}).done(function( jsonR ) {
+						console.log("Realizando corte de caja");
+						console.log(jsonR);
+					}).fail(function( xhr, status, errorThrown ) {
+						//console.log( "Sorry, there was a problem!" );
+					    console.log( "Error: " + errorThrown );
+					    console.log( "Status: " + status );
+					    //console.dir( xhr );
+					}).always(function( xhr, status ) {
+					    //console.log( "The request is complete!" );
+					});
+				}).fail(function( xhr, status, errorThrown ) {
+					//console.log( "Sorry, there was a problem!" );
+				    console.log( "Error: " + errorThrown );
+				    console.log( "Status: " + status );
+				    //console.dir( xhr );
+				}).always(function( xhr, status ) {
+				    //console.log( "The request is complete!" );
+				});
+			},
+			cleanFields : function() {
+				$("#inputGasto").val('');
+				$("#inputGastoCantidad").val('');
 			},
 			filterProducts : function() {
 				console.log("Filtrar productos");
@@ -109,9 +238,6 @@ var caja = (function() {
 			    $('#imagenFrontalMod').val('');
 			    $('#imagenDerechaMod').val('');
 			    
-			   ///checar selects
-			   //$('#unidadMedidaMod').val('');
-			   //$('#presentacionMod').val('');
 				index=0;
 				$.each($tds, function() {               // Visits every single <td> element
 				    console.log($(this).text());        // Prints out the text within the <td>
@@ -155,175 +281,6 @@ var caja = (function() {
 				return elt.options[elt.selectedIndex].text;
 			},
 			createReport : function() {
-				
-				console.log("generando reporte de ventas");
-				
-				horaDesde=$('#timepickerDesde').data('timepicker').hour;
-				minutoDesde=$('#timepickerDesde').data('timepicker').minute;
-				//meridianDesde=$('#timepickerDesde').data('timepicker').meridian;
-				
-				horaHasta=$('#timepickerHasta').data('timepicker').hour;
-				minutoHasta=$('#timepickerHasta').data('timepicker').minute;
-				//meridianHasta=$('#timepickerHasta').data('timepicker').meridian;
-				
-				//fechaDesde=$('#datepickerDesde').data('date');
-				fechaDesde=$("#datepickerDesde").data('datepicker').getFormattedDate('yyyy-mm-dd');
-				//fechaDesde=$('#datepickerHasta').data('date');
-				fechaHasta=$("#datepickerHasta").data('datepicker').getFormattedDate('yyyy-mm-dd');
-				horaDesdeFormateada='';
-				horaHastaFormateada='';
-				
-				if(minutoDesde=="1"){
-					minutoDesde="01";
-				}else if(minutoDesde=="2"){
-					minutoDesde="02";
-				}else if(minutoDesde=="3"){
-					minutoDesde="03";
-				}else if(minutoDesde=="4"){
-					minutoDesde="04";
-				}else if(minutoDesde=="5"){
-					minutoDesde="05";
-				}else if(minutoDesde=="6"){
-					minutoDesde="06";
-				}else if(minutoDesde=="7"){
-					minutoDesde="07";
-				}else if(minutoDesde=="8"){
-					minutoDesde="08";
-				}else if(minutoDesde=="9"){
-					minutoDesde="09";
-				}else if(minutoDesde=="0"){
-					minutoDesde="00";
-				}
-				
-				if(minutoHasta=="1"){
-					minutoHasta="01";
-				}else if(minutoHasta=="2"){
-					minutoHasta="02";
-				}else if(minutoHasta=="3"){
-					minutoHasta="03";
-				}else if(minutoHasta=="4"){
-					minutoHasta="04";
-				}else if(minutoHasta=="5"){
-					minutoHasta="05";
-				}else if(minutoHasta=="6"){
-					minutoHasta="06";
-				}else if(minutoHasta=="7"){
-					minutoHasta="07";
-				}else if(minutoHasta=="8"){
-					minutoHasta="08";
-				}else if(minutoHasta=="9"){
-					minutoHasta="09";
-				}else if(minutoHasta=="0"){
-					minutoHasta="00";
-				}
-				
-//				if(meridianDesde=="AM"){
-//					if(horaDesde=="1"){
-//						horaDesde="01";
-//					}else if(horaDesde=="2"){
-//						horaDesde="02";
-//					}else if(horaDesde=="3"){
-//						horaDesde="03";
-//					}else if(horaDesde=="4"){
-//						horaDesde="04";
-//					}else if(horaDesde=="5"){
-//						horaDesde="05";
-//					}else if(horaDesde=="6"){
-//						horaDesde="06";
-//					}else if(horaDesde=="7"){
-//						horaDesde="07";
-//					}else if(horaDesde=="8"){
-//						horaDesde="08";
-//					}else if(horaDesde=="9"){
-//						horaDesde="09";
-//					}else if(horaDesde=="10"){
-//						horaDesde="10";
-//					}else if(horaDesde=="11"){
-//						horaDesde="11";
-//					}else if(horaDesde=="12"){
-//						horaDesde="12";
-//					}
-//				}else if(meridianDesde="PM"){
-//					if(horaDesde=="1"){
-//						horaDesde="13";
-//					}else if(horaDesde=="2"){
-//						horaDesde="14";
-//					}else if(horaDesde=="3"){
-//						horaDesde="15";
-//					}else if(horaDesde=="4"){
-//						horaDesde="16";
-//					}else if(horaDesde=="5"){
-//						horaDesde="17";
-//					}else if(horaDesde=="6"){
-//						horaDesde="18";
-//					}else if(horaDesde=="7"){
-//						horaDesde="19";
-//					}else if(horaDesde=="8"){
-//						horaDesde="20";
-//					}else if(horaDesde=="9"){
-//						horaDesde="21";
-//					}else if(horaDesde=="10"){
-//						horaDesde="22";
-//					}else if(horaDesde=="11"){
-//						horaDesde="23";
-//					}else if(horaDesde=="12"){
-//						horaDesde="00";
-//					}
-//				}
-				
-//				if(meridianHasta=="AM"){
-//					if(horaHasta=="1"){
-//						horaHasta="01";
-//					}else if(horaHasta=="2"){
-//						horaHasta="02";
-//					}else if(horaHasta=="3"){
-//						horaHasta="03";
-//					}else if(horaHasta=="4"){
-//						horaHasta="04";
-//					}else if(horaHasta=="5"){
-//						horaHasta="05";
-//					}else if(horaHasta=="6"){
-//						horaHasta="06";
-//					}else if(horaHasta=="7"){
-//						horaHasta="07";
-//					}else if(horaHasta=="8"){
-//						horaHasta="08";
-//					}else if(horaHasta=="9"){
-//						horaHasta="09";
-//					}else if(horaHasta=="10"){
-//						horaHasta="10";
-//					}else if(horaHasta=="11"){
-//						horaHasta="11";
-//					}else if(horaHasta=="12"){
-//						horaHasta="12";
-//					}
-//				}else if(meridianHasta="PM"){
-//					if(horaHasta=="1"){
-//						horaHasta="13";
-//					}else if(horaHasta=="2"){
-//						horaHasta="14";
-//					}else if(horaHasta=="3"){
-//						horaHasta="15";
-//					}else if(horaHasta=="4"){
-//						horaHasta="16";
-//					}else if(horaHasta=="5"){
-//						horaHasta="17";
-//					}else if(horaHasta=="6"){
-//						horaHasta="18";
-//					}else if(horaHasta=="7"){
-//						horaHasta="19";
-//					}else if(horaHasta=="8"){
-//						horaHasta="20";
-//					}else if(horaHasta=="9"){
-//						horaHasta="21";
-//					}else if(horaHasta=="10"){
-//						horaHasta="22";
-//					}else if(horaHasta=="11"){
-//						horaHasta="23";
-//					}else if(horaHasta=="12"){
-//						horaHasta="00";
-//					}
-//				}
 				
 				horaDesdeFormateada=fechaDesde+' '+horaDesde+':'+minutoDesde+':00'
 				horaHastaFormateada=fechaHasta+' '+horaHasta+':'+minutoHasta+':00'
@@ -406,33 +363,11 @@ var caja = (function() {
 			});
 
 			function hidePopAfterOnlineInternetConnection(){
-				/*			
-			    // Enable to text field input
-			    $("#input-movie-name").prop('disabled', false);
-			    // Enable the search button responsible for triggering the search activity
-			    $("#search-button").prop('disabled', false);
-			    // Hide the internet connection status pop up. This is shown only when connection if offline and hides itself after recovery.
-			    $('#internet-connection-status-dialogue').trigger('close');*/
+
 			}
 
 			function showPopForOfflineConnection(){
-				/*
-			    // Disable the text field input
-			    $("#input-movie-name").prop('disabled', true);
-			    // Disable the search button responsible for triggering search activity.
-			    $("#search-button").prop('disabled', true);
-			    // Show the error with appropriate message title and description.
-			    $(".main-error-message").html("Connection Error");
-			    $(".main-error-resolution").html(" It seems that your Internet Connection if offline.Please verify and try again later.");
-			    $(".extra-error-message").html("(This popup will automatically disappear once connection comes back to life)");
-			    // Addition of extra design to improve user experience when connection goes off.
-			    $('#internet-connection-status-dialogue').lightbox_me({
-			        centered: true,
-			        overlaySpeed:"slow",
-			        closeClick:false,
-			        onLoad: function() {
-			        }
-			    });*/
+
 			}
 		},
 	
@@ -456,6 +391,6 @@ $(document).ready(function () {
 });
 
 function navegacion(element){
-	console.log("iniciando reporte ventas-----------------------");
+	console.log("iniciando caja-----------------------");
 	caja.events.changeView(element.id);
 }

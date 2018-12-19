@@ -53,8 +53,75 @@ var clientes = (function() {
 	};
 	
 	var events = {
-			getDetailClient : function(clientId) {
-				
+			getDetailClient : function(clientIdToSend) {
+				dataToSend={
+						clientId:clientIdToSend
+				}
+				$.ajax({
+				    url: "/getClientDetail",
+				    type: "POST",
+				    data:dataToSend,
+				}).done(function( json ) {
+					console.log("Obteniendo detalle cliente");
+					console.log(json);
+					
+					if(json.historialVentas.listaReporteVentas.length==0){
+						
+					}
+					$('#tableClienteVentas').html('');
+					
+					stringContentVentas='';
+					for(i=0;i<json.historialVentas.listaReporteVentas.length;i++){
+						currentRow=json.historialVentas.listaReporteVentas[i];
+						statusButton='<button type="button" class="btn btn-block btn-success">Entregado '+layout.events.formatMillisOnlyDate(currentRow.fecha)+'</button>';
+						buttonFactura='<button type="button" class="btn btn-block btn-primary" onclick="clientes.events.getFacturaFromClient(1);">Factura</button>';
+						stringContentVentas=stringContentVentas+'<tr>'
+		                  	+'<td>'+layout.events.formatMillisOnlyDate(currentRow.fecha)+'</td>'
+						  	+'<td>'+currentRow.descripcion+'</td>'
+						  	+'<td>'+currentRow.marca+'</td>'
+		                  	+'<td>'+currentRow.cantidadVendida+'</td>'
+						  	+'<td>'+currentRow.precioTotal+'</td>'
+						  	+'<td>'+statusButton+'</td>'
+						  	+'<td>'+buttonFactura+'</td>'
+		                	+'</tr>';
+					}
+					
+					$('#tableClienteVentas').append(stringContentVentas);
+					
+					if(json.estadoDeCuenta.listaEstadoDeCuenta.length==0){
+						
+					}
+					$('#tableEstadoCuenta').html('');
+					
+					stringContentCuenta='';
+					for(i=0;i<json.estadoDeCuenta.listaEstadoDeCuenta.length;i++){
+						currentRow=json.estadoDeCuenta.listaEstadoDeCuenta[i];
+						statusButton='<button type="button" class="btn btn-block btn-success">Entregado '+layout.events.formatMillisOnlyDate(currentRow.fecha)+'</button>';
+						buttonFactura='<button type="button" class="btn btn-block btn-primary" onclick="clientes.events.getFacturaFromClient(1);">Factura</button>';
+						stringContentCuenta=stringContentCuenta+'<tr>'
+						  +'<td>'+currentRow.consecutivo+'</td>'
+		                  +'<td>'+layout.events.formatMillisDate(currentRow.fecha)+'</td>'
+						  +'<td>'+currentRow.descripcion+'</td>'
+		                  +'<td>'+currentRow.marca+'</td>'
+		                  +'<td>'+currentRow.cantidad+'</td>'
+		                  +'<td>'+currentRow.cuentaTotal+'</td>'
+		                  +'<td>'+currentRow.restante+'</td>'
+		                  +'<td>'+currentRow.nuevoRestante+'</td>'
+						  +'<td>'+statusButton+'</td>'
+						  +'<td>'+buttonFactura+'</td>'
+						  +'</tr>';
+					}
+					
+					$('#tableEstadoCuenta').append(stringContentCuenta);
+					
+				}).fail(function( xhr, status, errorThrown ) {
+					//console.log( "Sorry, there was a problem!" );
+				    console.log( "Error: " + errorThrown );
+				    console.log( "Status: " + status );
+				    //console.dir( xhr );
+				}).always(function( xhr, status ) {
+				    //console.log( "The request is complete!" );
+				});
 				$('#modal-cliente-detalle').modal('show');
 			},
 			getFacturaFromClient : function(clientId) {
@@ -90,6 +157,8 @@ var clientes = (function() {
 				$("#inputApellidoM").val('');
 				$("#inputTelefono").val('');
 				$("#inputDireccion").val('');
+				$("#inputTelefono2").val('');
+				$("#inputEmail").val('');
 			},
 			filterClients : function() {
 				// Declare variables 
@@ -152,7 +221,9 @@ var clientes = (function() {
 											+'<td>'+clienteActual.varNombre+'</td>'
 											+'<td>'+clienteActual.varApellidoP+'</td>'
 											+'<td>'+clienteActual.varApellidoM+'</td>'
+											+'<td>'+clienteActual.email+'</td>'
 											+'<td>'+clienteActual.varTelefono+'</td>'
+											+'<td>'+clienteActual.telefono2+'</td>'
 											+'<td>'+clienteActual.varDireccion+'</td>'
 											+'<td><a type="submit" class="btn btn-info pull-right" onclick="clientes.events.getDetailClient('+clienteActual.idClienteAModificar+');">Detalle</a></td>'
 											+'</tr>';
@@ -176,7 +247,9 @@ var clientes = (function() {
 					apellidoP : $("#inputApellidoP").val(),
 					apellidoM : $("#inputApellidoM").val(),
 					telefono : $("#inputTelefono").val(),
-					direccion : $("#inputDireccion").val()
+					direccion : $("#inputDireccion").val(),
+					email : $("#inputEmail").val(),
+					telefono2 : $("#inputTelefono2").val(),
 				}
 				$.ajax({
 					

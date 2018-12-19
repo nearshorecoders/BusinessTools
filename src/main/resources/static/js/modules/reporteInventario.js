@@ -28,7 +28,7 @@ var reporteInventario = (function() {
 	};
 	
 	var suscribeEvents = function() {
-		events.cleanProductFields();
+		$('#tableInventarioProductos').html('');
 		$(".navbar-brand.pitch-logo").on("click", function(){ 
 			events.loadMainPage();
         });
@@ -53,11 +53,6 @@ var reporteInventario = (function() {
 	};
 	
 	var events = {
-			cleanReportFields : function() {
-				$("#totalPeriodoAmount").text('$ 0.0');
-				$("#totalPeriodoIVAAmount").text('$ 0.0');
-				
-			},
 			filterProducts : function() {
 				console.log("Filtrar productos");
 				  var input, filter, table, tr, td, i, txtValue;
@@ -163,6 +158,21 @@ var reporteInventario = (function() {
 						console.log("getting report");
 						console.log(json);
 						
+						$('#tableInventarioProductos').html('');
+						stringContent='';
+						for(i=0;i<json.listaProductosTodos.length;i++){
+							currentRow=json.listaProductosTodos[i];
+							stringContent=stringContent+'<tr>'
+			                  +'<td>'+currentRow.id+'</td>'
+							  +'<td>'+currentRow.codigo+'</td>'
+							  +'<td>'+currentRow.marca+'</td>'
+			                  +'<td>'+currentRow.descripcion+'</td>'
+			                  +'<td>'+currentRow.unidadesEnCaja+'</td>'
+			                  +'<td>'+currentRow.unidadesVendidas+'</td>'
+			                  +'<td><a type="submit" class="btn btn-info pull-right" onclick=";">Registrar inconsistencía</a></td>'
+			                  +'</tr>';
+						}
+						$('#tableInventarioProductos').append(stringContent);
 				    	$.notify({
 				    		title: '<strong>Se genero el reporte correctamente </strong>',
 			    			message: ''

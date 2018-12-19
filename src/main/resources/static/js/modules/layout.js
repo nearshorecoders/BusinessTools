@@ -54,7 +54,38 @@ var layout = (function() {
 	};
 	
 	var events = {
-		
+		formatMillisDate:function(time){
+			 var date = new Date(time);
+			 mes=parseInt(date.getMonth())+1
+			 dia=date.getDay();
+			 if(dia<10){
+				 dia='0'+dia;
+			 }
+			 anio=date.getFullYear();
+			 hora=date.getHours();
+			 minuto=date.getMinutes();
+			 segundo=date.getSeconds();
+			 
+			 fechaFormated=dia+'/'+mes+'/'+anio+' '+hora+':'+minuto+':'+segundo;
+			 
+			 return fechaFormated; 
+		},
+		formatMillisOnlyDate:function(time){
+			 var date = new Date(time);
+			 mes=parseInt(date.getMonth())+1
+			 dia=date.getDay();
+			 if(dia<10){
+				 dia='0'+dia;
+			 }
+			 anio=date.getFullYear();
+			 hora=date.getHours();
+			 minuto=date.getMinutes();
+			 segundo=date.getSeconds();
+			 
+			 fechaFormated=dia+'/'+mes+'/'+anio;
+			 
+			 return fechaFormated; 
+		},	
 		loadMainPage : function() {
 			events.changeView("index");
 			

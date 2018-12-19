@@ -5,10 +5,30 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.mysql.jdbc.Connection;
+import javax.sql.DataSource;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
+
+import com.mysql.jdbc.Connection;
+import com.org.pos.model.Retiro;
+
+@Repository
 public class RetiroRepository {
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt,String usuarioLogueado) {                                         
+    
+	private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    @Qualifier("exchangeDS")
+    public void setDataSource(DataSource dataSource) {
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    }
+    
+    public Retiro registrarRetiro(Double cantidad,String descripcion,Integer idSucursal, String usuarioLogueado){                                         
+        
+        Integer resultado;
         
         Date fechaInicioDia=new Date();
           fechaInicioDia.setHours(01);
@@ -23,44 +43,28 @@ public class RetiroRepository {
           String fi=sf.format(fechaInicioDia);
           String ff=sf.format(fechaFinDia);
         
-        
-        //DBConect conexion=new DBConect(); 
-        Connection conexionMysql = null;//conexion.GetConnection();
-        
-        String cantidad="";//cantidadRetiro.getText();
-        String retiro="";//motivoRetiro.getText();
-        if(cantidad.equals("") && retiro.equals("")){
-            
-            //JOptionPane.showMessageDialog(null,"Los datos necesarios para realizar la operación estan vacios,\n por lo cual no se abrira la caja.");
-            return;
-        }
-        
         try{
-            Statement statement = conexionMysql.createStatement();
-            
-            
+
             String getMax="select MAX(consecutivo) as max from " +
-                           " retiro where (fecha BETWEEN '"+fi+"' AND '"+ff+"')";
-             ResultSet rs=statement.executeQuery(getMax);
-            int max=0;
-             while(rs.next()){
-            
-                max=rs.getInt(1);
-                
-            }
-            max=max+1;
+                           " retiro where (fecha BETWEEN '"+fi+"' AND '"+ff+"') AND sucursal_idsucursal="+idSucursal;
+            Integer consecMax=jdbcTemplate.queryForObject(getMax, Integer.class);
+            int max=1;
+            if(consecMax!=null) {
+         		max=consecMax+1;
+         	}
              
-            String sqlString2="insert into retiro(cantidad,descripcion,consecutivo,usuario) VALUES("+cantidad+",'"+retiro+"',"+max+","+usuarioLogueado+")";
+            String sqlString2="insert into retiro(cantidad,descripcion,consecutivo,usuario,sucursal_idsucursal) VALUES("+cantidad+",'"+descripcion+"',"+max+","+usuarioLogueado+","+idSucursal+")";
+
+            resultado=jdbcTemplate.update(sqlString2);
+            Retiro retiroResult=new Retiro();
+            retiroResult.setCantidad(cantidad);
+            retiroResult.setConsecutivo(max);
+            retiroResult.getSucursal_idsucursal();
             
-            statement.executeUpdate(sqlString2);
-//            Ticket t=new Ticket();
-//            t.AbrirCaja();
-//            obtenerGastosDelDia(fi,ff);
-//            motivoRetiro.setText("");
-//            cantidadRetiro.setText("");
-        }catch(Exception e){
+            return retiroResult;
+         }catch(Exception e){
             e.printStackTrace();
         }
-        
+        return null;
     }    
 }

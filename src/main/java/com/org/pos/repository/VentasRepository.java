@@ -50,33 +50,9 @@ public class VentasRepository {
     	ivaConfigurado=.16;
     	Map<String,Object> reporteVentas=new HashMap<String,Object>();
     	List<ReporteVentas> listaReporteVentas=new ArrayList<ReporteVentas>();
-    	//Date fechaInit = null;//fechaInicio.getDate();
-        //Date fechaEnd = null;//fechaFin.getDate();
-        //Date fechaFin=null;
-        //if(fechaInit==null || fechaFin==null){
-            //JOptionPane.showMessageDialog(null,"Es necesario proporcionar el periodo de tiempo del reporte");
-        //    return;
-        //}
-        
-        //if(fechaEnd.before(fechaInit)){
-            //JOptionPane.showMessageDialog(null,"La fecha de fin no puede ser anterior a la fecha de inicio");
-        //    return;
-        //}
-        
-        //SimpleDateFormat formatoFecha=new SimpleDateFormat("yyyy/MM/dd");   
-        //String fechaInicial=formatoFecha.format(fechaInit);
-        //String fechaFinal=formatoFecha.format(fechaEnd);
-        //DBConect conexion=new DBConect();
         
         try{
-            //Connection conexionMysql =null;// conexion.GetConnection();
-           // Statement statement = conexionMysql.createStatement();
-            //DateEditor de=(DateEditor)jSpinner1.getEditor();
-            //DateEditor de2=(DateEditor)jSpinner2.getEditor();
-            //String tiempoInicio=fechaInicial;
-            //String tiempoFin=fechaFinal;
-            
-            
+
             String SQLString="SELECT a.consecutivoVenta,a.total,a.fechaVenta,b.descripcionProd,d.dirección,b.precioTotal,b.cantidad, "+
                              " b.precioTotal*b.cantidad as 'Subtotal',c.nombre,c.apellidop,c.apellidom, "+
                              " c.nombreUsuario FROM venta as a inner join detalleventa b on a.idVenta=b.Venta_idVenta "+
@@ -84,7 +60,7 @@ public class VentasRepository {
                              " inner join cliente as d on d.idCliente=a.cliente_idcliente"+
                              " where a.fechaVenta BETWEEN '"+fechaInicialFront+"' AND '"+fechaFinalFront+"' ";
             
-            String usuarioSeleccionado="---";//listaTodosLosUsuarios.getSelectedItem().toString();
+            String usuarioSeleccionado="---";
             if(usuarioSeleccionado.equals("---")){        
                  SQLString+=" order by a.idventa,b.consecutivoVenta";
             }else{
@@ -100,6 +76,8 @@ public class VentasRepository {
         	List<Map<String, Object>> rows = jdbcTemplate.queryForList(SQLString);
         	Double sumaTotalPeriodo=0.0;
         	Double sumaIvaPeriodo=0.0;
+        	Double sumaTotalInversion=0.0;
+        	Double sumaTotalUtilidad=0.0;
         	for (Map row : rows) {
         		ReporteVentas reporteVentasRow = new ReporteVentas();
         		reporteVentasRow.setApellidom((String)(row.get("apellidom")));
@@ -117,6 +95,7 @@ public class VentasRepository {
         		
         		Double cantidad=(Double)(row.get("cantidad"));
         		Double precioTotal=(Double)(row.get("precioTotal"));
+        		
         		 if(cantidad>1){
                      sumaTotalPeriodo+=precioTotal*cantidad;
                      sumaIvaPeriodo+=(precioTotal*cantidad)*ivaConfigurado;
@@ -129,61 +108,6 @@ public class VentasRepository {
             reporteVentas.put("totalPeriodo",sumaTotalPeriodo);
             reporteVentas.put("ivaTotalPeriodo",sumaIvaPeriodo);
             
-//            ResultSet rs= statement.executeQuery(SQLString);
-//            
-//            //Double sumaTotalPeriodo=0.0;
-//            //String nombreUsuario="---";
-//            
-//            while(rs.next()){
-//                
-//                int cantidad=rs.getInt("Cantidad vendida");
-//                if(cantidad>1){
-//                    sumaTotalPeriodo+=(rs.getDouble("precioTotal")*cantidad);
-//                    sumaIvaPeriodo+=(rs.getDouble("precioTotal")*cantidad)*ivaConfigurado;
-//                }else{
-//                    sumaTotalPeriodo+=rs.getDouble("precioTotal");
-//                    sumaIvaPeriodo+=rs.getDouble("precioTotal")*ivaConfigurado;
-//                }
-//                
-//                nombreUsuario=rs.getString("Vendido por");
-//               
-//            }
-//            
-//            if(sumaTotalPeriodo==0.0){
-//                //JOptionPane.showMessageDialog(null, "No se encontraron registros de venta en el periodo seleccionado");
-//            }
-
-//            if(usuarioSeleccionado.equals("---")){
-//            
-//            }else{
-//                //labelUsuarioQueVendio.setText(nombreUsuario);
-//            }
-            
-            //labelTotalPeriodo.setText("$"+decimales.format(sumaTotalPeriodo));
-            //labelTotalIvaPeriodo.setText("$"+decimales.format(sumaIvaPeriodo));
-            
-//            rs.beforeFirst();
-//            
-//            //DefaultTableModel listaDetalleVentasPeriodo= new DefaultTableModel();
-//                
-//                ResultSetMetaData rsMd = rs.getMetaData();
-//                //La cantidad de columnas que tiene la consulta
-//                int cantidadColumnas = rsMd.getColumnCount();
-//                //Establecer como cabezeras el nombre de las colimnas
-//                for (int i = 1; i <= cantidadColumnas; i++) {
-//                 //listaDetalleVentasPeriodo.addColumn(rsMd.getColumnLabel(i));
-//                }
-//                //Creando las filas para el JTable
-//                while (rs.next()) {
-//                 Object[] fila = new Object[cantidadColumnas];
-//                 for (int i = 0; i < cantidadColumnas; i++) {
-//                   fila[i]=rs.getObject(i+1);
-//                 }
-//                 //listaDetalleVentasPeriodo.addRow(fila);
-//                }
-            
-                //listaReporte.setModel(listaDetalleVentasPeriodo);
-
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -193,7 +117,7 @@ public class VentasRepository {
        return reporteVentas; 
     }    
     
-    public Map<String,Object> generarReporteVentasByClient(String clientID,Double ivaConfigurado) {
+    public Map<String,Object> generarReporteVentasByClient(Integer clientID,Double ivaConfigurado) {
     	ivaConfigurado=.16;
     	Map<String,Object> reporteVentas=new HashMap<String,Object>();
     	List<ReporteVentas> listaReporteVentas=new ArrayList<ReporteVentas>();
@@ -208,7 +132,7 @@ public class VentasRepository {
             
             String usuarioSeleccionado="---";//listaTodosLosUsuarios.getSelectedItem().toString();
             if(usuarioSeleccionado.equals("---")){        
-                 SQLString+="group by a.idventa order by a.idventa,b.consecutivoVenta";
+                 SQLString+=" group by a.idventa order by a.idventa,b.consecutivoVenta";
             }else{
                 
                  SQLString+=" and c.NombreCompleto='"+usuarioSeleccionado+"' ";

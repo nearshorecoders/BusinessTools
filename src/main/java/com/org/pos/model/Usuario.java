@@ -10,6 +10,22 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class Usuario implements UserDetails {
 
 	private static final long serialVersionUID = -9009246598084265042L;
+	
+	private Integer id;
+	private String nombreUsuario;
+	private String nombre;
+	private String apellidop;
+	private String apellidom;
+	private String password;
+	private String estatus;
+	private String email;
+	private Integer idRol;
+	private Integer sucursal_idsucursal;
+	
+	private List<GrantedAuthority> grantedAuthorities = AuthorityUtils.createAuthorityList("USER");
+	
+
+	
 	public Integer getId() {
 		return id;
 	}
@@ -69,19 +85,6 @@ public class Usuario implements UserDetails {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
-	private Integer id;
-	private String nombreUsuario;
-	private String nombre;
-	private String apellidop;
-	private String apellidom;
-	private String password;
-	private String estatus;
-	private Integer idRol;
-	
-	private List<GrantedAuthority> grantedAuthorities = AuthorityUtils.createAuthorityList("USER");
-	
-
 	
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -124,6 +127,22 @@ public class Usuario implements UserDetails {
 
 	public void setIdRol(Integer idRol) {
 		this.idRol = idRol;
+	}
+
+	public Integer getSucursal_idsucursal() {
+		return sucursal_idsucursal;
+	}
+
+	public void setSucursal_idsucursal(Integer sucursal_idsucursal) {
+		this.sucursal_idsucursal = sucursal_idsucursal;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 	
 }
